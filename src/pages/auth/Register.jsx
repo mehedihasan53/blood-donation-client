@@ -1,99 +1,152 @@
-import { Link } from "react-router";
-import { useAuth } from "../../Provider/AuthProvider";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../../firebase/firebase.config";
 
 const Register = () => {
-  const { registerWithEmail, signInGoogle, updateUser } = useAuth();
+  const navigate = useNavigate();
 
-  const handleRegister = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const name = e.target.name.value;
-    const photo = e.target.photo.value;
-    const email = e.target.email.value;
-    const password = e.target.password.value;
 
-    const result = await registerWithEmail(email, password);
-    await updateUser(name, photo);
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const file = form.image.files[0];
+    const bloodGroup = form.bloodGroup.value;
+    const password = form.password.value;
+    const confirm_password = form.confirm_password.value;
 
-    console.log("Registered:", result.user);
+    if (password !== confirm_password) {
+      return toast.error("Passwords do not match");
+    }
+
+    let imageUrl = "";
+    try {
+      if (file) {
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const res = await axios.post(
+          `https://api.imgbb.com/1/upload?key=${
+            import.meta.env.VITE_IMGBB_API_KEY
+          }`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+
+        imageUrl = res.data.data.display_url;
+      }
+
+      
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Update profile
+      await updateProfile(auth.currentUser, {
+        displayName: name,
+        photoURL: imageUrl,
+      });
+
+      
+      const userData = { name, email, bloodGroup, avatar: imageUrl };
+      await axios.post("http://localhost:3000/users", userData);
+
+      toast.success("User registered successfully!");
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || "Registration failed");
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-md">
-        <h2 className="text-2xl font-bold text-center text-red-600 mb-6">
-          Create Your Account
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-md bg-white rounded-xl shadow p-8">
+        <h2 className="text-2xl font-bold text-center mb-6">Create Account</h2>
 
-        <form onSubmit={handleRegister} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Full Name</label>
+            <label className="label">Name</label>
             <input
+              type="text"
               name="name"
-              type="text"
-              placeholder="Enter your name"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-red-200"
+              placeholder="Your full name"
+              className="input input-bordered w-full"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Photo URL</label>
+            <label className="label">Email</label>
             <input
-              name="photo"
-              type="text"
-              placeholder="Link to your photo"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-red-200"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
-            <input
-              name="email"
               type="email"
-              placeholder="Enter your email"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-red-200"
+              name="email"
+              placeholder="you@email.com"
+              className="input input-bordered w-full"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Password</label>
+            <label className="label">Avatar</label>
             <input
-              name="password"
+              type="file"
+              name="image"
+              accept="image/*"
+              className="file-input file-input-bordered w-full"
+            />
+          </div>
+
+          <div>
+            <label className="label">Blood Group</label>
+            <select
+              name="bloodGroup"
+              className="select select-bordered w-full"
+              required
+            >
+              <option value="">Select blood group</option>
+              {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((bg) => (
+                <option key={bg} value={bg}>
+                  {bg}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="label">Password</label>
+            <input
               type="password"
-              placeholder="Create a password"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-red-200"
+              name="password"
+              placeholder="••••••••"
+              className="input input-bordered w-full"
               required
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-red-600 text-white py-2 rounded-lg font-medium hover:bg-red-700 transition"
-          >
-            Register
-          </button>
+          <div>
+            <label className="label">Confirm Password</label>
+            <input
+              type="password"
+              name="confirm_password"
+              placeholder="••••••••"
+              className="input input-bordered w-full"
+              required
+            />
+          </div>
+
+          <button className="btn btn-primary w-full mt-2">Register</button>
         </form>
 
-        <div className="mt-6">
-          <button
-            onClick={signInGoogle}
-            className="w-full py-2 border border-gray-300 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-100 transition"
-          >
-            <img
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-              alt="google"
-              className="w-5"
-            />
-            Sign up with Google
-          </button>
-        </div>
-
-        <p className="text-center mt-4 text-sm">
+        <p className="text-center text-sm mt-4">
           Already have an account?{" "}
-          <Link to="/login" className="text-red-600 underline">
+          <Link to="/login" className="link link-primary">
             Login
           </Link>
         </p>
@@ -101,4 +154,5 @@ const Register = () => {
     </div>
   );
 };
+
 export default Register;

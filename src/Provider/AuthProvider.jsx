@@ -4,16 +4,15 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
-  signInWithPopup,
   updateProfile,
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
 
 import { app } from "../firebase/firebase.config";
+import axios from "axios";
 
 const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
 
 export const AuthContext = createContext(null);
 
@@ -23,29 +22,23 @@ export const useAuth = () => useContext(AuthContext);
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [role, setRole] = useState("");
 
-  // REGISTER (Email + Password)
+  // register
 
   const registerWithEmail = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  // REGISTER / LOGIN with Google
-
-  const signInGoogle = () => {
-    setLoading(true);
-    return signInWithPopup(auth, googleProvider);
-  };
-
-  // LOGIN (Email + Password)
+  // login
 
   const loginWithEmail = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  // UPDATE USER (name / photo)
+  //update user
 
   const updateUser = (name, photo) => {
     setLoading(true);
@@ -55,19 +48,31 @@ const AuthProvider = ({ children }) => {
     });
   };
 
-  // LOGOUT
+  // logout
 
   const logout = () => {
     setLoading(true);
     return signOut(auth);
   };
 
-  // OBSERVE USER
+  // observe user
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
+
+      if (currentUser?.email) {
+        axios
+          .get(`http://localhost:3000/users/role/${currentUser.email}`)
+          .then((res) => {
+            console.log("Role:", res.data.role);
+            setRole(res.data.role);
+          })
+          .catch((err) => {
+            console.error("Failed to fetch role:", err);
+          });
+      }
     });
 
     return () => unsubscribe();
@@ -76,9 +81,9 @@ const AuthProvider = ({ children }) => {
   //value
   const authInfo = {
     user,
+    role,
     loading,
     registerWithEmail,
-    signInGoogle,
     loginWithEmail,
     logout,
     updateUser,

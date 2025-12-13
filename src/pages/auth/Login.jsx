@@ -51,20 +51,6 @@ const Login = () => {
           </button>
         </form>
 
-        <div className="mt-6">
-          <button
-            onClick={signInGoogle}
-            className="w-full py-2 border border-gray-300 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-100 transition"
-          >
-            <img
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-              alt="google"
-              className="w-5"
-            />
-            Login with Google
-          </button>
-        </div>
-
         <p className="text-center mt-4 text-sm">
           Don't have an account?{" "}
           <Link to="/register" className="text-red-600 underline">
