@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import { app } from "../firebase/firebase.config";
 import useAxios from "../hooks/useAxios";
+import Loading from "../components/shared/Loading";
 
 const auth = getAuth(app);
 const axiosInstance = useAxios();
@@ -22,6 +23,7 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState("");
+  const [roleLoading, setRoleLoading] = useState(true);
 
   // Register
   const registerWithEmail = (email, password) => {
@@ -68,6 +70,7 @@ const AuthProvider = ({ children }) => {
             `users/role/${currentUser.email}`
           );
           setRole(res.data?.role || "");
+          setRoleLoading(false);
           console.log("Role:", res.data?.role);
         } catch (err) {
           console.error("Failed to fetch role:", err);
@@ -87,11 +90,12 @@ const AuthProvider = ({ children }) => {
     logout,
     forgotPassword,
     updateUser,
+    roleLoading,
   };
 
   return (
     <AuthContext.Provider value={authInfo}>
-      {!loading && children}
+      {loading || roleLoading ? <Loading /> : children}
     </AuthContext.Provider>
   );
 };

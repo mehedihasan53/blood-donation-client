@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaHome, FaUser, FaTint, FaSignOutAlt } from "react-icons/fa";
-import { useAuth } from "../Provider/AuthProvider";
+import { AuthContext, useAuth } from "../Provider/AuthProvider";
 import { MdBloodtype } from "react-icons/md";
 
 const Aside = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const { role } = useContext(AuthContext);
 
   const menu = [
     { name: "Dashboard", path: "/dashboard", icon: <FaHome /> },
@@ -15,11 +16,18 @@ const Aside = () => {
       path: "/dashboard/my-donation-requests",
       icon: <FaTint />,
     },
-    {
-      name: "Create Request",
-      path: "/dashboard/create-donation-request",
-      icon: <FaUser />,
-    },
+    ...(role === "donor"
+      ? [
+          {
+            name: "Create Request",
+            path: "/dashboard/create-donation-request",
+            icon: <FaUser />,
+          },
+        ]
+      : []),
+    ...(role === "admin"
+      ? [{ name: "All Users", path: "/dashboard/all-users", icon: <FaUser /> }]
+      : []),
   ];
 
   const handleLogout = async () => {

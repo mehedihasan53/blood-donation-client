@@ -8,6 +8,7 @@ import Login from "../pages/auth/Login";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import AddRequest from "../dashboard/AddRequest";
 import PrivateRoute from "../Provider/PrivateRoute";
+import AllUsers from "../dashboard/AllUsers";
 
 export const router = createBrowserRouter([
   {
@@ -69,7 +70,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "all-users",
-        element: <h1>All Users</h1>,
+        element: <AllUsers />,
       },
       {
         path: "profile",
