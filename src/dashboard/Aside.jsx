@@ -3,7 +3,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { FaHome, FaUser, FaTint, FaSignOutAlt } from "react-icons/fa";
 import { useAuth } from "../Provider/AuthProvider";
 import { MdBloodtype } from "react-icons/md";
-import { Link } from "react-router";
 
 const Aside = () => {
   const { logout } = useAuth();
@@ -33,12 +32,9 @@ const Aside = () => {
   };
 
   return (
-    <aside className="w-64 h-screen bg-white shadow-lg border-r flex flex-col">
+    <aside className="w-64 h-screen bg-white shadow-lg flex flex-col">
       {/* Logo / Brand */}
-      <Link
-        to={"/"}
-        className="flex items-center justify-center w-full h-20 bg-red-600 space-x-2"
-      >
+      <div className="flex items-center justify-center w-full h-20 bg-red-600 space-x-2">
         <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full">
           <MdBloodtype className="text-red-600 text-2xl" />
         </div>
@@ -46,7 +42,7 @@ const Aside = () => {
           <h1 className="text-white text-xl font-bold">BloodConnect</h1>
           <p className="text-red-100 text-xs">Save Lives, Donate Blood</p>
         </div>
-      </Link>
+      </div>
 
       {/* Navigation */}
       <nav className="flex flex-col mt-6 gap-2 px-2">
@@ -69,7 +65,7 @@ const Aside = () => {
       </nav>
 
       {/* Logout */}
-      <div className="mt-auto p-6 border-t">
+      <div className="mt-auto p-6 border-gray-200 border-t">
         <button
           onClick={handleLogout}
           className="flex items-center gap-3 px-4 py-3 w-full text-left rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all"

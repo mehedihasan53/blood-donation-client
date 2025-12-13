@@ -1,7 +1,7 @@
 import React from "react";
 
 const AddRequest = () => {
-  return <div>add req</div>;
+  return <div>add res</div>;
 };
 
 export default AddRequest;
