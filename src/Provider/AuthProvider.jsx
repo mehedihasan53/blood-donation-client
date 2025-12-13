@@ -8,15 +8,14 @@ import {
   onAuthStateChanged,
   sendPasswordResetEmail,
 } from "firebase/auth";
-
 import { app } from "../firebase/firebase.config";
-import axios from "axios";
+import useAxios from "../hooks/useAxios";
 
 const auth = getAuth(app);
+const axiosInstance = useAxios();
 
 export const AuthContext = createContext(null);
 
-// Hook
 export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider = ({ children }) => {
@@ -24,28 +23,25 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState("");
 
-  // register
-
+  // Register
   const registerWithEmail = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  // login
-
+  // Login
   const loginWithEmail = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  // forgot password
+  // Forgot password
   const forgotPassword = (email) => {
     setLoading(true);
     return sendPasswordResetEmail(auth, email);
   };
 
-  //update user
-
+  // Update user
   const updateUser = (name, photo) => {
     setLoading(true);
     return updateProfile(auth.currentUser, {
@@ -54,37 +50,34 @@ const AuthProvider = ({ children }) => {
     });
   };
 
-  // logout
-
+  // Logout
   const logout = () => {
     setLoading(true);
     return signOut(auth);
   };
 
-  // observe user
-
+  // Observe user
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       setLoading(false);
 
       if (currentUser?.email) {
-        axios
-          .get(`http://localhost:3000/users/role/${currentUser.email}`)
-          .then((res) => {
-            console.log("Role:", res.data.role);
-            setRole(res.data.role);
-          })
-          .catch((err) => {
-            console.error("Failed to fetch role:", err);
-          });
+        try {
+          const res = await axiosInstance.get(
+            `users/role/${currentUser.email}`
+          );
+          setRole(res.data?.role || "");
+          console.log("Role:", res.data?.role);
+        } catch (err) {
+          console.error("Failed to fetch role:", err);
+        }
       }
     });
 
     return () => unsubscribe();
   }, []);
 
-  //value
   const authInfo = {
     user,
     role,
@@ -97,7 +90,9 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={authInfo}>
+      {!loading && children}
+    </AuthContext.Provider>
   );
 };
 
