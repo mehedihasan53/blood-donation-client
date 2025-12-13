@@ -7,6 +7,7 @@ import {
   FaCheck,
   FaUserShield,
   FaUserFriends,
+  FaEllipsisV,
 } from "react-icons/fa";
 import toast from "react-hot-toast";
 import Loading from "../components/shared/Loading";
@@ -27,41 +28,68 @@ const getBadge = (type, value) => {
   return colors[type][value] || "";
 };
 
-// User Actions component
-const UserActions = ({ user, onStatus, onRole }) => (
-  <div className="flex gap-2">
-    {/* Status toggle button */}
-    <button
-      onClick={() => onStatus(user.email, user.status)}
-      className={`px-3 py-1 rounded text-sm ${
-        user.status === "active"
-          ? "bg-red-100 text-red-700 hover:bg-red-200"
-          : "bg-green-100 text-green-700 hover:bg-green-200"
-      }`}
-    >
-      {user.status === "active" ? <FaBan /> : <FaCheck />}
-    </button>
+// User Actions with dropdown menu
+const UserActions = ({
+  user,
+  onStatus,
+  onRole,
+  openDropdown,
+  setOpenDropdown,
+}) => {
+  const isOpen = openDropdown === user.email;
 
-    {/* Role buttons */}
-    {user.role !== "volunteer" && user.role !== "admin" && (
-      <button
-        onClick={() => onRole(user.email, "volunteer")}
-        className="px-3 py-1 rounded text-sm bg-blue-100 text-blue-700 hover:bg-blue-200"
-      >
-        <FaUserFriends />
-      </button>
-    )}
+  const handleToggle = () => {
+    setOpenDropdown(isOpen ? null : user.email);
+  };
 
-    {user.role !== "admin" && (
-      <button
-        onClick={() => onRole(user.email, "admin")}
-        className="px-3 py-1 rounded text-sm bg-purple-100 text-purple-700 hover:bg-purple-200"
-      >
-        <FaUserShield />
+  return (
+    <div className="relative">
+      <button onClick={handleToggle} className="p-2 rounded hover:bg-gray-200">
+        <FaEllipsisV />
       </button>
-    )}
-  </div>
-);
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-44 bg-white border rounded shadow-lg z-10 flex flex-col">
+          <button
+            onClick={() => {
+              onStatus(user.email, user.status);
+              setOpenDropdown(null);
+            }}
+            className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-sm"
+          >
+            {user.status === "active" ? <FaBan /> : <FaCheck />}
+            {user.status === "active" ? "Block" : "Unblock"}
+          </button>
+
+          {user.role !== "volunteer" && user.role !== "admin" && (
+            <button
+              onClick={() => {
+                onRole(user.email, "volunteer");
+                setOpenDropdown(null);
+              }}
+              className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-sm"
+            >
+              <FaUserFriends />
+              Make Volunteer
+            </button>
+          )}
+
+          {user.role !== "admin" && (
+            <button
+              onClick={() => {
+                onRole(user.email, "admin");
+                setOpenDropdown(null);
+              }}
+              className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-sm"
+            >
+              <FaUserShield />
+              Make Admin
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const AllUsers = () => {
   const axiosSecure = useAxiosSecure();
@@ -69,6 +97,7 @@ const AllUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+  const [openDropdown, setOpenDropdown] = useState(null);
 
   // Fetch all users
   useEffect(() => {
@@ -222,6 +251,8 @@ const AllUsers = () => {
                       user={u}
                       onStatus={handleStatus}
                       onRole={handleRole}
+                      openDropdown={openDropdown}
+                      setOpenDropdown={setOpenDropdown}
                     />
                   </td>
                 </tr>
