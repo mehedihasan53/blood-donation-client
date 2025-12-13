@@ -68,7 +68,7 @@ const Aside = () => {
         ))}
       </nav>
 
-      {/* Footer / Logout */}
+      {/* Logout */}
       <div className="mt-auto p-6 border-t">
         <button
           onClick={handleLogout}
