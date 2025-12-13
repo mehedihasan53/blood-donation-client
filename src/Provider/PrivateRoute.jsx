@@ -3,14 +3,14 @@ import { useAuth } from "../Provider/AuthProvider";
 import Loading from "../components/shared/Loading";
 
 const PrivateRoute = ({ children }) => {
-  const { user, loading, roleLoading } = useAuth();
+  const { user, loading, roleLoading, userStatus } = useAuth();
   const location = useLocation();
 
   if (loading || roleLoading) {
     return <Loading />;
   }
 
-  if (!user) {
+  if (!user || !userStatus == "active") {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

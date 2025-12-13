@@ -24,6 +24,7 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState("");
   const [roleLoading, setRoleLoading] = useState(true);
+  const [userStatus, setUserStatus] = useState("");
 
   // Register
   const registerWithEmail = (email, password) => {
@@ -70,6 +71,7 @@ const AuthProvider = ({ children }) => {
             `users/role/${currentUser.email}`
           );
           setRole(res.data?.role || "");
+          setUserStatus(res.data?.status || "");
           setRoleLoading(false);
           console.log("Role:", res.data?.role);
         } catch (err) {
@@ -91,6 +93,7 @@ const AuthProvider = ({ children }) => {
     forgotPassword,
     updateUser,
     roleLoading,
+    userStatus,
   };
 
   return (
