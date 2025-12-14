@@ -2,56 +2,41 @@ import React from "react";
 
 const Loading = () => {
   return (
-    <div className="min-h-[400px] flex flex-col items-center justify-center bg-gray-50">
-      <div className="relative w-[120px] h-[90px] mx-auto">
-        {/* Bouncing Ball */}
-        <div
-          className="absolute bottom-[30px] left-[50px] h-[30px] w-[30px] rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg"
-          style={{
-            animation: "loading-bounce 0.5s ease-in-out infinite alternate",
-          }}
-        />
+    <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
+      <div className="text-center">
+        <div className="relative mx-auto w-16 h-24 mb-6">
+          <div className="absolute inset-0">
+            <div
+              className="w-full h-full bg-gradient-to-b from-red-500 to-red-600 rounded-full animate-pulse"
+              style={{ clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)" }}
+            ></div>
 
-        {/* Steps */}
-        <div
-          className="absolute right-0 top-0 h-[7px] w-[45px] rounded-[4px]"
-          style={{
-            boxShadow:
-              "0 5px 0 #c7d2fe, -35px 50px 0 #c7d2fe, -70px 95px 0 #c7d2fe",
-            animation: "loading-step 1s ease-in-out infinite",
-          }}
-        />
+            <div className="absolute -inset-4 border-2 border-transparent border-t-red-400 border-r-red-300 rounded-full animate-spin"></div>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-xl font-semibold text-gray-800 mb-1">
+            Loading
+            <span className="inline-flex">
+              <span className="animate-[bounce_1s_infinite] mx-0.5">.</span>
+              <span className="animate-[bounce_1s_infinite_0.2s] mx-0.5">
+                .
+              </span>
+              <span className="animate-[bounce_1s_infinite_0.4s] mx-0.5">
+                .
+              </span>
+            </span>
+          </h3>
+          <p className="text-sm text-gray-500">Please wait a moment</p>
+        </div>
       </div>
 
-      <p className="mt-8 text-gray-700 font-semibold text-lg animate-pulse ">
-        Loading...
-      </p>
-
-      {/* Animations */}
       <style>
         {`
-          @keyframes loading-bounce {
-            0% { transform: scale(1, 0.7); }
-            40% { transform: scale(0.8, 1.2); }
-            60% { transform: scale(1, 1); }
-            100% { bottom: 140px; transform: scale(1, 1); }
-          }
-          
-          @keyframes loading-step {
-            0% {
-              box-shadow:
-                0 10px 0 rgba(0,0,0,0),
-                0 10px 0 #c7d2fe,
-                -35px 50px 0 #c7d2fe,
-                -70px 90px 0 #c7d2fe;
-            }
-            100% {
-              box-shadow:
-                0 10px 0 #c7d2fe,
-                -35px 50px 0 #c7d2fe,
-                -70px 90px 0 #c7d2fe,
-                -70px 90px 0 rgba(0,0,0,0);
-            }
+          @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
           }
         `}
       </style>

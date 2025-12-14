@@ -9,6 +9,7 @@ import ForgotPassword from "../pages/auth/ForgotPassword";
 import AddRequest from "../dashboard/AddRequest";
 import PrivateRoute from "../Provider/PrivateRoute";
 import AllUsers from "../dashboard/AllUsers";
+import MyDonationRequests from "../Donation/MyDonationRequests";
 
 export const router = createBrowserRouter([
   {
@@ -62,7 +63,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "my-donation-requests",
-        element: <h1>My Donation Requests</h1>,
+        element: <MyDonationRequests />,
       },
       {
         path: "all-blood-donation-request",

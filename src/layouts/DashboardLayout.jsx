@@ -9,27 +9,27 @@ const DashboardLayout = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="flex">
         {/* Desktop sidebar */}
-        <div className="hidden lg:block fixed inset-y-0 left-0 z-30">
+        <aside className="hidden lg:block fixed inset-y-0 left-0 z-30 w-64">
           <Aside />
-        </div>
+        </aside>
 
-        {/* Mobile sidebar */}
+        {/* Mobile sidebar overlay */}
         {sidebarOpen && (
-          <div className="fixed inset-0 z-40 lg:hidden">
+          <>
             <div
-              className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+              className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm lg:hidden"
               onClick={() => setSidebarOpen(false)}
             />
-            <div className="absolute inset-y-0 left-0 w-64">
+            <aside className="fixed inset-y-0 left-0 z-50 w-64 lg:hidden">
               <Aside />
-            </div>
-          </div>
+            </aside>
+          </>
         )}
 
         {/* Main content area */}
-        <div className="lg:ml-64 flex-1 min-h-screen">
+        <div className="flex-1 lg:ml-64 min-h-screen">
           {/* Mobile top header */}
-          <div className="lg:hidden sticky top-0 z-30 bg-gradient-to-r from-red-600 to-red-700 shadow-lg">
+          <header className="lg:hidden sticky top-0 z-30 bg-gradient-to-r from-red-600 to-red-700 shadow-lg">
             <div className="flex items-center justify-between px-4 py-3">
               <button
                 onClick={() => setSidebarOpen(true)}
@@ -55,9 +55,9 @@ const DashboardLayout = () => {
                 </div>
                 <span className="text-white font-semibold">Dashboard</span>
               </div>
-              <div className="w-10"></div>
+              <div className="w-10"></div> {/* For balance */}
             </div>
-          </div>
+          </header>
 
           {/* Outlet renders */}
           <main className="min-h-[calc(100vh-64px)] lg:min-h-screen">

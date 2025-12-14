@@ -54,9 +54,13 @@ const AuthProvider = ({ children }) => {
   };
 
   // Logout
-  const logout = () => {
+  const logout = async () => {
     setLoading(true);
-    return signOut(auth);
+    await signOut(auth);
+    setRole("");
+    setUserStatus("");
+    setRoleLoading(false);
+    setLoading(false);
   };
 
   // Observe user
@@ -72,11 +76,15 @@ const AuthProvider = ({ children }) => {
           );
           setRole(res.data?.role || "");
           setUserStatus(res.data?.status || "");
-          setRoleLoading(false);
-          console.log("Role:", res.data?.role);
         } catch (err) {
-          console.error("Failed to fetch role:", err);
+          console.error(err);
+        } finally {
+          setRoleLoading(false);
         }
+      } else {
+        setRole("");
+        setUserStatus("");
+        setRoleLoading(false);
       }
     });
 
