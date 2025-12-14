@@ -10,6 +10,9 @@ import AddRequest from "../dashboard/AddRequest";
 import PrivateRoute from "../Provider/PrivateRoute";
 import AllUsers from "../dashboard/AllUsers";
 import MyDonationRequests from "../Donation/MyDonationRequests";
+import Donate from "../Donate/Donate";
+import PaymentSuccess from "../Donate/Payment/PaymentSuccess";
+import CancelPayment from "../Donate/Payment/CancelPayment";
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +44,18 @@ export const router = createBrowserRouter([
         path: "search",
         element: <h1>Search Donors</h1>,
       },
+      {
+        path: "/donate",
+        element: <Donate />,
+      },
+      {
+        path: "/payment-success",
+        element: <PaymentSuccess />,
+      },
+      {
+        path: "/payment-cancel",
+        element: <CancelPayment />,
+      },
     ],
   },
   {
@@ -65,10 +80,7 @@ export const router = createBrowserRouter([
         path: "my-donation-requests",
         element: <MyDonationRequests />,
       },
-      {
-        path: "all-blood-donation-request",
-        element: <h1>All Blood Donation Requests</h1>,
-      },
+
       {
         path: "all-users",
         element: <AllUsers />,
