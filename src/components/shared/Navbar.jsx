@@ -89,14 +89,14 @@ const Navbar = () => {
 
             {user && (
               <NavLink
-                to="/dashboard/funding"
+                to="/search"
                 className={({ isActive }) =>
                   `text-white hover:text-red-200 font-medium transition-colors duration-200 ${
                     isActive ? "border-b-2 border-white" : ""
                   }`
                 }
               >
-                Funding
+                Search
               </NavLink>
             )}
           </div>

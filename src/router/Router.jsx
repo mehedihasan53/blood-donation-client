@@ -13,6 +13,7 @@ import MyDonationRequests from "../Donation/MyDonationRequests";
 import Donate from "../Donate/Donate";
 import PaymentSuccess from "../Donate/Payment/PaymentSuccess";
 import CancelPayment from "../Donate/Payment/CancelPayment";
+import Search from "../pages/Search";
 
 export const router = createBrowserRouter([
   {
@@ -41,12 +42,16 @@ export const router = createBrowserRouter([
         element: <h1>Donation Requests Page</h1>,
       },
       {
-        path: "search",
-        element: <h1>Search Donors</h1>,
+        path: "/search",
+        element: <Search />,
       },
       {
         path: "/donate",
-        element: <Donate />,
+        element: (
+          <PrivateRoute>
+            <Donate />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/payment-success",
