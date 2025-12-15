@@ -15,6 +15,7 @@ import {
   FaTimesCircle,
   FaSpinner,
 } from "react-icons/fa";
+import toast, { Toaster } from "react-hot-toast";
 
 const DonorDashboard = () => {
   const { user } = useAuth();
@@ -29,18 +30,16 @@ const DonorDashboard = () => {
 
   const fetchRecentRequests = async () => {
     try {
+      // Fetch maximum 3 recent requests (size=3)
       const res = await axiosSecure.get("/donation-requests?size=3&page=0");
 
-
-      // Check response structure
-      const fetchedRequests = res.data?.request || res.data?.requests || [];
+      const fetchedRequests = res.data?.requests || [];
+      // Sort by creation date/time if not already sorted by API
+      // Since API is fetching the first 3 (page=0), we assume they are the most recent.
       setRequests(fetchedRequests);
-
-      if (fetchedRequests.length === 0) {
-        console.log("No requests found for user");
-      }
     } catch (err) {
       console.error("Failed to load requests", err);
+      toast.error("Failed to load recent requests.");
     } finally {
       setLoading(false);
     }
@@ -48,6 +47,8 @@ const DonorDashboard = () => {
 
   const updateStatus = async (id, status) => {
     setUpdatingStatus(true);
+    const toastId = toast.loading(`Updating status to ${status}...`);
+
     try {
       await axiosSecure.patch(`/donation-requests/${id}`, { status });
 
@@ -60,9 +61,10 @@ const DonorDashboard = () => {
           return r;
         })
       );
+      toast.success(`Status updated to ${status}.`, { id: toastId });
     } catch (err) {
       console.error("Status update failed", err);
-      alert("Failed to update status");
+      toast.error("Failed to update status.", { id: toastId });
     } finally {
       setUpdatingStatus(false);
     }
@@ -74,12 +76,14 @@ const DonorDashboard = () => {
     );
     if (!confirm) return;
 
+    const toastId = toast.loading("Deleting request...");
     try {
       await axiosSecure.delete(`/donation-requests/${id}`);
       setRequests((prev) => prev.filter((r) => r._id !== id));
+      toast.success("Request deleted successfully.", { id: toastId });
     } catch (err) {
       console.error("Delete failed", err);
-      alert("Failed to delete request");
+      toast.error("Failed to delete request.", { id: toastId });
     }
   };
 
@@ -110,7 +114,9 @@ const DonorDashboard = () => {
   const formatDate = (dateString) => {
     if (!dateString) return "Not set";
     try {
-      return new Date(dateString).toLocaleDateString("en-US", {
+      // Attempt to parse and format the date part only (to handle potential ISO string time)
+      const dateOnly = dateString.split("T")[0];
+      return new Date(dateOnly).toLocaleDateString("en-US", {
         year: "numeric",
         month: "short",
         day: "numeric",
@@ -123,73 +129,39 @@ const DonorDashboard = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+        <FaSpinner className="animate-spin text-red-600 text-4xl" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+      <Toaster />
+
       <div className="max-w-7xl mx-auto">
         {/* Welcome Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+        <div className="mb-8 p-4 bg-white shadow-md rounded-xl border-l-4 border-red-600">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
             Welcome back, {user?.displayName || "Donor"}! 👋
           </h1>
           <p className="text-gray-600 text-lg">
-            Here's a quick overview of your recent donation activities.
+            Here's a quick overview of your **recent donation requests**.
           </p>
         </div>
-        {/* Quick Stats */}
-        {requests.length > 0 && (
-          <div className="my-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl p-6 border border-yellow-200">
-              <div className="text-2xl font-bold text-yellow-700">
-                {requests.filter((r) => r.status === "pending").length}
-              </div>
-              <div className="text-sm font-medium text-yellow-800">Pending</div>
-            </div>
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
-              <div className="text-2xl font-bold text-blue-700">
-                {requests.filter((r) => r.status === "inprogress").length}
-              </div>
-              <div className="text-sm font-medium text-blue-800">
-                In Progress
-              </div>
-            </div>
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
-              <div className="text-2xl font-bold text-green-700">
-                {requests.filter((r) => r.status === "done").length}
-              </div>
-              <div className="text-sm font-medium text-green-800">
-                Completed
-              </div>
-            </div>
-            <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-6 border border-red-200">
-              <div className="text-2xl font-bold text-red-700">
-                {requests.filter((r) => r.status === "canceled").length}
-              </div>
-              <div className="text-sm font-medium text-red-800">Canceled</div>
-            </div>
-          </div>
-        )}
 
         {/* Recent Requests Section */}
         {requests.length > 0 ? (
-          <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-gray-800">
-                Recent Donation Requests
+          <div className="space-y-8">
+            <div className="flex justify-between items-center border-b pb-3 mb-4">
+              <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                <FaTint className="text-red-600" /> Maximum 3 Recent Requests
               </h2>
-              <span className="text-sm text-gray-500">
-                Showing {requests.length} recent requests
-              </span>
             </div>
 
-            {/* Desktop Table */}
-            <div className="hidden md:block bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-              <table className="w-full">
-                <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+            {/* --- Desktop Table View --- */}
+            <div className="hidden md:block bg-white rounded-2xl shadow-xl overflow-x-auto border border-gray-100">
+              <table className="min-w-full divide-y divide-gray-100">
+                <thead className="bg-red-50">
                   <tr>
                     <th className="p-4 text-left text-sm font-semibold text-gray-700">
                       Recipient
@@ -200,13 +172,13 @@ const DonorDashboard = () => {
                     <th className="p-4 text-left text-sm font-semibold text-gray-700">
                       Date & Time
                     </th>
-                    <th className="p-4 text-left text-sm font-semibold text-gray-700">
+                    <th className="p-4 text-center text-sm font-semibold text-gray-700">
                       Blood Group
                     </th>
-                    <th className="p-4 text-left text-sm font-semibold text-gray-700">
+                    <th className="p-4 text-center text-sm font-semibold text-gray-700">
                       Status
                     </th>
-                    <th className="p-4 text-left text-sm font-semibold text-gray-700">
+                    <th className="p-4 text-center text-sm font-semibold text-gray-700">
                       Actions
                     </th>
                   </tr>
@@ -217,27 +189,25 @@ const DonorDashboard = () => {
                       key={req._id}
                       className="hover:bg-gray-50 transition-colors"
                     >
-                      <td className="p-4">
+                      <td className="p-4 whitespace-nowrap">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                            <FaUser className="text-red-600" />
-                          </div>
+                          <FaUser className="text-red-600 text-xl" />
                           <div>
                             <p className="font-medium text-gray-900">
                               {req.recipientName || "Not specified"}
                             </p>
+                            {/* Donor Info for In Progress status */}
                             {req.status === "inprogress" && (
-                              <div className="mt-1">
-                                <p className="text-xs text-gray-500">
-                                  Donor: {req.requesterEmail || "Not specified"}
-                                </p>
-                              </div>
+                              <p className="text-xs text-blue-600 mt-1 font-medium">
+                                Donor: {req.donorName || "N/A"} (
+                                {req.donorEmail || "N/A"})
+                              </p>
                             )}
                           </div>
                         </div>
                       </td>
-                      <td className="p-4">
-                        <div className="flex items-center gap-2 text-gray-700">
+                      <td className="p-4 whitespace-nowrap">
+                        <div className="flex items-center gap-2 text-gray-700 text-sm">
                           <FaMapMarkerAlt className="text-gray-400" />
                           <span>
                             {req.recipientUpazila || "N/A"},{" "}
@@ -245,65 +215,69 @@ const DonorDashboard = () => {
                           </span>
                         </div>
                       </td>
-                      <td className="p-4">
+                      <td className="p-4 whitespace-nowrap text-sm text-gray-700">
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
                             <FaCalendarAlt className="text-gray-400" />
                             <span>{formatDate(req.donationDate)}</span>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                          <div className="flex items-center gap-2 text-xs text-gray-500">
                             <FaClock className="text-gray-400" />
                             <span>{req.donationTime || "Not set"}</span>
                           </div>
                         </div>
                       </td>
-                      <td className="p-4">
+                      <td className="p-4 text-center">
                         <span
-                          className={`px-3 py-1.5 rounded-full text-sm font-bold ${getBloodGroupColor(
+                          className={`px-3 py-1.5 rounded-xl text-sm font-bold ${getBloodGroupColor(
                             req.bloodGroup
                           )}`}
                         >
-                          {req.bloodGroup || "Not specified"}
+                          {req.bloodGroup || "N/A"}
                         </span>
                       </td>
-                      <td className="p-4">
+                      <td className="p-4 text-center">
                         <span
-                          className={`px-3 py-1.5 rounded-full text-sm font-medium capitalize ${getStatusColor(
+                          className={`px-3 py-1.5 rounded-full text-xs font-medium capitalize ${getStatusColor(
                             req.status
                           )}`}
                         >
                           {req.status || "pending"}
                         </span>
                       </td>
-                      <td className="p-4">
-                        <div className="flex items-center gap-2">
+                      <td className="p-4 text-center whitespace-nowrap">
+                        <div className="flex items-center justify-center gap-2">
+                          {/* View Button */}
                           <Link
                             to={`/dashboard/donation-request/${req._id}`}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                            className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition"
                             title="View Details"
                           >
                             <FaEye />
                           </Link>
 
+                          {/* Edit Button (Visible always, but may be restricted on edit page) */}
                           <Link
                             to={`/dashboard/edit-request/${req._id}`}
-                            className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
+                            className="p-2 text-green-600 hover:bg-green-100 rounded-lg transition"
                             title="Edit Request"
                           >
                             <FaEdit />
                           </Link>
 
+                          {/* Delete Button */}
                           <button
                             onClick={() => handleDelete(req._id)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                            className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition"
                             title="Delete Request"
                             disabled={updatingStatus}
                           >
                             <FaTrash />
                           </button>
 
+                          {/* Done/Cancel Buttons (Only for In Progress) */}
                           {req.status === "inprogress" && (
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 ml-3">
                               <button
                                 onClick={() => updateStatus(req._id, "done")}
                                 className="px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm font-medium flex items-center gap-1 disabled:opacity-50"
@@ -313,8 +287,8 @@ const DonorDashboard = () => {
                                   <FaSpinner className="animate-spin" />
                                 ) : (
                                   <FaCheckCircle />
-                                )}
-                                {updatingStatus ? "Updating..." : "Done"}
+                                )}{" "}
+                                Done
                               </button>
                               <button
                                 onClick={() =>
@@ -327,8 +301,8 @@ const DonorDashboard = () => {
                                   <FaSpinner className="animate-spin" />
                                 ) : (
                                   <FaTimesCircle />
-                                )}
-                                {updatingStatus ? "Updating..." : "Cancel"}
+                                )}{" "}
+                                Cancel
                               </button>
                             </div>
                           )}
@@ -340,7 +314,7 @@ const DonorDashboard = () => {
               </table>
             </div>
 
-            {/* Mobile Cards */}
+            {/* --- Mobile Card View --- */}
             <div className="md:hidden space-y-4">
               {requests.map((req) => (
                 <div
@@ -349,12 +323,13 @@ const DonorDashboard = () => {
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="font-bold text-gray-900">
+                      <h3 className="font-bold text-lg text-gray-900">
                         {req.recipientName || "Not specified"}
                       </h3>
                       {req.status === "inprogress" && (
-                        <p className="text-sm text-gray-500">
-                          Donor: {req.requesterEmail || "Not specified"}
+                        <p className="text-xs text-blue-600 font-medium mt-1">
+                          Donor: {req.donorName || "N/A"} (
+                          {req.donorEmail || "N/A"})
                         </p>
                       )}
                     </div>
@@ -367,25 +342,19 @@ const DonorDashboard = () => {
                     </span>
                   </div>
 
-                  <div className="space-y-3 mb-4">
-                    <div className="flex items-center text-gray-700">
-                      <FaMapMarkerAlt className="w-4 h-4 mr-2 text-gray-400" />
-                      <span className="text-sm">
+                  <div className="space-y-3 mb-4 text-sm text-gray-700">
+                    <div className="flex items-center">
+                      <FaMapMarkerAlt className="w-4 h-4 mr-2 text-red-500" />
+                      <span>
                         {req.recipientUpazila || "N/A"},{" "}
                         {req.recipientDistrict || "N/A"}
                       </span>
                     </div>
 
-                    <div className="flex items-center text-gray-700">
-                      <FaCalendarAlt className="w-4 h-4 mr-2 text-gray-400" />
-                      <span className="text-sm">
-                        {formatDate(req.donationDate)}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center text-gray-700">
-                      <FaClock className="w-4 h-4 mr-2 text-gray-400" />
-                      <span className="text-sm">
+                    <div className="flex items-center">
+                      <FaCalendarAlt className="w-4 h-4 mr-2 text-red-500" />
+                      <span>
+                        {formatDate(req.donationDate)} at{" "}
                         {req.donationTime || "Not set"}
                       </span>
                     </div>
@@ -393,53 +362,68 @@ const DonorDashboard = () => {
                     <div className="flex items-center">
                       <FaTint className="w-4 h-4 mr-2 text-red-500" />
                       <span
-                        className={`px-2 py-1 rounded text-xs font-bold ${getBloodGroupColor(
+                        className={`px-2 py-1 rounded-lg text-xs font-bold ${getBloodGroupColor(
                           req.bloodGroup
                         )}`}
                       >
-                        {req.bloodGroup || "Not specified"}
+                        {req.bloodGroup || "N/A"}
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-4 border-t border-gray-100">
-                    <div className="flex gap-2">
+                  <div className="flex flex-col gap-3 pt-4 border-t border-gray-100">
+                    <div className="flex gap-2 justify-center sm:justify-start">
+                      {/* Action buttons group */}
                       <Link
                         to={`/dashboard/donation-request/${req._id}`}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                        className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg"
+                        title="View Details"
                       >
                         <FaEye />
                       </Link>
                       <Link
                         to={`/dashboard/edit-request/${req._id}`}
-                        className="p-2 text-green-600 hover:bg-green-50 rounded-lg"
+                        className="p-2 text-green-600 hover:bg-green-100 rounded-lg"
+                        title="Edit Request"
                       >
                         <FaEdit />
                       </Link>
                       <button
                         onClick={() => handleDelete(req._id)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                        className="p-2 text-red-600 hover:bg-red-100 rounded-lg"
+                        title="Delete Request"
                         disabled={updatingStatus}
                       >
                         <FaTrash />
                       </button>
                     </div>
 
+                    {/* Done/Cancel buttons group */}
                     {req.status === "inprogress" && (
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 justify-center sm:justify-start">
                         <button
                           onClick={() => updateStatus(req._id, "done")}
-                          className="px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 text-xs font-medium disabled:opacity-50"
+                          className="flex-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium disabled:opacity-50"
                           disabled={updatingStatus}
                         >
-                          {updatingStatus ? "Updating..." : "Done"}
+                          {updatingStatus ? (
+                            <FaSpinner className="animate-spin w-4 h-4 mr-1" />
+                          ) : (
+                            <FaCheckCircle className="w-4 h-4 mr-1" />
+                          )}{" "}
+                          Done
                         </button>
                         <button
                           onClick={() => updateStatus(req._id, "canceled")}
-                          className="px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 text-xs font-medium disabled:opacity-50"
+                          className="flex-1 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium disabled:opacity-50"
                           disabled={updatingStatus}
                         >
-                          {updatingStatus ? "Updating..." : "Cancel"}
+                          {updatingStatus ? (
+                            <FaSpinner className="animate-spin w-4 h-4 mr-1" />
+                          ) : (
+                            <FaTimesCircle className="w-4 h-4 mr-1" />
+                          )}{" "}
+                          Cancel
                         </button>
                       </div>
                     )}
@@ -447,8 +431,19 @@ const DonorDashboard = () => {
                 </div>
               ))}
             </div>
+
+            {/* View All Requests Button */}
+            <div className="text-center mt-8">
+              <Link
+                to="/dashboard/donation-requests"
+                className="inline-flex items-center px-6 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-all duration-300 shadow-md hover:shadow-lg text-lg"
+              >
+                <FaEye className="mr-2" /> View My All Requests
+              </Link>
+            </div>
           </div>
         ) : (
+          /* Hidden Section - No Requests */
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-12 text-center">
             <div className="max-w-md mx-auto">
               <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
