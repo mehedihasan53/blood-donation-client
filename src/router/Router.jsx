@@ -9,12 +9,13 @@ import ForgotPassword from "../pages/auth/ForgotPassword";
 import AddRequest from "../dashboard/AddRequest";
 import PrivateRoute from "../Provider/PrivateRoute";
 import AllUsers from "../dashboard/AllUsers";
-import MyDonationRequests from "../Donation/MyDonationRequests";
 import Donate from "../Donate/Donate";
 import PaymentSuccess from "../Donate/Payment/PaymentSuccess";
 import CancelPayment from "../Donate/Payment/CancelPayment";
 import Search from "../pages/Search";
 import AdminDashboard from "../dashboard/AdminDashboard";
+import MyDonationRequest from "../Donation/MyDonationRequest";
+import AllDonationRequests from "../Donation/AllDonationRequests";
 
 export const router = createBrowserRouter([
   {
@@ -37,10 +38,6 @@ export const router = createBrowserRouter([
       {
         path: "forgot-password",
         element: <ForgotPassword />,
-      },
-      {
-        path: "donation-requests",
-        element: <h1>Donation Requests Page</h1>,
       },
       {
         path: "/search",
@@ -88,7 +85,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "my-donation-requests",
-        element: <MyDonationRequests />,
+        element: <AllDonationRequests />,
+      },
+      {
+        path: "donation-requests",
+        element: <MyDonationRequest />,
       },
 
       {

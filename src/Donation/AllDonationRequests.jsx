@@ -20,7 +20,7 @@ const STATUS = [
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 const ITEMS_PER_PAGE = 5;
 
-const MyDonationRequests = () => {
+const AllDonationRequests = () => {
   const axiosSecure = useAxiosSecure();
   const [myRequests, setMyRequests] = useState([]);
   const [totalRequest, setTotalRequest] = useState(0);
@@ -556,4 +556,4 @@ const DetailRow = ({ label, value }) => (
   </div>
 );
 
-export default MyDonationRequests;
+export default AllDonationRequests;

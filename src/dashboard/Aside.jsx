@@ -11,11 +11,16 @@ const Aside = () => {
 
   const menu = [
     { name: "Dashboard", path: "/dashboard", icon: <FaHome /> },
-    {
-      name: "My Requests",
-      path: "/dashboard/my-donation-requests",
-      icon: <FaTint />,
-    },
+    ...(role === "admin"
+      ? [
+          {
+            name: "All Requests",
+            path: "/dashboard/my-donation-requests",
+            icon: <FaTint />,
+          },
+          { name: "All Users", path: "/dashboard/all-users", icon: <FaUser /> },
+        ]
+      : []),
     ...(role === "donor"
       ? [
           {
@@ -23,10 +28,12 @@ const Aside = () => {
             path: "/dashboard/create-donation-request",
             icon: <FaUser />,
           },
+          {
+            name: "My Requests",
+            path: "/dashboard/donation-requests",
+            icon: <FaTint />,
+          },
         ]
-      : []),
-    ...(role === "admin"
-      ? [{ name: "All Users", path: "/dashboard/all-users", icon: <FaUser /> }]
       : []),
   ];
 
