@@ -13,9 +13,9 @@ import Donate from "../Donate/Donate";
 import PaymentSuccess from "../Donate/Payment/PaymentSuccess";
 import CancelPayment from "../Donate/Payment/CancelPayment";
 import Search from "../pages/Search";
-import AdminDashboard from "../dashboard/AdminDashboard";
 import MyDonationRequest from "../Donation/MyDonationRequest";
 import AllDonationRequests from "../Donation/AllDonationRequests";
+import Dashboard from "../dashboard/dashboard/Dashboard";
 
 export const router = createBrowserRouter([
   {
@@ -77,7 +77,7 @@ export const router = createBrowserRouter([
       {
         index: true,
         path: "/dashboard",
-        element: <AdminDashboard />,
+        element: <Dashboard />,
       },
       {
         path: "create-donation-request",
@@ -100,18 +100,6 @@ export const router = createBrowserRouter([
         path: "profile",
         element: <h1>Profile Page</h1>,
       },
-      {
-        path: "funding",
-        element: <h1>Funding Page</h1>,
-      },
-      {
-        path: "*",
-        element: <h1>404 - Dashboard Page Not Found</h1>,
-      },
     ],
-  },
-  {
-    path: "*",
-    element: <h1>404 - Page Not Found</h1>,
   },
 ]);
