@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useState } from "react";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import { AuthContext } from "../Provider/AuthProvider";
 import {
@@ -12,6 +12,19 @@ import {
 import toast from "react-hot-toast";
 import Loading from "../components/shared/Loading";
 
+// Utility function to get role badge styling
+const getRoleBadgeClass = (role) => {
+  if (role === "admin") return "bg-purple-100 text-purple-800";
+  if (role === "volunteer") return "bg-blue-100 text-blue-800";
+  return "bg-green-100 text-green-800"; // General/Donor role
+};
+
+// Utility function to get status badge styling
+const getStatusBadgeClass = (status) => {
+  if (status === "active") return "bg-green-100 text-green-800";
+  return "bg-red-100 text-red-800"; // Blocked
+};
+
 const AllUsers = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useContext(AuthContext);
@@ -19,7 +32,6 @@ const AllUsers = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [openDropdown, setOpenDropdown] = useState(null);
-  const dropdownRef = useRef(null);
 
   useEffect(() => {
     if (!user) return;
@@ -30,16 +42,6 @@ const AllUsers = () => {
       .catch(() => toast.error("Failed to load users"))
       .finally(() => setLoading(false));
   }, [axiosSecure, user]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOpenDropdown(null);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const handleStatus = async (email, currentStatus) => {
     const newStatus = currentStatus === "active" ? "blocked" : "active";
@@ -66,14 +68,73 @@ const AllUsers = () => {
     }
   };
 
+  // Filter users based on selected status
   const filteredUsers =
     filter === "all" ? users : users.filter((u) => u.status === filter);
 
+  // Calculate stats for the cards
   const stats = {
     active: users.filter((u) => u.status === "active").length,
     blocked: users.filter((u) => u.status === "blocked").length,
     admin: users.filter((u) => u.role === "admin").length,
   };
+
+  // Function to render action buttons (reused in both table and card)
+  const renderActions = (u) => (
+    <div className="relative">
+      <button
+        onClick={() =>
+          setOpenDropdown(openDropdown === u.email ? null : u.email)
+        }
+        className="p-2 rounded-lg hover:bg-gray-100"
+      >
+        <FaEllipsisV />
+      </button>
+      {openDropdown === u.email && (
+        <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-10">
+          {/* Status Toggle Button */}
+          <button
+            onClick={() => {
+              handleStatus(u.email, u.status);
+              setOpenDropdown(null);
+            }}
+            className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100 text-left"
+          >
+            {u.status === "active" ? <FaBan /> : <FaCheck />}
+            {u.status === "active" ? "Block User" : "Unblock User"}
+          </button>
+
+          {/* Make Volunteer Button */}
+          {u.role !== "volunteer" && u.role !== "admin" && (
+            <button
+              onClick={() => {
+                handleRole(u.email, "volunteer");
+                setOpenDropdown(null);
+              }}
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100 text-left"
+            >
+              <FaUserFriends />
+              Make Volunteer
+            </button>
+          )}
+
+          {/* Make Admin Button */}
+          {u.role !== "admin" && (
+            <button
+              onClick={() => {
+                handleRole(u.email, "admin");
+                setOpenDropdown(null);
+              }}
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100 text-left"
+            >
+              <FaUserShield />
+              Make Admin
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
 
   if (loading)
     return (
@@ -84,8 +145,10 @@ const AllUsers = () => {
 
   return (
     <div className="p-4 sm:p-6">
+      {/* Header */}
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Manage Users</h1>
 
+      {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         {[
           { label: "Active Users", value: stats.active, color: "green" },
@@ -94,23 +157,24 @@ const AllUsers = () => {
         ].map((stat) => (
           <div
             key={stat.label}
-            className={`bg-${stat.color}-100 p-4 rounded-lg flex flex-col items-center`}
+            className={`bg-white p-4 rounded-lg shadow border-l-4 border-${stat.color}-500`}
           >
-            <div className="text-2xl font-bold">{stat.value}</div>
+            <div className="text-2xl font-bold text-gray-800">{stat.value}</div>
             <div className="text-sm text-gray-600">{stat.label}</div>
           </div>
         ))}
       </div>
 
+      {/* Filter Buttons */}
       <div className="flex flex-wrap gap-2 mb-6">
         {["all", "active", "blocked"].map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-4 py-2 rounded-lg capitalize ${
+            className={`px-4 py-2 rounded-lg capitalize transition duration-150 ${
               filter === f
-                ? "bg-red-600 text-white"
-                : "bg-gray-100 hover:bg-gray-200"
+                ? "bg-red-600 text-white shadow-md"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
             {f}
@@ -118,114 +182,140 @@ const AllUsers = () => {
         ))}
       </div>
 
-      {filteredUsers.length === 0 ? (
-        <div className="p-8 text-center text-gray-500">No users found.</div>
-      ) : (
-        <div className="grid grid-cols-1 gap-6">
-          {filteredUsers.map((u, index) => (
+      {/* Desktop Table (Visible on medium screens and up) */}
+      <div className="hidden md:block bg-white rounded-lg shadow overflow-hidden">
+        {filteredUsers.length === 0 ? (
+          <div className="p-8 text-center text-gray-500">
+            No users found matching the filter.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="p-3 text-left text-sm font-medium text-gray-600">
+                    User
+                  </th>
+                  <th className="p-3 text-left text-sm font-medium text-gray-600">
+                    Role
+                  </th>
+                  <th className="p-3 text-left text-sm font-medium text-gray-600">
+                    Status
+                  </th>
+                  <th className="p-3 text-left text-sm font-medium text-gray-600">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {filteredUsers.map((u) => (
+                  <tr key={u.email} className="hover:bg-gray-50">
+                    <td className="p-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                          {u.avatar ? (
+                            <img
+                              src={u.avatar}
+                              alt={u.name}
+                              className="w-10 h-10 rounded-full object-cover"
+                            />
+                          ) : (
+                            <FaUser className="text-gray-600" />
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-800">
+                            {u.name}
+                          </div>
+                          <div className="text-sm text-gray-500">{u.email}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="p-3">
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm capitalize ${getRoleBadgeClass(
+                          u.role
+                        )}`}
+                      >
+                        {u.role}
+                      </span>
+                    </td>
+                    <td className="p-3">
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm capitalize ${getStatusBadgeClass(
+                          u.status
+                        )}`}
+                      >
+                        {u.status}
+                      </span>
+                    </td>
+                    <td className="p-3">{renderActions(u)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Mobile Cards (Hidden on medium screens and up) */}
+      <div className="md:hidden space-y-4">
+        {filteredUsers.length === 0 ? (
+          <div className="p-4 text-center text-gray-500 bg-white rounded-lg shadow">
+            No users found matching the filter.
+          </div>
+        ) : (
+          filteredUsers.map((u) => (
             <div
               key={u.email}
-              className="bg-white rounded-2xl shadow-lg border-l-6 border-red-500 overflow-hidden hover:shadow-xl transition-all flex flex-col md:flex-row relative"
+              className="bg-white rounded-lg shadow p-4 space-y-3 border-l-4 border-red-500"
             >
-              <div className="flex-1 p-5 md:p-6">
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+              {/* User Info & Actions */}
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
                     {u.avatar ? (
                       <img
                         src={u.avatar}
                         alt={u.name}
-                        className="w-12 h-12 rounded-full"
+                        className="w-10 h-10 rounded-full object-cover"
                       />
                     ) : (
                       <FaUser className="text-gray-600" />
                     )}
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-800 text-lg">
-                      {u.name}
-                    </h3>
-                    <p className="text-gray-500 text-sm">{u.email}</p>
+                    <div className="font-medium text-gray-800">{u.name}</div>
+                    <div className="text-sm text-gray-500">{u.email}</div>
                   </div>
                 </div>
-
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {/* Role */}
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs capitalize ${
-                      u.role === "admin"
-                        ? "bg-purple-100 text-purple-800"
-                        : u.role === "volunteer"
-                        ? "bg-blue-100 text-blue-800"
-                        : "bg-green-100 text-green-800"
-                    }`}
-                  >
-                    {u.role}
-                  </span>
-
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs capitalize ${
-                      u.status === "active"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {u.status}
-                  </span>
-                </div>
+                {/* Actions (Dropdown) */}
+                {renderActions(u)}
               </div>
 
-              <div className="absolute top-3 right-3" ref={dropdownRef}>
-                <button
-                  onClick={() =>
-                    setOpenDropdown(openDropdown === u.email ? null : u.email)
-                  }
-                  className="p-2 rounded-lg hover:bg-gray-100"
+              {/* Status and Role Badges */}
+              <div className="flex justify-start gap-3 items-center pt-2 border-t border-gray-100">
+                <div className="text-sm font-medium text-gray-600">Role:</div>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm capitalize ${getRoleBadgeClass(
+                    u.role
+                  )}`}
                 >
-                  <FaEllipsisV />
-                </button>
-                {openDropdown === u.email && (
-                  <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-10">
-                    <button
-                      onClick={() => {
-                        handleStatus(u.email, u.status);
-                        setOpenDropdown(null);
-                      }}
-                      className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100"
-                    >
-                      {u.status === "active" ? <FaBan /> : <FaCheck />}
-                      {u.status === "active" ? "Block User" : "Unblock User"}
-                    </button>
-                    {u.role !== "volunteer" && u.role !== "admin" && (
-                      <button
-                        onClick={() => {
-                          handleRole(u.email, "volunteer");
-                          setOpenDropdown(null);
-                        }}
-                        className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100"
-                      >
-                        <FaUserFriends />
-                        Make Volunteer
-                      </button>
-                    )}
-                    {u.role !== "admin" && (
-                      <button
-                        onClick={() => {
-                          handleRole(u.email, "admin");
-                          setOpenDropdown(null);
-                        }}
-                        className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100"
-                      >
-                        <FaUserShield />
-                        Make Admin
-                      </button>
-                    )}
-                  </div>
-                )}
+                  {u.role}
+                </span>
+                <div className="text-sm font-medium text-gray-600">Status:</div>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm capitalize ${getStatusBadgeClass(
+                    u.status
+                  )}`}
+                >
+                  {u.status}
+                </span>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </div>
     </div>
   );
 };
