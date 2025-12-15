@@ -7,16 +7,18 @@ import {
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
+import Loading from "../components/shared/Loading";
 
 const STATUS = [
   { value: "all", label: "All" },
-  { value: "pending", label: "Pending", color: "yellow" },
-  { value: "inprogress", label: "In Progress", color: "blue" },
-  { value: "done", label: "Completed", color: "green" },
-  { value: "canceled", label: "Canceled", color: "red" },
+  { value: "pending", label: "Pending" },
+  { value: "inprogress", label: "In Progress" },
+  { value: "done", label: "Completed" },
+  { value: "canceled", label: "Canceled" },
 ];
 
-const ITEMS_PER_PAGE = 3;
+const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+const ITEMS_PER_PAGE = 5;
 
 const MyDonationRequests = () => {
   const axiosSecure = useAxiosSecure();
@@ -25,21 +27,41 @@ const MyDonationRequests = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
+  const [districts, setDistricts] = useState([]);
+  const [upazilas, setUpazilas] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [editRequest, setEditRequest] = useState(null);
-  const [viewRequest, setViewRequest] = useState(null);
+  const [modalType, setModalType] = useState("");
+  const [selectedRequest, setSelectedRequest] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [selectedDistrictId, setSelectedDistrictId] = useState("");
+
+  useEffect(() => {
+    fetchLocationData();
+    fetchRequests();
+  }, [currentPage, filter]);
+
+  const fetchLocationData = async () => {
+    try {
+      const [districtsRes, upazilasRes] = await Promise.all([
+        fetch("/districts.json"),
+        fetch("/upazilas.json"),
+      ]);
+      const districtsData = await districtsRes.json();
+      const upazilasData = await upazilasRes.json();
+      setDistricts(districtsData.districts || []);
+      setUpazilas(upazilasData.upazilas || []);
+    } catch (err) {
+      console.error("Error fetching location data:", err);
+    }
+  };
 
   const fetchRequests = async () => {
     setLoading(true);
     try {
-      let url = `/donation-requests?page=${
-        currentPage - 1
-      }&size=${ITEMS_PER_PAGE}`;
-      if (filter !== "all") url += `&status=${filter}`;
-
-      const res = await axiosSecure.get(url);
-      console.log("API Response:", res.data); // Debug
+      const params = { page: currentPage - 1, size: ITEMS_PER_PAGE };
+      if (filter !== "all") params.status = filter;
+      const res = await axiosSecure.get("/donation-requests", { params });
       setMyRequests(res.data.request || []);
       setTotalRequest(res.data.totalRequest || 0);
     } catch (err) {
@@ -49,59 +71,60 @@ const MyDonationRequests = () => {
     }
   };
 
-  useEffect(() => {
-    fetchRequests();
-  }, [currentPage, filter]);
-
-  const numberOfPages = Math.ceil(totalRequest / ITEMS_PER_PAGE);
-  const pages = [...Array(numberOfPages).keys()].map((e) => e + 1);
-
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this request?"))
       return;
     try {
-      console.log("Deleting request with ID:", id);
-      const res = await axiosSecure.delete(`/donation-requests/${id}`);
-      console.log("Delete response:", res);
-      if (res.data.deletedCount === 1) {
-        fetchRequests();
-      }
+      await axiosSecure.delete(`/donation-requests/${id}`);
+      fetchRequests();
     } catch (err) {
       console.error("Delete error:", err);
       alert("Failed to delete request");
     }
   };
 
-  const handleView = async (id) => {
-    try {
-      const res = await axiosSecure.get(`/donation-requests/${id}`);
-      console.log("View response:", res.data);
-      setViewRequest(res.data);
-      setModalOpen("view");
-    } catch (err) {
-      console.error("View error:", err);
-      alert("Failed to load request details");
-    }
+  const handleView = (request) => {
+    setSelectedRequest(request);
+    setModalType("view");
+    setModalOpen(true);
   };
 
-  const handleEdit = async (request) => {
-    setEditRequest(request);
-    setModalOpen("edit");
+  const handleEdit = (request) => {
+    setSelectedRequest(request);
+    setFormData({
+      recipientName: request.recipientName,
+      recipientUpazila: request.recipientUpazila,
+      recipientDistrict: request.recipientDistrict,
+      bloodGroup: request.bloodGroup,
+      donationDate: request.donationDate,
+      donationTime: request.donationTime,
+      hospitalName: request.hospitalName || "",
+      fullAddress: request.fullAddress || "",
+      requestMessage: request.requestMessage || "",
+      status: request.status,
+    });
+
+    const district = districts.find(
+      (d) => d.name === request.recipientDistrict
+    );
+    setSelectedDistrictId(district?.id || "");
+
+    setModalType("edit");
+    setModalOpen(true);
   };
 
-  const handleUpdate = async (updatedData) => {
-    if (!editRequest?._id) return;
-
+  const handleUpdate = async () => {
+    if (!selectedRequest?._id) return;
     setIsUpdating(true);
     try {
-      console.log("Updating request:", editRequest._id, updatedData);
-      const res = await axiosSecure.patch(
-        `/donation-requests/${editRequest._id}`,
-        updatedData
+      await axiosSecure.patch(
+        `/donation-requests/${selectedRequest._id}`,
+        formData
       );
-      console.log("Update response:", res);
       setModalOpen(false);
-      setEditRequest(null);
+      setSelectedRequest(null);
+      setFormData({});
+      setSelectedDistrictId("");
       fetchRequests();
     } catch (err) {
       console.error("Update error:", err);
@@ -111,58 +134,53 @@ const MyDonationRequests = () => {
     }
   };
 
-  const statusBadge = (status) => {
-    const colors = {
-      pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
-      inprogress: "bg-blue-100 text-blue-800 border-blue-200",
-      done: "bg-green-100 text-green-800 border-green-200",
-      canceled: "bg-red-100 text-red-800 border-red-200",
-    };
-    return (
-      <span
-        className={`px-2 py-1 rounded-full text-xs sm:text-sm font-medium border capitalize ${
-          colors[status] || "bg-gray-100 text-gray-800 border-gray-200"
-        }`}
-      >
-        {status}
-      </span>
-    );
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "districtId") {
+      const district = districts.find((d) => d.id == value);
+      setSelectedDistrictId(value);
+      setFormData((prev) => ({
+        ...prev,
+        recipientDistrict: district ? district.name : "",
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
-  const bloodBadge = (bg) => {
+  const filteredUpazilas = upazilas.filter(
+    (u) => String(u.district_id) === String(selectedDistrictId)
+  );
+
+  const getBloodBadgeClass = (bg) => {
     const colors = {
-      "A+": "bg-red-50 text-red-700 border-red-200",
-      "A-": "bg-red-100 text-red-800 border-red-300",
-      "B+": "bg-blue-50 text-blue-700 border-blue-200",
-      "B-": "bg-blue-100 text-blue-800 border-blue-300",
-      "AB+": "bg-purple-50 text-purple-700 border-purple-200",
-      "AB-": "bg-purple-100 text-purple-800 border-purple-300",
-      "O+": "bg-green-50 text-green-700 border-green-200",
-      "O-": "bg-green-100 text-green-800 border-green-300",
+      "A+": "bg-red-100 text-red-800",
+      "A-": "bg-red-50 text-red-700",
+      "B+": "bg-blue-100 text-blue-800",
+      "B-": "bg-blue-50 text-blue-700",
+      "AB+": "bg-purple-100 text-purple-800",
+      "AB-": "bg-purple-50 text-purple-700",
+      "O+": "bg-green-100 text-green-800",
+      "O-": "bg-green-50 text-green-700",
     };
-    return (
-      <span
-        className={`px-2 py-1 rounded-full text-xs sm:text-sm font-medium border ${
-          colors[bg] || "bg-gray-100 text-gray-700 border-gray-200"
-        }`}
-      >
-        {bg}
-      </span>
-    );
+    return colors[bg] || "bg-gray-100 text-gray-700";
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <div className="animate-spin w-12 h-12 border-t-2 border-b-2 border-blue-500 rounded-full"></div>
-      </div>
-    );
-  }
+  const getStatusBadgeClass = (status) => {
+    const colors = {
+      pending: "bg-yellow-100 text-yellow-800",
+      inprogress: "bg-blue-100 text-blue-800",
+      done: "bg-green-100 text-green-800",
+      canceled: "bg-red-100 text-red-800",
+    };
+    return colors[status] || "bg-gray-100 text-gray-800";
+  };
+
+  if (loading) return <Loading />;
 
   return (
     <div className="p-4 sm:p-6 space-y-6">
-      {/* Header & Filter */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
           My Donation Requests ({totalRequest})
         </h1>
@@ -182,248 +200,348 @@ const MyDonationRequests = () => {
         </select>
       </div>
 
-      {/* Desktop Table */}
-      <div className="hidden md:block overflow-x-auto w-full rounded-lg shadow bg-white">
+      <div className="bg-white rounded-lg shadow overflow-hidden">
         {myRequests.length === 0 ? (
           <div className="text-center p-10 text-gray-500">
-            No donation requests found. Create your first request!
+            No donation requests found.
           </div>
         ) : (
-          <table className="w-full border-collapse">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="p-3 text-left text-sm font-medium text-gray-600">
-                  Recipient
-                </th>
-                <th className="p-3 text-left text-sm font-medium text-gray-600">
-                  Location
-                </th>
-                <th className="p-3 text-left text-sm font-medium text-gray-600">
-                  Blood
-                </th>
-                <th className="p-3 text-left text-sm font-medium text-gray-600">
-                  Date & Time
-                </th>
-                <th className="p-3 text-left text-sm font-medium text-gray-600">
-                  Status
-                </th>
-                <th className="p-3 text-left text-sm font-medium text-gray-600">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {myRequests.map((r) => (
-                <tr key={r._id} className="hover:bg-gray-50 transition-colors">
-                  <td className="p-3 text-sm">{r.recipientName}</td>
-                  <td className="p-3 text-sm">
-                    {r.recipientUpazila}, {r.recipientDistrict}
-                  </td>
-                  <td className="p-3">{bloodBadge(r.bloodGroup)}</td>
-                  <td className="p-3 text-sm">
-                    {r.donationDate} {r.donationTime}
-                  </td>
-                  <td className="p-3">{statusBadge(r.status)}</td>
-                  <td className="p-3 flex space-x-2">
-                    <button
-                      onClick={() => handleView(r._id)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                      title="View Details"
-                    >
-                      <FaEye />
-                    </button>
-                    <button
-                      onClick={() => handleEdit(r)}
-                      className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
-                      title="Edit Request"
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(r._id)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
-                      title="Delete Request"
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="p-3 text-left text-sm font-medium text-gray-600">
+                    Recipient
+                  </th>
+                  <th className="p-3 text-left text-sm font-medium text-gray-600">
+                    Location
+                  </th>
+                  <th className="p-3 text-left text-sm font-medium text-gray-600">
+                    Blood
+                  </th>
+                  <th className="p-3 text-left text-sm font-medium text-gray-600">
+                    Date & Time
+                  </th>
+                  <th className="p-3 text-left text-sm font-medium text-gray-600">
+                    Status
+                  </th>
+                  <th className="p-3 text-left text-sm font-medium text-gray-600">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      {/* Mobile Card */}
-      <div className="md:hidden grid grid-cols-1 gap-4">
-        {myRequests.length === 0 ? (
-          <div className="text-center p-6 text-gray-500">
-            No donation requests found
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {myRequests.map((r) => (
+                  <tr key={r._id} className="hover:bg-gray-50">
+                    <td className="p-3 text-sm">{r.recipientName}</td>
+                    <td className="p-3 text-sm">
+                      {r.recipientUpazila}, {r.recipientDistrict}
+                    </td>
+                    <td className="p-3">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${getBloodBadgeClass(
+                          r.bloodGroup
+                        )}`}
+                      >
+                        {r.bloodGroup}
+                      </span>
+                    </td>
+                    <td className="p-3 text-sm">
+                      {r.donationDate} {r.donationTime}
+                    </td>
+                    <td className="p-3">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${getStatusBadgeClass(
+                          r.status
+                        )}`}
+                      >
+                        {r.status}
+                      </span>
+                    </td>
+                    <td className="p-3">
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => handleView(r)}
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                        >
+                          <FaEye />
+                        </button>
+                        <button
+                          onClick={() => handleEdit(r)}
+                          className="p-2 text-green-600 hover:bg-green-50 rounded"
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(r._id)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        ) : (
-          myRequests.map((r) => (
-            <div
-              key={r._id}
-              className="bg-white rounded-xl shadow p-4 space-y-3"
-            >
-              <div>
-                <span className="font-semibold text-gray-500">Recipient: </span>
-                <span className="text-gray-800">{r.recipientName}</span>
-              </div>
-              <div>
-                <span className="font-semibold text-gray-500">Location: </span>
-                <span className="text-gray-800">
-                  {r.recipientUpazila}, {r.recipientDistrict}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-gray-500">
-                  Blood Group:
-                </span>
-                {bloodBadge(r.bloodGroup)}
-              </div>
-              <div>
-                <span className="font-semibold text-gray-500">
-                  Date & Time:{" "}
-                </span>
-                <span className="text-gray-800">
-                  {r.donationDate} {r.donationTime}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-gray-500">Status:</span>
-                {statusBadge(r.status)}
-              </div>
-              <div className="flex justify-end space-x-2 pt-2 border-t">
-                <button
-                  onClick={() => handleView(r._id)}
-                  className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                  title="View"
-                >
-                  <FaEye />
-                </button>
-                <button
-                  onClick={() => handleEdit(r)}
-                  className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
-                  title="Edit"
-                >
-                  <FaEdit />
-                </button>
-                <button
-                  onClick={() => handleDelete(r._id)}
-                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
-                  title="Delete"
-                >
-                  <FaTrash />
-                </button>
-              </div>
-            </div>
-          ))
         )}
       </div>
 
-      {/* Pagination */}
-      {numberOfPages > 1 && (
-        <div className="flex flex-wrap justify-center items-center mt-6 gap-2">
+      {Math.ceil(totalRequest / ITEMS_PER_PAGE) > 1 && (
+        <div className="flex justify-center items-center gap-2">
           <button
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="p-2 border rounded-lg hover:bg-gray-100 transition disabled:opacity-50"
+            className="p-2 border rounded hover:bg-gray-100 disabled:opacity-50"
           >
             <FaChevronLeft />
           </button>
-          {pages.map((p) => (
-            <button
-              key={p}
-              onClick={() => setCurrentPage(p)}
-              className={`px-3 py-1 rounded-lg transition ${
-                p === currentPage
-                  ? "bg-red-500 text-white"
-                  : "border hover:bg-gray-100"
-              }`}
-            >
-              {p}
-            </button>
-          ))}
+          {[...Array(Math.ceil(totalRequest / ITEMS_PER_PAGE)).keys()].map(
+            (p) => (
+              <button
+                key={p}
+                onClick={() => setCurrentPage(p + 1)}
+                className={`px-3 py-1 rounded ${
+                  currentPage === p + 1
+                    ? "bg-red-500 text-white"
+                    : "border hover:bg-gray-100"
+                }`}
+              >
+                {p + 1}
+              </button>
+            )
+          )}
           <button
             onClick={() =>
-              setCurrentPage((p) => Math.min(numberOfPages, p + 1))
+              setCurrentPage((p) =>
+                Math.min(Math.ceil(totalRequest / ITEMS_PER_PAGE), p + 1)
+              )
             }
-            disabled={currentPage === numberOfPages}
-            className="p-2 border rounded-lg hover:bg-gray-100 transition disabled:opacity-50"
+            disabled={currentPage === Math.ceil(totalRequest / ITEMS_PER_PAGE)}
+            className="p-2 border rounded hover:bg-gray-100 disabled:opacity-50"
           >
             <FaChevronRight />
           </button>
         </div>
       )}
 
-      {/* Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 p-4">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md relative">
-            <button
-              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800"
-              onClick={() => {
-                setModalOpen(false);
-                setEditRequest(null);
-                setViewRequest(null);
-              }}
-            >
-              ✕
-            </button>
-            {modalOpen === "view" && viewRequest && (
-              <div className="space-y-4">
-                <h2 className="font-bold text-lg text-gray-800">
-                  Donation Request Details
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-bold text-gray-800">
+                  {modalType === "view" ? "Request Details" : "Edit Request"}
                 </h2>
-                <div className="space-y-2">
-                  <p>
-                    <b className="text-gray-600">Recipient:</b>{" "}
-                    <span className="text-gray-800">
-                      {viewRequest.recipientName}
-                    </span>
-                  </p>
-                  <p>
-                    <b className="text-gray-600">Location:</b>{" "}
-                    <span className="text-gray-800">
-                      {viewRequest.recipientUpazila},{" "}
-                      {viewRequest.recipientDistrict}
-                    </span>
-                  </p>
-                  <p>
-                    <b className="text-gray-600">Blood Group:</b>{" "}
-                    <span className="text-gray-800">
-                      {viewRequest.bloodGroup}
-                    </span>
-                  </p>
-                  <p>
-                    <b className="text-gray-600">Date:</b>{" "}
-                    <span className="text-gray-800">
-                      {viewRequest.donationDate}
-                    </span>
-                  </p>
-                  <p>
-                    <b className="text-gray-600">Time:</b>{" "}
-                    <span className="text-gray-800">
-                      {viewRequest.donationTime}
-                    </span>
-                  </p>
-                  <p>
-                    <b className="text-gray-600">Status:</b>{" "}
-                    <span className="capitalize text-gray-800">
-                      {viewRequest.status}
-                    </span>
-                  </p>
-                </div>
+                <button
+                  onClick={() => {
+                    setModalOpen(false);
+                    setSelectedRequest(null);
+                    setFormData({});
+                    setSelectedDistrictId("");
+                  }}
+                  className="text-gray-600 hover:text-gray-800"
+                >
+                  ✕
+                </button>
               </div>
-            )}
-            {modalOpen === "edit" && editRequest && (
-              <EditForm
-                request={editRequest}
-                onUpdate={handleUpdate}
-                isUpdating={isUpdating}
-              />
-            )}
+
+              {modalType === "view" && selectedRequest && (
+                <div className="space-y-3">
+                  <DetailRow
+                    label="Recipient"
+                    value={selectedRequest.recipientName}
+                  />
+                  <DetailRow
+                    label="District"
+                    value={selectedRequest.recipientDistrict}
+                  />
+                  <DetailRow
+                    label="Upazila"
+                    value={selectedRequest.recipientUpazila}
+                  />
+                  <DetailRow
+                    label="Blood Group"
+                    value={selectedRequest.bloodGroup}
+                  />
+                  <DetailRow
+                    label="Date"
+                    value={selectedRequest.donationDate}
+                  />
+                  <DetailRow
+                    label="Time"
+                    value={selectedRequest.donationTime}
+                  />
+                  <DetailRow
+                    label="Hospital"
+                    value={selectedRequest.hospitalName || "N/A"}
+                  />
+                  <DetailRow label="Status" value={selectedRequest.status} />
+                  {selectedRequest.requestMessage && (
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">Message:</p>
+                      <p className="text-gray-800 bg-gray-50 p-3 rounded">
+                        {selectedRequest.requestMessage}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {modalType === "edit" && (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleUpdate();
+                  }}
+                  className="space-y-4"
+                >
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Recipient Name *
+                    </label>
+                    <input
+                      name="recipientName"
+                      value={formData.recipientName || ""}
+                      onChange={handleFormChange}
+                      className="border px-3 py-2 rounded w-full focus:ring-2 focus:ring-red-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      District *
+                    </label>
+                    <select
+                      name="districtId"
+                      value={selectedDistrictId}
+                      onChange={handleFormChange}
+                      className="border px-3 py-2 rounded w-full focus:ring-2 focus:ring-red-500"
+                      required
+                    >
+                      <option value="">Select District</option>
+                      {districts.map((d) => (
+                        <option key={d.id} value={d.id}>
+                          {d.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Upazila *
+                    </label>
+                    <select
+                      name="recipientUpazila"
+                      value={formData.recipientUpazila || ""}
+                      onChange={handleFormChange}
+                      disabled={!selectedDistrictId}
+                      className={`border px-3 py-2 rounded w-full focus:ring-2 focus:ring-red-500 ${
+                        !selectedDistrictId ? "bg-gray-50" : ""
+                      }`}
+                      required
+                    >
+                      <option value="">Select Upazila</option>
+                      {filteredUpazilas.map((u) => (
+                        <option key={u.id} value={u.name}>
+                          {u.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Blood Group *
+                    </label>
+                    <select
+                      name="bloodGroup"
+                      value={formData.bloodGroup || ""}
+                      onChange={handleFormChange}
+                      className="border px-3 py-2 rounded w-full focus:ring-2 focus:ring-red-500"
+                      required
+                    >
+                      <option value="">Select Blood Group</option>
+                      {BLOOD_GROUPS.map((bg) => (
+                        <option key={bg} value={bg}>
+                          {bg}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Date *
+                      </label>
+                      <input
+                        type="date"
+                        name="donationDate"
+                        value={formData.donationDate || ""}
+                        onChange={handleFormChange}
+                        className="border px-3 py-2 rounded w-full focus:ring-2 focus:ring-red-500"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Time *
+                      </label>
+                      <input
+                        type="time"
+                        name="donationTime"
+                        value={formData.donationTime || ""}
+                        onChange={handleFormChange}
+                        className="border px-3 py-2 rounded w-full focus:ring-2 focus:ring-red-500"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Status *
+                    </label>
+                    <select
+                      name="status"
+                      value={formData.status || ""}
+                      onChange={handleFormChange}
+                      className="border px-3 py-2 rounded w-full focus:ring-2 focus:ring-red-500"
+                      required
+                    >
+                      <option value="">Select Status</option>
+                      {STATUS.filter((s) => s.value !== "all").map((s) => (
+                        <option key={s.value} value={s.value}>
+                          {s.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="flex justify-end space-x-3 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => setModalOpen(false)}
+                      className="px-4 py-2 border rounded hover:bg-gray-50"
+                      disabled={isUpdating}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50"
+                      disabled={isUpdating}
+                    >
+                      {isUpdating ? "Updating..." : "Update Request"}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -431,119 +549,11 @@ const MyDonationRequests = () => {
   );
 };
 
-// Edit Form Component
-const EditForm = ({ request, onUpdate, isUpdating }) => {
-  const [form, setForm] = useState({
-    recipientName: request.recipientName,
-    recipientUpazila: request.recipientUpazila,
-    recipientDistrict: request.recipientDistrict,
-    bloodGroup: request.bloodGroup,
-    donationDate: request.donationDate,
-    donationTime: request.donationTime,
-    status: request.status,
-  });
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onUpdate(form);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="font-bold text-lg text-gray-800">Edit Donation Request</h2>
-      <div className="space-y-3">
-        <input
-          className="border px-3 py-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-red-500"
-          name="recipientName"
-          value={form.recipientName}
-          onChange={handleChange}
-          placeholder="Recipient Name"
-          required
-        />
-        <input
-          className="border px-3 py-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-red-500"
-          name="recipientUpazila"
-          value={form.recipientUpazila}
-          onChange={handleChange}
-          placeholder="Upazila"
-          required
-        />
-        <input
-          className="border px-3 py-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-red-500"
-          name="recipientDistrict"
-          value={form.recipientDistrict}
-          onChange={handleChange}
-          placeholder="District"
-          required
-        />
-        <select
-          name="bloodGroup"
-          value={form.bloodGroup}
-          onChange={handleChange}
-          className="border px-3 py-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-red-500"
-          required
-        >
-          <option value="">Select Blood Group</option>
-          {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((b) => (
-            <option key={b} value={b}>
-              {b}
-            </option>
-          ))}
-        </select>
-        <input
-          type="date"
-          name="donationDate"
-          value={form.donationDate}
-          onChange={handleChange}
-          className="border px-3 py-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-red-500"
-          required
-        />
-        <input
-          type="time"
-          name="donationTime"
-          value={form.donationTime}
-          onChange={handleChange}
-          className="border px-3 py-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-red-500"
-          required
-        />
-        <select
-          name="status"
-          value={form.status}
-          onChange={handleChange}
-          className="border px-3 py-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-red-500"
-          required
-        >
-          <option value="">Select Status</option>
-          {STATUS.filter((s) => s.value !== "all").map((s) => (
-            <option key={s.value} value={s.value}>
-              {s.label}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="flex justify-end space-x-3">
-        <button
-          type="button"
-          onClick={() => window.history.back()}
-          className="px-4 py-2 border rounded hover:bg-gray-50 transition"
-          disabled={isUpdating}
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition disabled:opacity-50"
-          disabled={isUpdating}
-        >
-          {isUpdating ? "Updating..." : "Update Request"}
-        </button>
-      </div>
-    </form>
-  );
-};
+const DetailRow = ({ label, value }) => (
+  <div className="flex items-center">
+    <span className="w-24 text-sm text-gray-600">{label}:</span>
+    <span className="text-gray-800">{value}</span>
+  </div>
+);
 
 export default MyDonationRequests;

@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Root from "../layouts/Root";
 import Home from "../pages/Home/Home";
 import DashboardLayout from "../layouts/DashboardLayout";
-import MainDashboard from "../dashboard/MainDashboard";
+
 import Register from "../pages/auth/Register";
 import Login from "../pages/auth/Login";
 import ForgotPassword from "../pages/auth/ForgotPassword";
@@ -14,6 +14,7 @@ import Donate from "../Donate/Donate";
 import PaymentSuccess from "../Donate/Payment/PaymentSuccess";
 import CancelPayment from "../Donate/Payment/CancelPayment";
 import Search from "../pages/Search";
+import AdminDashboard from "../dashboard/AdminDashboard";
 
 export const router = createBrowserRouter([
   {
@@ -43,7 +44,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/search",
-        element: <Search />,
+        element: (
+          <PrivateRoute>
+            <Search />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/donate",
@@ -75,7 +80,7 @@ export const router = createBrowserRouter([
       {
         index: true,
         path: "/dashboard",
-        element: <MainDashboard />,
+        element: <AdminDashboard />,
       },
       {
         path: "create-donation-request",
