@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import { AuthContext } from "../Provider/AuthProvider";
 import {
@@ -19,6 +19,7 @@ const AllUsers = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [openDropdown, setOpenDropdown] = useState(null);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     if (!user) return;
@@ -29,6 +30,16 @@ const AllUsers = () => {
       .catch(() => toast.error("Failed to load users"))
       .finally(() => setLoading(false));
   }, [axiosSecure, user]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleStatus = async (email, currentStatus) => {
     const newStatus = currentStatus === "active" ? "blocked" : "active";
@@ -83,7 +94,7 @@ const AllUsers = () => {
         ].map((stat) => (
           <div
             key={stat.label}
-            className={`bg-${stat.color}-100 p-4 rounded-lg`}
+            className={`bg-${stat.color}-100 p-4 rounded-lg flex flex-col items-center`}
           >
             <div className="text-2xl font-bold">{stat.value}</div>
             <div className="text-sm text-gray-600">{stat.label}</div>
@@ -107,137 +118,114 @@ const AllUsers = () => {
         ))}
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        {filteredUsers.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">No users found.</div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="p-3 text-left text-sm font-medium text-gray-600">
-                    User
-                  </th>
-                  <th className="p-3 text-left text-sm font-medium text-gray-600">
-                    Role
-                  </th>
-                  <th className="p-3 text-left text-sm font-medium text-gray-600">
-                    Status
-                  </th>
-                  <th className="p-3 text-left text-sm font-medium text-gray-600">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {filteredUsers.map((u) => (
-                  <tr key={u.email} className="hover:bg-gray-50">
-                    <td className="p-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                          {u.avatar ? (
-                            <img
-                              src={u.avatar}
-                              alt={u.name}
-                              className="w-10 h-10 rounded-full"
-                            />
-                          ) : (
-                            <FaUser className="text-gray-600" />
-                          )}
-                        </div>
-                        <div>
-                          <div className="font-medium text-gray-800">
-                            {u.name}
-                          </div>
-                          <div className="text-sm text-gray-500">{u.email}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-3">
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm capitalize ${
-                          u.role === "admin"
-                            ? "bg-purple-100 text-purple-800"
-                            : u.role === "volunteer"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-green-100 text-green-800"
-                        }`}
+      {filteredUsers.length === 0 ? (
+        <div className="p-8 text-center text-gray-500">No users found.</div>
+      ) : (
+        <div className="grid grid-cols-1 gap-6">
+          {filteredUsers.map((u, index) => (
+            <div
+              key={u.email}
+              className="bg-white rounded-2xl shadow-lg border-l-6 border-red-500 overflow-hidden hover:shadow-xl transition-all flex flex-col md:flex-row relative"
+            >
+              <div className="flex-1 p-5 md:p-6">
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                    {u.avatar ? (
+                      <img
+                        src={u.avatar}
+                        alt={u.name}
+                        className="w-12 h-12 rounded-full"
+                      />
+                    ) : (
+                      <FaUser className="text-gray-600" />
+                    )}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-800 text-lg">
+                      {u.name}
+                    </h3>
+                    <p className="text-gray-500 text-sm">{u.email}</p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {/* Role */}
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs capitalize ${
+                      u.role === "admin"
+                        ? "bg-purple-100 text-purple-800"
+                        : u.role === "volunteer"
+                        ? "bg-blue-100 text-blue-800"
+                        : "bg-green-100 text-green-800"
+                    }`}
+                  >
+                    {u.role}
+                  </span>
+
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs capitalize ${
+                      u.status === "active"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {u.status}
+                  </span>
+                </div>
+              </div>
+
+              <div className="absolute top-3 right-3" ref={dropdownRef}>
+                <button
+                  onClick={() =>
+                    setOpenDropdown(openDropdown === u.email ? null : u.email)
+                  }
+                  className="p-2 rounded-lg hover:bg-gray-100"
+                >
+                  <FaEllipsisV />
+                </button>
+                {openDropdown === u.email && (
+                  <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-10">
+                    <button
+                      onClick={() => {
+                        handleStatus(u.email, u.status);
+                        setOpenDropdown(null);
+                      }}
+                      className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100"
+                    >
+                      {u.status === "active" ? <FaBan /> : <FaCheck />}
+                      {u.status === "active" ? "Block User" : "Unblock User"}
+                    </button>
+                    {u.role !== "volunteer" && u.role !== "admin" && (
+                      <button
+                        onClick={() => {
+                          handleRole(u.email, "volunteer");
+                          setOpenDropdown(null);
+                        }}
+                        className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100"
                       >
-                        {u.role}
-                      </span>
-                    </td>
-                    <td className="p-3">
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm capitalize ${
-                          u.status === "active"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
+                        <FaUserFriends />
+                        Make Volunteer
+                      </button>
+                    )}
+                    {u.role !== "admin" && (
+                      <button
+                        onClick={() => {
+                          handleRole(u.email, "admin");
+                          setOpenDropdown(null);
+                        }}
+                        className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100"
                       >
-                        {u.status}
-                      </span>
-                    </td>
-                    <td className="p-3">
-                      <div className="relative">
-                        <button
-                          onClick={() =>
-                            setOpenDropdown(
-                              openDropdown === u.email ? null : u.email
-                            )
-                          }
-                          className="p-2 rounded-lg hover:bg-gray-100"
-                        >
-                          <FaEllipsisV />
-                        </button>
-                        {openDropdown === u.email && (
-                          <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-10">
-                            <button
-                              onClick={() => {
-                                handleStatus(u.email, u.status);
-                                setOpenDropdown(null);
-                              }}
-                              className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100"
-                            >
-                              {u.status === "active" ? <FaBan /> : <FaCheck />}
-                              {u.status === "active"
-                                ? "Block User"
-                                : "Unblock User"}
-                            </button>
-                            {u.role !== "volunteer" && u.role !== "admin" && (
-                              <button
-                                onClick={() => {
-                                  handleRole(u.email, "volunteer");
-                                  setOpenDropdown(null);
-                                }}
-                                className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100"
-                              >
-                                <FaUserFriends />
-                                Make Volunteer
-                              </button>
-                            )}
-                            {u.role !== "admin" && (
-                              <button
-                                onClick={() => {
-                                  handleRole(u.email, "admin");
-                                  setOpenDropdown(null);
-                                }}
-                                className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100"
-                              >
-                                <FaUserShield />
-                                Make Admin
-                              </button>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+                        <FaUserShield />
+                        Make Admin
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
