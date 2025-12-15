@@ -20,6 +20,7 @@ import Profile from "../dashboard/dashboard/Profile";
 import PendingRequests from "../components/PendingRequests";
 import DonationRequestDetails from "../pages/DonationRequestDetails";
 import EditDonationRequest from "../dashboard/EditDonationRequest";
+import VolunteerDashboard from "../dashboard/VolunteerDashboard";
 
 export const router = createBrowserRouter([
   {
@@ -119,6 +120,10 @@ export const router = createBrowserRouter([
       {
         path: "edit-request/:id",
         element: <EditDonationRequest />,
+      },
+      {
+        path: "all-blood-donation-request-volunteer",
+        element: <VolunteerDashboard />,
       },
     ],
   },

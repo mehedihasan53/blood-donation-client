@@ -10,17 +10,37 @@ const Aside = () => {
   const { role } = useContext(AuthContext);
 
   const menu = [
-    { name: "Dashboard", path: "/dashboard", icon: <FaHome /> },
+    {
+      name: "Dashboard",
+      path: "/dashboard",
+      icon: <FaHome />,
+    },
+
     ...(role === "admin"
       ? [
           {
             name: "All Requests",
-            path: "/dashboard/my-donation-requests",
+            path: "/dashboard/all-blood-donation-request",
             icon: <FaTint />,
           },
-          { name: "All Users", path: "/dashboard/all-users", icon: <FaUser /> },
+          {
+            name: "All Users",
+            path: "/dashboard/all-users",
+            icon: <FaUser />,
+          },
         ]
       : []),
+
+    ...(role === "volunteer"
+      ? [
+          {
+            name: "All Requests",
+            path: "/dashboard/all-blood-donation-request-volunteer",
+            icon: <FaTint />,
+          },
+        ]
+      : []),
+
     ...(role === "donor"
       ? [
           {
@@ -35,7 +55,12 @@ const Aside = () => {
           },
         ]
       : []),
-    { name: "Profile", path: "/dashboard/profile", icon: <FaUser /> },
+
+    {
+      name: "Profile",
+      path: "/dashboard/profile",
+      icon: <FaUser />,
+    },
   ];
 
   const handleLogout = async () => {
