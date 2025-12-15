@@ -75,7 +75,7 @@ const Donate = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-red-500 text-white py-2 rounded font-medium hover:bg-red-600 transition disabled:opacity-60"
+            className="w-full bg-red-600 text-white py-2 rounded font-medium hover:bg-red-700 transition disabled:opacity-60"
           >
             {loading ? "Redirecting to payment..." : "Donate Now"}
           </button>

@@ -17,6 +17,8 @@ import MyDonationRequest from "../Donation/MyDonationRequest";
 import AllDonationRequests from "../Donation/AllDonationRequests";
 import Dashboard from "../dashboard/dashboard/Dashboard";
 import Profile from "../dashboard/dashboard/Profile";
+import PendingRequests from "../components/PendingRequests";
+import DonationRequestDetails from "../pages/DonationRequestDetails";
 
 export const router = createBrowserRouter([
   {
@@ -49,6 +51,14 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "donation-request/:id",
+        element: (
+          <PrivateRoute>
+            <DonationRequestDetails />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: "/donate",
         element: (
           <PrivateRoute>
@@ -63,6 +73,10 @@ export const router = createBrowserRouter([
       {
         path: "/payment-cancel",
         element: <CancelPayment />,
+      },
+      {
+        path: "/Pending-requests",
+        element: <PendingRequests />,
       },
     ],
   },
