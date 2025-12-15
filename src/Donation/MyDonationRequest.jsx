@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { format } from "date-fns";
 import toast, { Toaster } from "react-hot-toast";
+import Loading from "../components/shared/Loading";
 
 const MyDonationRequests = () => {
   const axiosSecure = useAxiosSecure();
@@ -89,12 +90,7 @@ const MyDonationRequests = () => {
     }
   };
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <FaSpinner className="animate-spin text-red-600 text-3xl" />
-      </div>
-    );
+  if (loading) return <Loading />;
 
   const totalPages = Math.ceil(filteredRequests.length / pageSize);
   const paginatedRequests = filteredRequests.slice(
@@ -175,7 +171,7 @@ const MyDonationRequests = () => {
             onClick={() => setStatusFilter(value)}
             className={`px-4 py-2 rounded-lg text-sm transition-colors ${
               statusFilter === value
-                ? "bg-blue-600 text-white"
+                ? "bg-red-600 text-white"
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
@@ -204,7 +200,7 @@ const MyDonationRequests = () => {
             onClick={() => setCurrentPage(idx + 1)}
             className={`px-4 py-2 rounded-lg transition-colors ${
               currentPage === idx + 1
-                ? "bg-blue-600 text-white"
+                ? "bg-red-600 text-white"
                 : "bg-gray-200 hover:bg-gray-300"
             }`}
           >

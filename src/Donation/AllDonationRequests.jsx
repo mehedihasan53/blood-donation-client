@@ -8,7 +8,7 @@ import {
   FaChevronRight,
 } from "react-icons/fa";
 import Loading from "../components/shared/Loading";
-import toast, { Toaster } from "react-hot-toast"; // **1. Toasting Library Import**
+import toast, { Toaster } from "react-hot-toast";
 
 const STATUS = [
   { value: "all", label: "All" },
@@ -42,7 +42,6 @@ const AllDonationRequests = () => {
     fetchRequests();
   }, [currentPage, filter]);
 
-  // **2. Data Fetching Logic (Requests and Locations)**
   const fetchLocationData = async () => {
     try {
       const [districtsRes, upazilasRes] = await Promise.all([
@@ -75,7 +74,6 @@ const AllDonationRequests = () => {
     }
   };
 
-  // **3. CRUD Operations (Delete and Update)**
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this request?"))
       return;
@@ -141,7 +139,6 @@ const AllDonationRequests = () => {
     }
   };
 
-  // **4. Form and Location State Management**
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     if (name === "districtId") {
@@ -160,7 +157,6 @@ const AllDonationRequests = () => {
     (u) => String(u.district_id) === String(selectedDistrictId)
   );
 
-  // **5. Utility Functions for UI/Styling**
   const getBloodBadgeClass = (bg) => {
     const colors = {
       "A+": "bg-red-100 text-red-800",
@@ -468,7 +464,6 @@ const AllDonationRequests = () => {
                 }}
                 className="space-y-4"
               >
-                {/* Recipient Name Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Recipient Name *
@@ -527,7 +522,6 @@ const AllDonationRequests = () => {
                   </select>
                 </div>
 
-                {/* Blood Group Select Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Blood Group *
@@ -548,7 +542,6 @@ const AllDonationRequests = () => {
                   </select>
                 </div>
 
-                {/* Donation Date Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Donation Date *
@@ -563,7 +556,6 @@ const AllDonationRequests = () => {
                   />
                 </div>
 
-                {/* Donation Time Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Donation Time *
@@ -578,7 +570,6 @@ const AllDonationRequests = () => {
                   />
                 </div>
 
-                {/* Hospital Name Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Hospital Name
@@ -591,7 +582,6 @@ const AllDonationRequests = () => {
                   />
                 </div>
 
-                {/* Full Address Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Full Address
@@ -605,7 +595,6 @@ const AllDonationRequests = () => {
                   />
                 </div>
 
-                {/* Request Message Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Request Message
@@ -619,7 +608,6 @@ const AllDonationRequests = () => {
                   />
                 </div>
 
-                {/* Status Select Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Status *
@@ -640,7 +628,6 @@ const AllDonationRequests = () => {
                   </select>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex justify-end gap-2">
                   <button
                     type="button"

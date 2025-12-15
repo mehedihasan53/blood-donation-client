@@ -190,7 +190,6 @@ const DonationRequestDetails = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
       <Toaster position="top-right" />
 
-      {/* Header */}
       <div className="max-w-4xl mx-auto mb-8">
         <button
           onClick={() => window.history.back()}
@@ -206,10 +205,8 @@ const DonationRequestDetails = () => {
         </p>
       </div>
 
-      {/* Main Card */}
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-l-8 border-red-500">
-          {/* Card Header */}
           <div className="p-6 md:p-8 bg-red-50 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex items-start gap-4">
               <div
@@ -247,9 +244,7 @@ const DonationRequestDetails = () => {
             </div>
           </div>
 
-          {/* Card Body */}
           <div className="p-6 md:p-8 space-y-6">
-            {/* Location */}
             <div className="flex items-center gap-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
               <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                 <FaMapMarkerAlt className="text-blue-600" />
@@ -262,7 +257,6 @@ const DonationRequestDetails = () => {
               </div>
             </div>
 
-            {/* Donation Schedule */}
             <div className="flex items-center gap-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
               <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
                 <FaCalendarAlt className="text-emerald-600" />
@@ -276,7 +270,6 @@ const DonationRequestDetails = () => {
               </div>
             </div>
 
-            {/* Hospital Info */}
             {request.hospitalName && (
               <div className="flex items-center gap-4 p-4 bg-cyan-50 rounded-xl border border-cyan-100">
                 <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
@@ -291,7 +284,6 @@ const DonationRequestDetails = () => {
               </div>
             )}
 
-            {/* Donor Info */}
             {request.status === "inprogress" && (
               <div className="flex items-center gap-4 p-4 bg-purple-50 rounded-xl border border-purple-100">
                 <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -306,7 +298,6 @@ const DonationRequestDetails = () => {
               </div>
             )}
 
-            {/* Donate Button */}
             {request.status === "pending" && (
               <div className="flex justify-center pt-4">
                 <button
@@ -329,7 +320,6 @@ const DonationRequestDetails = () => {
             onClick={() => setOpenModal(false)}
           />
           <div className="relative bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl">
-            {/* Header */}
             <div className="flex items-center gap-3 mb-6 pb-4 border-b">
               <div className="w-12 h-12 bg-gradient-to-br from-red-100 to-pink-100 rounded-xl flex items-center justify-center">
                 <FaHandHoldingHeart className="text-red-500 text-xl" />
@@ -344,7 +334,6 @@ const DonationRequestDetails = () => {
               </div>
             </div>
 
-            {/* User Info */}
             <div className="space-y-4 mb-6">
               <div className="p-4 bg-blue-50 rounded-xl">
                 <p className="text-sm text-gray-500 mb-1">Your Name</p>
@@ -382,7 +371,6 @@ const DonationRequestDetails = () => {
               </div>
             </div>
 
-            {/* Actions */}
             <div className="flex gap-3 pt-4 border-t">
               <button
                 onClick={() => setOpenModal(false)}

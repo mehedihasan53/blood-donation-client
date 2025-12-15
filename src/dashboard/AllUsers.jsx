@@ -12,17 +12,15 @@ import {
 import toast from "react-hot-toast";
 import Loading from "../components/shared/Loading";
 
-// Utility function to get role badge styling
 const getRoleBadgeClass = (role) => {
   if (role === "admin") return "bg-purple-100 text-purple-800";
   if (role === "volunteer") return "bg-blue-100 text-blue-800";
-  return "bg-green-100 text-green-800"; // General/Donor role
+  return "bg-green-100 text-green-800";
 };
 
-// Utility function to get status badge styling
 const getStatusBadgeClass = (status) => {
   if (status === "active") return "bg-green-100 text-green-800";
-  return "bg-red-100 text-red-800"; // Blocked
+  return "bg-red-100 text-red-800";
 };
 
 const AllUsers = () => {
@@ -68,18 +66,15 @@ const AllUsers = () => {
     }
   };
 
-  // Filter users based on selected status
   const filteredUsers =
     filter === "all" ? users : users.filter((u) => u.status === filter);
 
-  // Calculate stats for the cards
   const stats = {
     active: users.filter((u) => u.status === "active").length,
     blocked: users.filter((u) => u.status === "blocked").length,
     admin: users.filter((u) => u.role === "admin").length,
   };
 
-  // Function to render action buttons (reused in both table and card)
   const renderActions = (u) => (
     <div className="relative">
       <button
@@ -92,7 +87,6 @@ const AllUsers = () => {
       </button>
       {openDropdown === u.email && (
         <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-10">
-          {/* Status Toggle Button */}
           <button
             onClick={() => {
               handleStatus(u.email, u.status);
@@ -104,7 +98,6 @@ const AllUsers = () => {
             {u.status === "active" ? "Block User" : "Unblock User"}
           </button>
 
-          {/* Make Volunteer Button */}
           {u.role !== "volunteer" && u.role !== "admin" && (
             <button
               onClick={() => {
@@ -118,7 +111,6 @@ const AllUsers = () => {
             </button>
           )}
 
-          {/* Make Admin Button */}
           {u.role !== "admin" && (
             <button
               onClick={() => {
@@ -145,10 +137,8 @@ const AllUsers = () => {
 
   return (
     <div className="p-4 sm:p-6">
-      {/* Header */}
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Manage Users</h1>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         {[
           { label: "Active Users", value: stats.active, color: "green" },
@@ -165,7 +155,6 @@ const AllUsers = () => {
         ))}
       </div>
 
-      {/* Filter Buttons */}
       <div className="flex flex-wrap gap-2 mb-6">
         {["all", "active", "blocked"].map((f) => (
           <button
@@ -182,7 +171,7 @@ const AllUsers = () => {
         ))}
       </div>
 
-      {/* Desktop Table (Visible on medium screens and up) */}
+      {/* Desktop Table  */}
       <div className="hidden md:block bg-white rounded-lg shadow overflow-hidden">
         {filteredUsers.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
@@ -258,7 +247,7 @@ const AllUsers = () => {
         )}
       </div>
 
-      {/* Mobile Cards (Hidden on medium screens and up) */}
+      {/* Mobile Cards  */}
       <div className="md:hidden space-y-4">
         {filteredUsers.length === 0 ? (
           <div className="p-4 text-center text-gray-500 bg-white rounded-lg shadow">
@@ -270,7 +259,6 @@ const AllUsers = () => {
               key={u.email}
               className="bg-white rounded-lg shadow p-4 space-y-3 border-l-4 border-red-500"
             >
-              {/* User Info & Actions */}
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
@@ -289,11 +277,10 @@ const AllUsers = () => {
                     <div className="text-sm text-gray-500">{u.email}</div>
                   </div>
                 </div>
-                {/* Actions (Dropdown) */}
+
                 {renderActions(u)}
               </div>
 
-              {/* Status and Role Badges */}
               <div className="flex justify-start gap-3 items-center pt-2 border-t border-gray-100">
                 <div className="text-sm font-medium text-gray-600">Role:</div>
                 <span

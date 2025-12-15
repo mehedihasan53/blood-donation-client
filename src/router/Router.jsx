@@ -19,6 +19,7 @@ import Dashboard from "../dashboard/dashboard/Dashboard";
 import Profile from "../dashboard/dashboard/Profile";
 import PendingRequests from "../components/PendingRequests";
 import DonationRequestDetails from "../pages/DonationRequestDetails";
+import EditDonationRequest from "../dashboard/EditDonationRequest";
 
 export const router = createBrowserRouter([
   {
@@ -114,6 +115,10 @@ export const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "edit-request/:id",
+        element: <EditDonationRequest />,
       },
     ],
   },

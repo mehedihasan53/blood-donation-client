@@ -65,9 +65,9 @@ const Search = () => {
       const res = await axiosInstance.get(
         `/search-request?bloodGroup=${encodeURIComponent(
           bloodGroup
-        )}&district=${encodeURIComponent(districtName)}&upazila=${encodeURIComponent(
-          upazila
-        )}`
+        )}&district=${encodeURIComponent(
+          districtName
+        )}&upazila=${encodeURIComponent(upazila)}`
       );
       setResults(res.data);
     } catch (err) {
@@ -127,7 +127,6 @@ const Search = () => {
           ))}
         </select>
 
-        {/* Search Button */}
         <button
           type="submit"
           disabled={loading}
@@ -137,7 +136,6 @@ const Search = () => {
         </button>
       </form>
 
-      {/* Results */}
       {results.length > 0 ? (
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {results.map((donor, idx) => (
@@ -145,7 +143,6 @@ const Search = () => {
               key={idx}
               className="bg-white rounded-2xl border border-gray-200 shadow hover:shadow-lg transition transform hover:-translate-y-1"
             >
-              {/* Card Header */}
               <div className="p-6 border-b border-gray-100 flex justify-between items-start">
                 <div className="flex items-center">
                   <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mr-4">
@@ -155,7 +152,9 @@ const Search = () => {
                     <h3 className="text-xl font-bold text-gray-800">
                       {donor.recipientName}
                     </h3>
-                    <p className="text-gray-600 text-sm">{donor.requesterEmail}</p>
+                    <p className="text-gray-600 text-sm">
+                      {donor.requesterEmail}
+                    </p>
                   </div>
                 </div>
                 <span
@@ -167,9 +166,7 @@ const Search = () => {
                 </span>
               </div>
 
-              {/* Card Details */}
               <div className="p-6 space-y-4">
-                {/* Location */}
                 <div className="flex items-center">
                   <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center mr-3">
                     <FiMapPin className="text-gray-600" />
@@ -182,7 +179,6 @@ const Search = () => {
                   </div>
                 </div>
 
-                {/* Hospital */}
                 {donor.hospitalName && (
                   <div className="flex items-center">
                     <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center mr-3">
@@ -195,7 +191,6 @@ const Search = () => {
                   </div>
                 )}
 
-                {/* Donation Date */}
                 {donor.donationDate && (
                   <div className="flex items-center">
                     <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center mr-3">
@@ -210,12 +205,10 @@ const Search = () => {
                   </div>
                 )}
 
-                {/* Full Address */}
                 {donor.fullAddress && (
                   <p className="text-gray-500 text-sm">{donor.fullAddress}</p>
                 )}
 
-                {/* Action Buttons */}
                 <div className="flex gap-3 mt-4">
                   <button className="flex-1 py-3 px-4 bg-red-50 text-red-600 font-medium rounded-xl hover:bg-red-100 transition flex items-center justify-center">
                     <FiPhone className="mr-2" /> Contact

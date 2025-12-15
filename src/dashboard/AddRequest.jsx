@@ -72,7 +72,6 @@ const AddRequest = () => {
   return (
     <div className="min-h-screen">
       <div className="max-w-4xl mx-auto">
-        {/* Header Card */}
         <div className="mb-8 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl shadow-2xl overflow-hidden">
           <div className="p-8 text-white">
             <div className="flex items-center space-x-4">
@@ -92,7 +91,6 @@ const AddRequest = () => {
         {/* Form Card */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
           <form onSubmit={handleSubmit} className="p-8">
-            {/* User Info */}
             <div className="mb-10">
               <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
                 <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">

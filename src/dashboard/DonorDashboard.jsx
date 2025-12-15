@@ -16,6 +16,7 @@ import {
   FaSpinner,
 } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
+import Loading from "../components/shared/Loading";
 
 const DonorDashboard = () => {
   const { user } = useAuth();
@@ -30,12 +31,9 @@ const DonorDashboard = () => {
 
   const fetchRecentRequests = async () => {
     try {
-      // Fetch maximum 3 recent requests (size=3)
       const res = await axiosSecure.get("/donation-requests?size=3&page=0");
 
       const fetchedRequests = res.data?.requests || [];
-      // Sort by creation date/time if not already sorted by API
-      // Since API is fetching the first 3 (page=0), we assume they are the most recent.
       setRequests(fetchedRequests);
     } catch (err) {
       console.error("Failed to load requests", err);
@@ -52,7 +50,6 @@ const DonorDashboard = () => {
     try {
       await axiosSecure.patch(`/donation-requests/${id}`, { status });
 
-      // Update local state
       setRequests((prev) =>
         prev.map((r) => {
           if (r._id === id) {
@@ -114,7 +111,6 @@ const DonorDashboard = () => {
   const formatDate = (dateString) => {
     if (!dateString) return "Not set";
     try {
-      // Attempt to parse and format the date part only (to handle potential ISO string time)
       const dateOnly = dateString.split("T")[0];
       return new Date(dateOnly).toLocaleDateString("en-US", {
         year: "numeric",
@@ -127,11 +123,7 @@ const DonorDashboard = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <FaSpinner className="animate-spin text-red-600 text-4xl" />
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
@@ -139,26 +131,23 @@ const DonorDashboard = () => {
       <Toaster />
 
       <div className="max-w-7xl mx-auto">
-        {/* Welcome Section */}
         <div className="mb-8 p-4 bg-white shadow-md rounded-xl border-l-4 border-red-600">
           <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
             Welcome back, {user?.displayName || "Donor"}! 👋
           </h1>
           <p className="text-gray-600 text-lg">
-            Here's a quick overview of your **recent donation requests**.
+            Here's a quick overview of your recent donation requests.
           </p>
         </div>
 
-        {/* Recent Requests Section */}
         {requests.length > 0 ? (
           <div className="space-y-8">
             <div className="flex justify-between items-center border-b pb-3 mb-4">
               <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                <FaTint className="text-red-600" /> Maximum 3 Recent Requests
+                <FaTint className="text-red-600" /> Recent 3 Requests
               </h2>
             </div>
 
-            {/* --- Desktop Table View --- */}
             <div className="hidden md:block bg-white rounded-2xl shadow-xl overflow-x-auto border border-gray-100">
               <table className="min-w-full divide-y divide-gray-100">
                 <thead className="bg-red-50">
@@ -196,7 +185,7 @@ const DonorDashboard = () => {
                             <p className="font-medium text-gray-900">
                               {req.recipientName || "Not specified"}
                             </p>
-                            {/* Donor Info for In Progress status */}
+
                             {req.status === "inprogress" && (
                               <p className="text-xs text-blue-600 mt-1 font-medium">
                                 Donor: {req.donorName || "N/A"} (
@@ -247,16 +236,14 @@ const DonorDashboard = () => {
                       </td>
                       <td className="p-4 text-center whitespace-nowrap">
                         <div className="flex items-center justify-center gap-2">
-                          {/* View Button */}
                           <Link
-                            to={`/dashboard/donation-request/${req._id}`}
+                            to={`/donation-request/${req._id}`}
                             className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition"
                             title="View Details"
                           >
                             <FaEye />
                           </Link>
 
-                          {/* Edit Button (Visible always, but may be restricted on edit page) */}
                           <Link
                             to={`/dashboard/edit-request/${req._id}`}
                             className="p-2 text-green-600 hover:bg-green-100 rounded-lg transition"
@@ -265,7 +252,6 @@ const DonorDashboard = () => {
                             <FaEdit />
                           </Link>
 
-                          {/* Delete Button */}
                           <button
                             onClick={() => handleDelete(req._id)}
                             className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition"
@@ -275,7 +261,6 @@ const DonorDashboard = () => {
                             <FaTrash />
                           </button>
 
-                          {/* Done/Cancel Buttons (Only for In Progress) */}
                           {req.status === "inprogress" && (
                             <div className="flex gap-2 ml-3">
                               <button
@@ -314,7 +299,6 @@ const DonorDashboard = () => {
               </table>
             </div>
 
-            {/* --- Mobile Card View --- */}
             <div className="md:hidden space-y-4">
               {requests.map((req) => (
                 <div
@@ -373,9 +357,8 @@ const DonorDashboard = () => {
 
                   <div className="flex flex-col gap-3 pt-4 border-t border-gray-100">
                     <div className="flex gap-2 justify-center sm:justify-start">
-                      {/* Action buttons group */}
                       <Link
-                        to={`/dashboard/donation-request/${req._id}`}
+                        to={`/donation-request/${req._id}`}
                         className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg"
                         title="View Details"
                       >
@@ -398,12 +381,11 @@ const DonorDashboard = () => {
                       </button>
                     </div>
 
-                    {/* Done/Cancel buttons group */}
                     {req.status === "inprogress" && (
                       <div className="flex gap-2 justify-center sm:justify-start">
                         <button
                           onClick={() => updateStatus(req._id, "done")}
-                          className="flex-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium disabled:opacity-50"
+                          className="flex-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium disabled:opacity-50 flex items-center justify-center"
                           disabled={updatingStatus}
                         >
                           {updatingStatus ? (
@@ -415,7 +397,7 @@ const DonorDashboard = () => {
                         </button>
                         <button
                           onClick={() => updateStatus(req._id, "canceled")}
-                          className="flex-1 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium disabled:opacity-50"
+                          className="flex-1 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium disabled:opacity-50 flex items-center justify-center"
                           disabled={updatingStatus}
                         >
                           {updatingStatus ? (
@@ -432,7 +414,6 @@ const DonorDashboard = () => {
               ))}
             </div>
 
-            {/* View All Requests Button */}
             <div className="text-center mt-8">
               <Link
                 to="/dashboard/donation-requests"
@@ -443,7 +424,6 @@ const DonorDashboard = () => {
             </div>
           </div>
         ) : (
-          /* Hidden Section - No Requests */
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-12 text-center">
             <div className="max-w-md mx-auto">
               <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
