@@ -16,6 +16,7 @@ import Search from "../pages/Search";
 import MyDonationRequest from "../Donation/MyDonationRequest";
 import AllDonationRequests from "../Donation/AllDonationRequests";
 import Dashboard from "../dashboard/dashboard/Dashboard";
+import Profile from "../dashboard/dashboard/Profile";
 
 export const router = createBrowserRouter([
   {
@@ -98,7 +99,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <h1>Profile Page</h1>,
+        element: <Profile />,
       },
     ],
   },

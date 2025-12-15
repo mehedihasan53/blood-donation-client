@@ -35,6 +35,7 @@ const Aside = () => {
           },
         ]
       : []),
+    { name: "Profile", path: "/dashboard/profile", icon: <FaUser /> },
   ];
 
   const handleLogout = async () => {
