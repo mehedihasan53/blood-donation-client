@@ -67,16 +67,6 @@ const Navbar = () => {
             </NavLink>
 
             <NavLink
-              to="/donation-requests"
-              className={({ isActive }) =>
-                `text-white hover:text-red-200 font-medium transition-colors duration-200 ${
-                  isActive ? "border-b-2 border-white" : ""
-                }`
-              }
-            >
-              Donation Requests
-            </NavLink>
-            <NavLink
               to="/donate"
               className={({ isActive }) =>
                 `text-white hover:text-red-200 font-medium transition-colors duration-200 ${
