@@ -3,11 +3,12 @@ import { useAuth } from "../../Provider/AuthProvider";
 import AdminDashboard from "../AdminDashboard";
 import DonorDashboard from "../DonorDashboard";
 import VolunteerDashboard from "../VolunteerDashboard";
+import Loading from "../../components/shared/Loading";
 
 const Dashboard = () => {
   const { user, role } = useAuth();
 
-  if (!user) return <p>Loading...</p>;
+  if (!user) return <Loading />;
 
   switch (role?.toLowerCase()) {
     case "admin":

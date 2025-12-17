@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../firebase/firebase.config";
 import { useEffect, useState } from "react";
+import useAxios from "../../hooks/useAxios";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const Register = () => {
   const [districts, setDistricts] = useState([]);
   const [upazilas, setUpazilas] = useState([]);
   const [selectedDistrict, setSelectedDistrict] = useState("");
+  const axiosInstance = useAxios();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,7 +82,8 @@ const Register = () => {
         photoURL: imageUrl,
       });
 
-      await axios.post("http://localhost:3000/users", {
+      // await axios.post("http://localhost:3000/users",
+      await axiosInstance.post("/users", {
         name,
         email,
         bloodGroup,

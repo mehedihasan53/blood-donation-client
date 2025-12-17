@@ -477,7 +477,7 @@ const AllDonationRequests = () => {
                   />
                 </div>
 
-                {/* District Select Input */}
+                {/* District Select  */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     District *
@@ -498,7 +498,7 @@ const AllDonationRequests = () => {
                   </select>
                 </div>
 
-                {/* Upazila Select Input */}
+                {/* Upazila Select  */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Upazila *

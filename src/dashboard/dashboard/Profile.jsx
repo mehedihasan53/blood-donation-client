@@ -213,17 +213,6 @@ const Profile = () => {
                   </div>
 
                   <div className="flex flex-col items-center md:items-end gap-2">
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white/20 backdrop-blur-sm rounded-full">
-                      {getRoleIcon(formData.role)}
-                      <span
-                        className={`text-sm font-medium capitalize ${getRoleBadge(
-                          formData.role
-                        )} px-2 py-0.5 rounded`}
-                      >
-                        {formData.role || "User"}
-                      </span>
-                    </div>
-
                     <div className="flex justify-center md:justify-end gap-3">
                       {editMode ? (
                         <>

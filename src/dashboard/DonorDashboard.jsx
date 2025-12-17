@@ -133,7 +133,8 @@ const DonorDashboard = () => {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 p-4 bg-white shadow-md rounded-xl border-l-4 border-red-600">
           <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
-            Welcome back, {user?.displayName || "Donor"}! 👋
+            Welcome back,{" "}
+            <span className="text-red-600">{user?.displayName || "Donor"}</span>
           </h1>
           <p className="text-gray-600 text-lg">
             Here's a quick overview of your recent donation requests.

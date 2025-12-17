@@ -12,16 +12,19 @@ import {
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import Loading from "./shared/Loading";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const PendingRequests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const axiosInstance = useAxiosSecure();
 
   useEffect(() => {
     const fetchPendingRequests = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:3000/donation-requests/status/pending"
+        
+        const res = await axiosInstance.get(
+          "/donation-requests/status/pending"
         );
         setRequests(res.data.requests || []);
       } catch (error) {
@@ -94,7 +97,7 @@ const PendingRequests = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+    <div className="min-h-screen bg-red-50 p-4 md:p-8">
       <Toaster position="top-right" />
 
       <div className="max-w-7xl mx-auto mb-8">

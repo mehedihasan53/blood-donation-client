@@ -28,19 +28,16 @@ const AuthProvider = ({ children }) => {
 
   // Register
   const registerWithEmail = (email, password) => {
-    setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
   // Login
   const loginWithEmail = (email, password) => {
-    setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
   // Forgot password
   const forgotPassword = (email) => {
-    setLoading(true);
     return sendPasswordResetEmail(auth, email);
   };
 

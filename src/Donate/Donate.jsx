@@ -40,7 +40,7 @@ const Donate = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-red-50 px-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow p-6 space-y-6">
         <h1 className="text-2xl font-bold text-center text-gray-800">
           Donate for the Cause ❤️

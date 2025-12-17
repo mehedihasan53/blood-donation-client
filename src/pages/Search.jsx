@@ -127,7 +127,7 @@ const Search = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-red-50 p-4">
       {/* Search Form Section */}
       <form
         onSubmit={handleSearch}
@@ -197,7 +197,7 @@ const Search = () => {
         )}
       </div>
 
-      {/* Cards Display */}
+      {/* card */}
       {results.length > 0 ? (
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {results.map((donor, idx) => (

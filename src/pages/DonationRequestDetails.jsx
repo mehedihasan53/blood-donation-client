@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useAuth } from "../Provider/AuthProvider";
 import {
@@ -8,8 +7,6 @@ import {
   FaMapMarkerAlt,
   FaTint,
   FaCalendarAlt,
-  FaClock,
-  FaInfoCircle,
   FaUserCheck,
   FaHospital,
   FaHandHoldingHeart,
@@ -17,12 +14,13 @@ import {
   FaCheckCircle,
   FaEnvelope,
   FaArrowLeft,
-  FaShieldAlt,
 } from "react-icons/fa";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const DonationRequestDetails = () => {
   const { id } = useParams();
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
   const [request, setRequest] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -34,8 +32,10 @@ const DonationRequestDetails = () => {
       try {
         if (!user) return;
         const token = await user.getIdToken();
-        const res = await axios.get(
-          `http://localhost:3000/donation-requests/${id}`,
+
+        const res = await axiosSecure.get(
+          `donation-requests/${id}`,
+
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -57,8 +57,10 @@ const DonationRequestDetails = () => {
       if (!user) return;
       const token = await user.getIdToken();
 
-      await axios.patch(
-        `http://localhost:3000/donation-requests/${id}`,
+      // await axios.patch(
+      //   `http://localhost:3000/donation-requests/${id}`,
+      await axiosSecure.patch(
+        `donation-requests/${id}`,
         {
           status: "inprogress",
           donorName: user.displayName,

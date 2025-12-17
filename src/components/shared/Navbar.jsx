@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaUser, FaSignOutAlt, FaBell, FaHome, FaSearch } from "react-icons/fa";
 import { MdBloodtype } from "react-icons/md";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { useAuth } from "../../Provider/AuthProvider";
+import { AuthContext, useAuth } from "../../Provider/AuthProvider";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, logout, role } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -42,7 +42,6 @@ const Navbar = () => {
     <nav className="bg-gradient-to-r from-red-600 to-red-800 shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full">
               <MdBloodtype className="text-red-600 text-2xl" />
@@ -53,7 +52,6 @@ const Navbar = () => {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <NavLink
               to="/"
@@ -66,16 +64,18 @@ const Navbar = () => {
               Home
             </NavLink>
 
-            <NavLink
-              to="/donate"
-              className={({ isActive }) =>
-                `text-white hover:text-red-200 font-medium transition-colors duration-200 ${
-                  isActive ? "border-b-2 border-white" : ""
-                }`
-              }
-            >
-              Donate
-            </NavLink>
+            {user && (
+              <NavLink
+                to="/donate"
+                className={({ isActive }) =>
+                  `text-white hover:text-red-200 font-medium transition-colors duration-200 ${
+                    isActive ? "border-b-2 border-white" : ""
+                  }`
+                }
+              >
+                Donate
+              </NavLink>
+            )}
             <NavLink
               to="/Pending-requests"
               className={({ isActive }) =>
@@ -101,9 +101,8 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Right side - Auth/User Section */}
+          {/* Right side  */}
           <div className="flex items-center space-x-4">
-            {/* Search Button for Mobile */}
             <Link
               to="/search"
               className="md:hidden text-white hover:text-red-200 transition-colors"
@@ -160,7 +159,7 @@ const Navbar = () => {
                       Dashboard
                     </Link>
 
-                    {user.role === "admin" && (
+                    {role === "admin" && (
                       <Link
                         to="/dashboard/all-users"
                         className="flex items-center px-4 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors"
@@ -184,13 +183,6 @@ const Navbar = () => {
             ) : (
               <div className="hidden md:flex items-center space-x-4">
                 <Link
-                  to="/search"
-                  className="text-white hover:text-red-200 font-medium transition-colors"
-                >
-                  Search Donors
-                </Link>
-
-                <Link
                   to="/login"
                   className="text-white hover:text-red-200 font-medium transition-colors"
                 >
@@ -206,7 +198,6 @@ const Navbar = () => {
               </div>
             )}
 
-            {/* Mobile Menu Button */}
             <button
               onClick={toggleMenu}
               className="md:hidden text-white hover:text-red-200 transition-colors focus:outline-none"

@@ -3,10 +3,9 @@ import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 
 const ContactUs = () => {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-10 bg-red-50">
       <div className="container mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          {/* Left Side: Contact Form */}
           <div className="bg-gray-50 p-8 lg:p-12 rounded-[32px] border border-gray-100">
             <h3 className="text-3xl font-black text-gray-900 mb-6">
               Send us a Message
@@ -60,7 +59,6 @@ const ContactUs = () => {
             </form>
           </div>
 
-          {/* Right Side: Contact Info */}
           <div className="lg:pt-10">
             <div className="inline-block px-4 py-1.5 mb-4 text-xs font-bold tracking-widest text-red-600 uppercase bg-red-100 rounded-full">
               Contact Support
@@ -75,7 +73,6 @@ const ContactUs = () => {
             </p>
 
             <div className="space-y-8">
-              {/* Phone Info */}
               <div className="flex items-center gap-6">
                 <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 text-xl shadow-sm">
                   <FaPhoneAlt />
@@ -84,13 +81,10 @@ const ContactUs = () => {
                   <p className="text-sm font-bold text-gray-400 uppercase tracking-wider">
                     Call Us Today
                   </p>
-                  <p className="text-xl font-black text-gray-800">
-                    +880 1234 567 890
-                  </p>
+                  <p className=" font-black text-gray-800">+880 1234 567 890</p>
                 </div>
               </div>
 
-              {/* Email Info */}
               <div className="flex items-center gap-6">
                 <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 text-xl shadow-sm">
                   <FaEnvelope />
@@ -99,13 +93,12 @@ const ContactUs = () => {
                   <p className="text-sm font-bold text-gray-400 uppercase tracking-wider">
                     Email Support
                   </p>
-                  <p className="text-xl font-black text-gray-800">
+                  <p className="font-black text-gray-800">
                     support@lifesource.com
                   </p>
                 </div>
               </div>
 
-              {/* Location Info */}
               <div className="flex items-center gap-6">
                 <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 text-xl shadow-sm">
                   <FaMapMarkerAlt />
@@ -114,9 +107,7 @@ const ContactUs = () => {
                   <p className="text-sm font-bold text-gray-400 uppercase tracking-wider">
                     Our Location
                   </p>
-                  <p className="text-xl font-black text-gray-800">
-                    Dhaka, Bangladesh
-                  </p>
+                  <p className="font-black text-gray-800">Dhaka, Bangladesh</p>
                 </div>
               </div>
             </div>

@@ -22,12 +22,13 @@ import DonationRequestDetails from "../pages/DonationRequestDetails";
 import EditDonationRequest from "../dashboard/EditDonationRequest";
 import VolunteerDashboard from "../dashboard/VolunteerDashboard";
 import VolunteerDonationRequests from "../dashboard/VolunteerDonationRequests";
+import ErrorPage from "../components/shared/ErrorPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    errorElement: <h1>404 Not Found</h1>,
+    errorElement: <ErrorPage></ErrorPage>,
     children: [
       {
         path: "",
@@ -71,7 +72,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/payment-success",
-        element: <PaymentSuccess />,
+        element: (
+          <PrivateRoute>
+            <PaymentSuccess />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/payment-cancel",
@@ -90,7 +95,7 @@ export const router = createBrowserRouter([
         <DashboardLayout />
       </PrivateRoute>
     ),
-    errorElement: <h1>404 Not Found</h1>,
+    errorElement: <ErrorPage></ErrorPage>,
     children: [
       {
         index: true,

@@ -75,10 +75,7 @@ const VolunteerDonationRequests = () => {
     }
   };
 
-  if (loading)
-    return (
-    <Loading/>
-    );
+  if (loading) return <Loading />;
 
   return (
     <div className="p-4 space-y-4">
@@ -105,7 +102,7 @@ const VolunteerDonationRequests = () => {
         </select>
       </div>
 
-      <div className="hidden md:block bg-white shadow rounded overflow-hidden">
+      <div className="hidden md:block bg-red-50 shadow rounded overflow-hidden">
         <table className="w-full border-collapse">
           <thead className="bg-gray-100 text-gray-700">
             <tr>

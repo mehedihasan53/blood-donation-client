@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import {
   FaUsers,
@@ -12,6 +12,7 @@ import {
 import { GiHeartDrop } from "react-icons/gi";
 import { MdAttachMoney } from "react-icons/md";
 import Loading from "../components/shared/Loading";
+import { AuthContext } from "../Provider/AuthProvider";
 
 const AdminDashboard = () => {
   const axiosSecure = useAxiosSecure();
@@ -25,6 +26,7 @@ const AdminDashboard = () => {
     recentDonations: [],
   });
   const [loading, setLoading] = useState(true);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     fetchDashboardData();
@@ -116,7 +118,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="p-5 space-y-4">
+        <div className="p-5 space-y-4 ">
           {request.recipientUpazila && request.recipientDistrict && (
             <div className="flex items-center gap-3 p-3 bg-red-50 rounded-xl">
               <FaMapMarkerAlt className="text-red-600 w-6 h-6" />
@@ -183,7 +185,10 @@ const AdminDashboard = () => {
             </div>
             <div>
               <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800">
-                Welcome, Admin
+                Welcome,{" "}
+                <span className="text-red-600">
+                  {user?.displayName || "Admin"}
+                </span>
               </h1>
               <p className="text-gray-600 mt-2 text-lg">
                 Quick overview of all users, donation requests, and total

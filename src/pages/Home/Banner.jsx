@@ -33,26 +33,25 @@ const Banner = () => {
   ];
 
   return (
-    <div className="relative min-h-screen flex items-center overflow-hidden bg-[#fafafa] py-16 lg:py-0">
-      {/* Background  */}
+    <div className="relative min-h-screen flex items-center overflow-hidden bg-transparent py-12 lg:py-0">
       <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-red-100 rounded-full mix-blend-multiply filter blur-[100px] opacity-30 animate-blob" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-pink-100 rounded-full mix-blend-multiply filter blur-[100px] opacity-30 animate-blob animation-delay-2000" />
 
       <div className="container mx-auto px-6 lg:px-12 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Main Hero Content */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="text-center lg:text-left"
+            className="text-center lg:text-left order-1"
           >
             <motion.div
               variants={itemVariants}
               className="inline-flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 px-5 py-2 rounded-full text-sm font-bold mb-8"
             >
               <MdBloodtype className="text-xl animate-pulse" />
-              <span className="uppercase tracking-wider ">
+              <span className="uppercase tracking-wider">
                 Be a Life Saver Today
               </span>
             </motion.div>
@@ -117,31 +116,35 @@ const Banner = () => {
             </div>
           </motion.div>
 
+          {/* Banner Image  */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1 }}
-            className="hidden lg:flex relative justify-center items-center"
+            className="relative flex justify-center items-center order-2 mt-12 lg:mt-0"
           >
-            <div className="absolute w-[550px] h-[550px] bg-gradient-to-tr from-red-100/60 to-red-50/40 rounded-full animate-morph opacity-60" />
+            <div className="absolute w-[300px] h-[300px] lg:w-[550px] lg:h-[550px] bg-gradient-to-tr from-red-100/60 to-red-50/40 rounded-full animate-morph opacity-60" />
 
             <motion.div
-              animate={{ y: [0, -20, 0] }}
+              animate={{
+                y: window.innerWidth > 1024 ? [0, -20, 0] : [0, 0, 0],
+              }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              className="relative z-20 w-[110%] max-w-[500px]"
+              className="relative z-20 w-[85%] lg:w-[110%] max-w-[500px]"
             >
               <img
                 src={bannerImg}
                 alt="Blood Donation Banner"
-                className="w-full h-auto drop-shadow-[0_40px_60px_rgba(220,38,38,0.15)] object-contain rounded-2xl"
+                className="w-full h-auto drop-shadow-[0_20px_40px_rgba(220,38,38,0.15)] lg:drop-shadow-[0_40px_60px_rgba(220,38,38,0.15)] object-contain rounded-2xl"
               />
             </motion.div>
 
+            {/* Verified Card */}
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 1, type: "spring" }}
-              className="absolute bottom-5 -right-8 z-30 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white flex items-center gap-3"
+              className="hidden lg:flex absolute bottom-5 -right-8 z-30 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white items-center gap-3"
             >
               <div className="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center text-green-600">
                 <FaUserCheck />
@@ -156,7 +159,8 @@ const Banner = () => {
               </div>
             </motion.div>
 
-            <div className="absolute inset-0 z-10 pointer-events-none">
+            {/* Blood Groups Floating Text */}
+            <div className="hidden lg:block absolute inset-0 z-10 pointer-events-none">
               {bloodGroups.map((bg, i) => (
                 <motion.span
                   key={i}
