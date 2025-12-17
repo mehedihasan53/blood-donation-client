@@ -6,8 +6,11 @@ import {
   FiCalendar,
   FiUser,
   FiDroplet,
+  FiDownload,
 } from "react-icons/fi";
 import useAxios from "../hooks/useAxios";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -36,14 +39,18 @@ const Search = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const districtsData = await fetch("/districts.json").then((res) =>
-        res.json()
-      );
-      const upazilasData = await fetch("/upazilas.json").then((res) =>
-        res.json()
-      );
-      setDistricts(districtsData.districts);
-      setUpazilas(upazilasData.upazilas);
+      try {
+        const districtsData = await fetch("/districts.json").then((res) =>
+          res.json()
+        );
+        const upazilasData = await fetch("/upazilas.json").then((res) =>
+          res.json()
+        );
+        setDistricts(districtsData.districts);
+        setUpazilas(upazilasData.upazilas);
+      } catch (err) {
+        console.error("Error loading location data:", err);
+      }
     };
     fetchData();
   }, []);
@@ -77,18 +84,59 @@ const Search = () => {
     }
   };
 
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("Blood Donation Search Results", 14, 15);
+    doc.setFontSize(10);
+    doc.text(`Total Donors Found: ${results.length}`, 14, 22);
+
+    const tableColumn = [
+      "Recipient Name",
+      "Blood",
+      "District",
+      "Upazila",
+      "Hospital",
+      "Date",
+    ];
+    const tableRows = [];
+
+    results.forEach((donor) => {
+      const donorData = [
+        donor.recipientName,
+        donor.bloodGroup,
+        donor.recipientDistrict,
+        donor.recipientUpazila,
+        donor.hospitalName || "N/A",
+        new Date(donor.donationDate).toLocaleDateString(),
+      ];
+      tableRows.push(donorData);
+    });
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 30,
+      theme: "grid",
+      headStyles: { fillColor: [220, 38, 38] },
+      styles: { fontSize: 9 },
+    });
+
+    doc.save("blood_donors_list.pdf");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-4">
-      {/* Search Form */}
+      {/* Search Form Section */}
       <form
         onSubmit={handleSearch}
-        className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"
+        className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 bg-white p-6 rounded-2xl shadow-sm border border-gray-100"
       >
-        {/* Blood Group */}
         <select
           name="bloodGroup"
           required
-          className="border rounded-xl px-4 py-3"
+          className="border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-red-500 transition"
         >
           <option value="">Select Blood Group</option>
           {bloodGroups.map((bg) => (
@@ -98,12 +146,11 @@ const Search = () => {
           ))}
         </select>
 
-        {/* District */}
         <select
           name="district"
           value={selectedDistrict}
           onChange={(e) => setSelectedDistrict(e.target.value)}
-          className="border rounded-xl px-4 py-3"
+          className="border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-red-500 transition"
         >
           <option value="">All Districts</option>
           {districts.map((d) => (
@@ -113,11 +160,10 @@ const Search = () => {
           ))}
         </select>
 
-        {/* Upazila */}
         <select
           name="upazila"
           disabled={!selectedDistrict}
-          className="border rounded-xl px-4 py-3"
+          className="border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-red-500 transition"
         >
           <option value="">All Upazilas</option>
           {filteredUpazilas.map((u) => (
@@ -130,101 +176,98 @@ const Search = () => {
         <button
           type="submit"
           disabled={loading}
-          className="md:col-span-3 bg-gradient-to-r from-red-600 to-red-700 text-white py-3 rounded-xl hover:from-red-700 hover:to-red-800 transition"
+          className="md:col-span-3 bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700 transition active:scale-95 flex items-center justify-center gap-2"
         >
           {loading ? "Searching..." : "Search Donors"}
         </button>
       </form>
 
+      {/* Results  */}
+      <div className="max-w-7xl mx-auto mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <h2 className="text-2xl font-bold text-gray-800">
+          {results.length > 0 ? `Donors Found (${results.length})` : "Results"}
+        </h2>
+        {results.length > 0 && (
+          <button
+            onClick={downloadPDF}
+            className="w-full sm:w-auto bg-red-600 text-white px-6 py-2.5 rounded-xl flex items-center justify-center gap-2 hover:bg-red-700 transition shadow-md"
+          >
+            <FiDownload /> Download PDF
+          </button>
+        )}
+      </div>
+
+      {/* Cards Display */}
       {results.length > 0 ? (
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {results.map((donor, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-2xl border border-gray-200 shadow hover:shadow-lg transition transform hover:-translate-y-1"
+              className="bg-white rounded-2xl border-l-8 border-red-600 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col items-center p-6 text-center"
             >
-              <div className="p-6 border-b border-gray-100 flex justify-between items-start">
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mr-4">
-                    <FiUser className="text-2xl text-red-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-800">
-                      {donor.recipientName}
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      {donor.requesterEmail}
-                    </p>
-                  </div>
-                </div>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-bold ${getBloodGroupColor(
-                    donor.bloodGroup
-                  )}`}
-                >
-                  {donor.bloodGroup}
-                </span>
+              <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-4 border border-red-100">
+                <FiUser className="text-4xl text-red-600" />
               </div>
 
-              <div className="p-6 space-y-4">
-                <div className="flex items-center">
-                  <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center mr-3">
-                    <FiMapPin className="text-gray-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Location</p>
-                    <p className="font-medium">
-                      {donor.recipientUpazila}, {donor.recipientDistrict}
-                    </p>
-                  </div>
+              <h3 className="text-xl font-bold text-gray-800">
+                {donor.recipientName}
+              </h3>
+              <p className="text-gray-500 text-xs mb-3 italic">
+                {donor.requesterEmail}
+              </p>
+
+              <span
+                className={`px-4 py-1 rounded-full text-xs font-black uppercase mb-5 ${getBloodGroupColor(
+                  donor.bloodGroup
+                )}`}
+              >
+                Blood Group: {donor.bloodGroup}
+              </span>
+
+              <div className="w-full space-y-3 mb-6">
+                <div className="flex items-center justify-center gap-2 text-gray-600">
+                  <FiMapPin className="text-red-500 flex-shrink-0" />
+                  <span className="text-sm font-medium">
+                    {donor.recipientUpazila}, {donor.recipientDistrict}
+                  </span>
                 </div>
 
                 {donor.hospitalName && (
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center mr-3">
-                      <FiDroplet className="text-gray-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Hospital</p>
-                      <p className="font-medium">{donor.hospitalName}</p>
-                    </div>
+                  <div className="flex items-center justify-center gap-2 text-gray-600">
+                    <FiDroplet className="text-red-500 flex-shrink-0" />
+                    <span className="text-sm font-medium truncate max-w-[200px]">
+                      {donor.hospitalName}
+                    </span>
                   </div>
                 )}
 
-                {donor.donationDate && (
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center mr-3">
-                      <FiCalendar className="text-gray-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Donation Date</p>
-                      <p className="font-medium">
-                        {new Date(donor.donationDate).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {donor.fullAddress && (
-                  <p className="text-gray-500 text-sm">{donor.fullAddress}</p>
-                )}
-
-                <div className="flex gap-3 mt-4">
-                  <button className="flex-1 py-3 px-4 bg-red-50 text-red-600 font-medium rounded-xl hover:bg-red-100 transition flex items-center justify-center">
-                    <FiPhone className="mr-2" /> Contact
-                  </button>
-                  <button className="flex-1 py-3 px-4 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition flex items-center justify-center">
-                    <FiMail className="mr-2" /> Message
-                  </button>
+                <div className="flex items-center justify-center gap-2 text-gray-600">
+                  <FiCalendar className="text-red-500 flex-shrink-0" />
+                  <span className="text-sm font-medium">
+                    {new Date(donor.donationDate).toLocaleDateString()}
+                  </span>
                 </div>
+              </div>
+
+              <div className="flex gap-2 w-full mt-auto">
+                <button className="flex-1 py-3 bg-red-50 text-red-600 font-bold rounded-xl hover:bg-red-100 transition flex items-center justify-center gap-2 text-sm border border-red-100">
+                  <FiPhone /> Contact
+                </button>
+                <button className="flex-1 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition flex items-center justify-center gap-2 text-sm shadow-sm">
+                  <FiMail /> Message
+                </button>
               </div>
             </div>
           ))}
         </div>
       ) : (
-        <p className="text-gray-500 text-center mt-8">
-          No donors found for selected criteria.
-        </p>
+        !loading && (
+          <div className="text-center py-20 bg-white rounded-2xl shadow-sm max-w-7xl mx-auto border border-dashed border-gray-300">
+            <p className="text-gray-400 font-medium">
+              Search for donors to see results here.
+            </p>
+          </div>
+        )
       )}
     </div>
   );
