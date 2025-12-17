@@ -3,6 +3,7 @@ import { useAuth } from "../../Provider/AuthProvider";
 import { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import toast from "react-hot-toast";
+import DynamicTitle from "../../components/shared/DynamicTitle";
 
 const Login = () => {
   const { loginWithEmail } = useAuth();
@@ -29,6 +30,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
+      <DynamicTitle title="Login" />
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">

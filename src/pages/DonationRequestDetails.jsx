@@ -16,6 +16,8 @@ import {
   FaArrowLeft,
 } from "react-icons/fa";
 import useAxiosSecure from "../hooks/useAxiosSecure";
+import Loading from "../components/shared/Loading";
+import DynamicTitle from "../components/shared/DynamicTitle";
 
 const DonationRequestDetails = () => {
   const { id } = useParams();
@@ -57,8 +59,6 @@ const DonationRequestDetails = () => {
       if (!user) return;
       const token = await user.getIdToken();
 
-      // await axios.patch(
-      //   `http://localhost:3000/donation-requests/${id}`,
       await axiosSecure.patch(
         `donation-requests/${id}`,
         {
@@ -86,17 +86,13 @@ const DonationRequestDetails = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[400px]">
-        <FaSpinner className="animate-spin text-red-500 text-4xl mb-4" />
-        <p className="text-gray-600">Loading donation details...</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (!request) {
     return (
       <div className="text-center py-16">
+        <DynamicTitle title="Donation request details" />
         <div className="text-gray-400 text-6xl mb-4">🩸</div>
         <h2 className="text-2xl font-bold text-gray-700 mb-2">
           Request Not Found

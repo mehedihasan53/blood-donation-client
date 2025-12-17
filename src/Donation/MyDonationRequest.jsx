@@ -11,6 +11,7 @@ import {
 import { format } from "date-fns";
 import toast, { Toaster } from "react-hot-toast";
 import Loading from "../components/shared/Loading";
+import DynamicTitle from "../components/shared/DynamicTitle";
 
 const MyDonationRequests = () => {
   const axiosSecure = useAxiosSecure();
@@ -426,6 +427,7 @@ const MyDonationRequests = () => {
 
   return (
     <div className="min-h-screen p-4 md:p-8 bg-gray-50">
+      <DynamicTitle title="My Donation Requests" />
       <Toaster />
 
       <h1 className="text-4xl font-extrabold text-gray-900 mb-2">

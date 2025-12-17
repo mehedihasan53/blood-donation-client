@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../firebase/firebase.config";
 import { useEffect, useState } from "react";
 import useAxios from "../../hooks/useAxios";
+import DynamicTitle from "../../components/shared/DynamicTitle";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -82,7 +83,6 @@ const Register = () => {
         photoURL: imageUrl,
       });
 
-      // await axios.post("http://localhost:3000/users",
       await axiosInstance.post("/users", {
         name,
         email,
@@ -106,6 +106,7 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <DynamicTitle title="Register" />
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-gray-800">Create Account</h2>

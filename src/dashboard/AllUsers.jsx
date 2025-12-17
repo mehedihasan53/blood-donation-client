@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import toast from "react-hot-toast";
 import Loading from "../components/shared/Loading";
+import DynamicTitle from "../components/shared/DynamicTitle";
 
 const getRoleBadgeClass = (role) => {
   if (role === "admin") return "bg-purple-100 text-purple-800";
@@ -137,6 +138,7 @@ const AllUsers = () => {
 
   return (
     <div className="p-4 sm:p-6">
+      <DynamicTitle title="All Users" />
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Manage Users</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">

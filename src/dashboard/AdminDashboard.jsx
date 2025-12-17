@@ -13,6 +13,7 @@ import { GiHeartDrop } from "react-icons/gi";
 import { MdAttachMoney } from "react-icons/md";
 import Loading from "../components/shared/Loading";
 import { AuthContext } from "../Provider/AuthProvider";
+import DynamicTitle from "../components/shared/DynamicTitle";
 
 const AdminDashboard = () => {
   const axiosSecure = useAxiosSecure();
@@ -98,6 +99,7 @@ const AdminDashboard = () => {
     const bloodGroupColor = getBloodGroupColor(request.bloodGroup || "");
     return (
       <div className="bg-white rounded-2xl shadow-lg border-l-6 border-red-500 overflow-hidden hover:shadow-xl transition-all duration-300">
+        <DynamicTitle title={"Admin Dashboard"}></DynamicTitle>
         <div className="flex items-center gap-4 p-5 bg-red-50">
           <div className="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center">
             <FaUsers className="text-red-600 text-2xl" />

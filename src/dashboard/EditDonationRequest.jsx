@@ -12,6 +12,7 @@ import {
   FaArrowLeft,
 } from "react-icons/fa";
 import Loading from "../components/shared/Loading";
+import DynamicTitle from "../components/shared/DynamicTitle";
 
 const EditDonationRequest = () => {
   const { id } = useParams();

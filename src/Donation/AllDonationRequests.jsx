@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 import Loading from "../components/shared/Loading";
 import toast, { Toaster } from "react-hot-toast";
+import DynamicTitle from "../components/shared/DynamicTitle";
 
 const STATUS = [
   { value: "all", label: "All" },
@@ -185,6 +186,7 @@ const AllDonationRequests = () => {
 
   return (
     <div className="p-4 sm:p-6 space-y-6">
+      <DynamicTitle title="All Donation Requests" />
       <Toaster
         position="top-right"
         reverseOrder={false}

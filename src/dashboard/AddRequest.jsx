@@ -14,6 +14,7 @@ import {
   FaFileAlt,
 } from "react-icons/fa";
 import useAxiosSecure from "../hooks/useAxiosSecure";
+import DynamicTitle from "../components/shared/DynamicTitle";
 
 const AddRequest = () => {
   const { user } = useAuth();
@@ -71,6 +72,7 @@ const AddRequest = () => {
 
   return (
     <div className="min-h-screen">
+      <DynamicTitle title="Create Request" />
       <div className="max-w-4xl mx-auto">
         <div className="mb-8 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl shadow-2xl overflow-hidden">
           <div className="p-8 text-white">

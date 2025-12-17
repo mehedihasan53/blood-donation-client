@@ -14,6 +14,7 @@ import {
 } from "react-icons/fa";
 import toast from "react-hot-toast";
 import Loading from "../../components/shared/Loading";
+import DynamicTitle from "../../components/shared/DynamicTitle";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -173,6 +174,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+      <DynamicTitle title="My Profile" />
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>

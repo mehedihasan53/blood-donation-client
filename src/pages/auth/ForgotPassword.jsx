@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../../firebase/firebase.config";
 import toast from "react-hot-toast";
+import DynamicTitle from "../../components/shared/DynamicTitle";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -28,6 +29,7 @@ const ForgotPassword = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <DynamicTitle title="Forgot Password" />
       <div className="w-full max-w-md bg-white rounded-lg shadow p-8">
         <h2 className="text-2xl font-bold text-center mb-6">Reset Password</h2>
 

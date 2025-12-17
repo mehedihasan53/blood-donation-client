@@ -3,6 +3,7 @@ import useAxiosSecure from "../hooks/useAxiosSecure";
 import { FaEye, FaEdit, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
 import Loading from "../components/shared/Loading";
+import DynamicTitle from "../components/shared/DynamicTitle";
 
 const STATUS = [
   { value: "all", label: "All" },
@@ -79,6 +80,7 @@ const VolunteerDonationRequests = () => {
 
   return (
     <div className="p-4 space-y-4">
+      <DynamicTitle title="Donation Requests" />
       <Toaster position="top-right" />
 
       <div className="flex justify-between items-center">

@@ -17,6 +17,7 @@ import {
 } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
 import Loading from "../components/shared/Loading";
+import DynamicTitle from "../components/shared/DynamicTitle";
 
 const DonorDashboard = () => {
   const { user } = useAuth();
@@ -128,6 +129,7 @@ const DonorDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+      <DynamicTitle title="Donor Dashboard" />
       <Toaster />
 
       <div className="max-w-7xl mx-auto">

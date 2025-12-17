@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaExclamationTriangle, FaHome } from "react-icons/fa";
+import DynamicTitle from "./DynamicTitle";
 
 const ErrorPage = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
+      <DynamicTitle title="Error Page" />
       <div className="text-center">
         <div className="flex justify-center mb-6">
           <div className="p-6 bg-red-100 rounded-full animate-bounce">

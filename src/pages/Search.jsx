@@ -11,6 +11,7 @@ import {
 import useAxios from "../hooks/useAxios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import DynamicTitle from "../components/shared/DynamicTitle";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -128,6 +129,8 @@ const Search = () => {
 
   return (
     <div className="min-h-screen bg-red-50 p-4">
+      <DynamicTitle title="Search Blood Donors" />
+
       {/* Search Form Section */}
       <form
         onSubmit={handleSearch}

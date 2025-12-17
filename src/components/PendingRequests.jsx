@@ -13,6 +13,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import Loading from "./shared/Loading";
 import useAxiosSecure from "../hooks/useAxiosSecure";
+import DynamicTitle from "./shared/DynamicTitle";
 
 const PendingRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -22,7 +23,6 @@ const PendingRequests = () => {
   useEffect(() => {
     const fetchPendingRequests = async () => {
       try {
-        
         const res = await axiosInstance.get(
           "/donation-requests/status/pending"
         );
@@ -98,6 +98,8 @@ const PendingRequests = () => {
 
   return (
     <div className="min-h-screen bg-red-50 p-4 md:p-8">
+      <DynamicTitle title="Pending Requests" />
+
       <Toaster position="top-right" />
 
       <div className="max-w-7xl mx-auto mb-8">

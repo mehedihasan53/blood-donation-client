@@ -3,6 +3,7 @@ import { FaTint, FaHourglassHalf, FaCheckCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import Loading from "../components/shared/Loading";
+import DynamicTitle from "../components/shared/DynamicTitle";
 
 const VolunteerDashboard = () => {
   const axiosSecure = useAxiosSecure();
@@ -28,6 +29,7 @@ const VolunteerDashboard = () => {
 
   return (
     <div className="p-6 space-y-6">
+      <DynamicTitle title="Volunteer Dashboard" />
       <div>
         <h1 className="text-2xl font-bold text-gray-800">
           Volunteer Dashboard
