@@ -2,6 +2,10 @@ import { createBrowserRouter } from "react-router-dom";
 import Root from "../layouts/Root";
 import Home from "../pages/Home/Home";
 import DashboardLayout from "../layouts/DashboardLayout";
+import DonationFAQ from "../pages/DonationFAQ";
+import PrivacyPolicy from "../pages/PrivacyPolicy";
+import TermsOfService from "../pages/TermsOfService";
+import AboutOurMission from "../pages/AboutOurMission";
 
 import Register from "../pages/auth/Register";
 import Login from "../pages/auth/Login";
@@ -85,6 +89,22 @@ export const router = createBrowserRouter([
       {
         path: "/Pending-requests",
         element: <PendingRequests />,
+      },
+      {
+        path: "/donation-faq",
+        element: <DonationFAQ />,
+      },
+      {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: "/terms-of-service",
+        element: <TermsOfService />,
+      },
+      {
+        path: "/about-our-mission",
+        element: <AboutOurMission />,
       },
     ],
   },

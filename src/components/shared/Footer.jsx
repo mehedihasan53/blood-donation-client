@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import {
   FaFacebookF,
@@ -77,7 +76,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/" className="hover:text-red-500 transition-colors">
+                <Link to="/about-our-mission" className="hover:text-red-500 transition-colors">
                   About Our Mission
                 </Link>
               </li>
@@ -90,18 +89,18 @@ const Footer = () => {
             </h6>
             <ul className="space-y-4">
               <li>
-                <Link to="#" className="hover:text-red-500 transition-colors">
+                <Link to="/donation-faq" className="hover:text-red-500 transition-colors">
                   Donation FAQ
                 </Link>
               </li>
 
               <li>
-                <Link to="#" className="hover:text-red-500 transition-colors">
+                <Link to="/privacy-policy" className="hover:text-red-500 transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:text-red-500 transition-colors">
+                <Link to="/terms-of-service" className="hover:text-red-500 transition-colors">
                   Terms of Service
                 </Link>
               </li>
