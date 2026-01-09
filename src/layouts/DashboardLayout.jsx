@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Aside from "../dashboard/Aside";
 import { Outlet } from "react-router";
 import { useAuth } from "../Provider/AuthProvider";
+import ScrollToTop from "../components/shared/ScrollToTop";
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -9,10 +10,10 @@ const DashboardLayout = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 flex overflow-hidden">
+      <ScrollToTop />
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-2xl transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-2xl transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <Aside closeSidebar={() => setSidebarOpen(false)} />
       </aside>

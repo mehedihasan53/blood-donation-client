@@ -23,7 +23,7 @@ const PendingRequests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  const itemsPerPage = 12;
   const axiosInstance = useAxiosSecure();
 
   useEffect(() => {
@@ -201,7 +201,7 @@ const PendingRequests = () => {
           {/* Requests Grid */}
           <motion.div
             variants={containerVariants}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-12"
           >
             {currentRequests.map((req) => {
               const bloodGroupColor = getBloodGroupColor(req.bloodGroup);
@@ -210,20 +210,20 @@ const PendingRequests = () => {
                 <motion.div
                   key={req._id}
                   variants={itemVariants}
-                  whileHover={{ y: -5 }}
+                  whileHover={{ y: -3 }}
                   className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col"
                 >
                   {/* Header */}
-                  <div className="p-6 border-b border-gray-200/50 dark:border-gray-700/30">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-12 h-12 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                        <FaUser className="text-red-600 dark:text-red-400 text-lg" />
+                  <div className="p-4 lg:p-5 border-b border-gray-200/50 dark:border-gray-700/30">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                        <FaUser className="text-red-600 dark:text-red-400 text-sm" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white truncate">
+                        <h3 className="text-base font-bold text-gray-900 dark:text-white truncate">
                           {req.recipientName}
                         </h3>
-                        <p className="text-gray-500 dark:text-gray-400 text-sm truncate">
+                        <p className="text-gray-500 dark:text-gray-400 text-xs truncate">
                           {req.requesterEmail}
                         </p>
                       </div>
@@ -231,22 +231,22 @@ const PendingRequests = () => {
 
                     {/* Blood Group Badge */}
                     <div className="flex justify-center">
-                      <div className={`${bloodGroupColor.bg} backdrop-blur-sm ${bloodGroupColor.text} ${bloodGroupColor.border} border px-4 py-2 rounded-full flex items-center gap-2`}>
-                        <FaTint className="text-sm" />
-                        <span className="font-bold text-sm">{req.bloodGroup}</span>
+                      <div className={`${bloodGroupColor.bg} backdrop-blur-sm ${bloodGroupColor.text} ${bloodGroupColor.border} border px-3 py-1.5 rounded-full flex items-center gap-1.5`}>
+                        <FaTint className="text-xs" />
+                        <span className="font-bold text-xs">{req.bloodGroup}</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div className="p-6 space-y-4 flex-grow">
+                  <div className="p-4 lg:p-5 space-y-3 flex-grow">
                     {/* Location */}
-                    <div className="flex items-center gap-3 p-3 bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30">
-                      <div className="w-8 h-8 bg-blue-100/80 dark:bg-blue-900/40 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                        <FaMapMarkerAlt className="text-blue-600 dark:text-blue-400 text-sm" />
+                    <div className="flex items-center gap-2.5 p-2.5 bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30">
+                      <div className="w-7 h-7 bg-blue-100/80 dark:bg-blue-900/40 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                        <FaMapMarkerAlt className="text-blue-600 dark:text-blue-400 text-xs" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-900 dark:text-white text-sm">
+                        <p className="font-semibold text-gray-900 dark:text-white text-xs">
                           {req.recipientUpazila}
                         </p>
                         <p className="text-gray-600 dark:text-gray-300 text-xs">
@@ -256,18 +256,18 @@ const PendingRequests = () => {
                     </div>
 
                     {/* Date */}
-                    <div className="flex items-center gap-3 p-3 bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30">
-                      <div className="w-8 h-8 bg-green-100/80 dark:bg-green-900/40 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                        <FaCalendarAlt className="text-green-600 dark:text-green-400 text-sm" />
+                    <div className="flex items-center gap-2.5 p-2.5 bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30">
+                      <div className="w-7 h-7 bg-green-100/80 dark:bg-green-900/40 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                        <FaCalendarAlt className="text-green-600 dark:text-green-400 text-xs" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-900 dark:text-white text-sm">
+                        <p className="font-semibold text-gray-900 dark:text-white text-xs">
                           {formatDate(req.donationDate)}
                         </p>
                         {req.donationTime && (
                           <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-300">
-                            <FaClock className="text-gray-400 dark:text-gray-500" />
-                            <span>{req.donationTime}</span>
+                            <FaClock className="text-gray-400 dark:text-gray-500 text-xs" />
+                            <span className="text-xs">{req.donationTime}</span>
                           </div>
                         )}
                       </div>
@@ -275,11 +275,11 @@ const PendingRequests = () => {
 
                     {/* Hospital */}
                     {req.hospitalName && (
-                      <div className="flex items-center gap-3 p-3 bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30">
-                        <div className="w-8 h-8 bg-purple-100/80 dark:bg-purple-900/40 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                          <FaStethoscope className="text-purple-600 dark:text-purple-400 text-sm" />
+                      <div className="flex items-center gap-2.5 p-2.5 bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30">
+                        <div className="w-7 h-7 bg-purple-100/80 dark:bg-purple-900/40 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                          <FaStethoscope className="text-purple-600 dark:text-purple-400 text-xs" />
                         </div>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 truncate font-medium">
+                        <p className="text-xs text-gray-700 dark:text-gray-300 truncate font-medium">
                           {req.hospitalName}
                         </p>
                       </div>
@@ -287,17 +287,17 @@ const PendingRequests = () => {
                   </div>
 
                   {/* Footer */}
-                  <div className="p-6 pt-0">
+                  <div className="p-4 lg:p-5 pt-0">
                     <motion.div
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <Link
                         to={`/donation-request/${req._id}`}
-                        className="w-full flex items-center justify-center gap-2 py-3 bg-red-600/90 dark:bg-red-600/80 backdrop-blur-sm text-white rounded-xl font-semibold hover:bg-red-700/90 dark:hover:bg-red-700/80 transition-all duration-300 border border-red-500/30 shadow-lg hover:shadow-xl"
+                        className="w-full flex items-center justify-center gap-2 py-2.5 bg-red-600/90 dark:bg-red-600/80 backdrop-blur-sm text-white rounded-xl font-semibold hover:bg-red-700/90 dark:hover:bg-red-700/80 transition-all duration-300 border border-red-500/30 shadow-lg hover:shadow-xl text-sm"
                       >
-                        <span>View Details & Donate</span>
-                        <FaArrowRight className="text-sm" />
+                        <span>View & Donate</span>
+                        <FaArrowRight className="text-xs" />
                       </Link>
                     </motion.div>
                   </div>

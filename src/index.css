@@ -6,6 +6,32 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Sticky navbar improvements */
+nav[class*="sticky"] {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Enhanced shadow for sticky navbar on scroll */
+nav[class*="sticky"]:not(:first-child) {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.dark nav[class*="sticky"]:not(:first-child) {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Ensure backdrop-filter support fallback */
+@supports not (backdrop-filter: blur(12px)) {
+  nav[class*="backdrop-blur"] {
+    background-color: rgba(249, 250, 251, 0.95);
+  }
+  
+  .dark nav[class*="backdrop-blur"] {
+    background-color: rgba(30, 41, 59, 0.95);
+  }
+}
+
 /* Custom animations for glassmorphism components */
 @keyframes fade-in {
   from {

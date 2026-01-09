@@ -3,7 +3,6 @@ import { useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaCheckCircle, FaHeart, FaHome, FaTachometerAlt, FaReceipt, FaHandsHelping, FaDownload } from "react-icons/fa";
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import useAxios from "../../hooks/useAxios";
 import { AuthContext } from "../../Provider/AuthProvider";
 import DynamicTitle from "../../components/shared/DynamicTitle";
@@ -54,7 +53,7 @@ const PaymentSuccess = () => {
     };
 
     savePayment();
-  }, [sessionId, saved, axiosInstance]);
+  }, [sessionId, saved, axiosInstance, searchParams]);
 
   const generatePDF = async () => {
     if (!paymentData || !user) return;

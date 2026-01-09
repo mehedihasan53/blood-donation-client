@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FaUser, FaSignOutAlt, FaHome, FaSun, FaMoon } from "react-icons/fa";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
+import { FaUser, FaSignOutAlt, FaHome, FaSun, FaMoon, FaEnvelope } from "react-icons/fa";
 import { MdBloodtype } from "react-icons/md";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useAuth } from "../../Provider/AuthProvider";
@@ -12,6 +12,38 @@ const Navbar = () => {
   const { user, logout, role } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Handle contact scroll functionality
+  const handleContactClick = () => {
+    const isOnHomePage = location.pathname === '/';
+
+    if (isOnHomePage) {
+      // If already on home page, scroll to contact section
+      const contactSection = document.getElementById('contact-us');
+      if (contactSection) {
+        contactSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    } else {
+      // Navigate to home page and then scroll to contact section
+      navigate('/', { replace: false });
+      setTimeout(() => {
+        const contactSection = document.getElementById('contact-us');
+        if (contactSection) {
+          contactSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }, 200); // Increased delay to avoid conflict with ScrollToTop
+    }
+
+    // Close mobile menu if open
+    setIsMenuOpen(false);
+  };
 
   // Handle user logout
   const handleLogout = async () => {
@@ -43,7 +75,7 @@ const Navbar = () => {
     "block text-gray-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-red-300 hover:bg-white/20 dark:hover:bg-white/10 px-6 py-4 rounded-xl font-medium transition-all duration-300 backdrop-blur-sm";
 
   return (
-    <nav className="bg-gray-50/80 dark:bg-slate-800/90 backdrop-blur-xl border-b border-gray-200/40 dark:border-slate-600/40 sticky top-0 z-50 shadow-sm">
+    <nav className="bg-gray-50/80 dark:bg-slate-800/90 backdrop-blur-xl border-b border-gray-200/40 dark:border-slate-600/40 sticky top-0 z-50 shadow-sm supports-[backdrop-filter]:bg-gray-50/60 supports-[backdrop-filter]:dark:bg-slate-800/70 transition-all duration-200">
       <div className="container mx-auto px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo Section */}
@@ -72,6 +104,13 @@ const Navbar = () => {
             <NavLink to="/pending-requests" className={navLinkStyle}>
               Pending Requests
             </NavLink>
+            <button
+              onClick={handleContactClick}
+              className="px-6 py-3 text-gray-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-red-300 font-medium transition-all duration-300 rounded-xl hover:bg-white/20 dark:hover:bg-white/10 backdrop-blur-sm flex items-center gap-2"
+            >
+
+              Contact
+            </button>
             {user && (
               <>
                 <NavLink to="/donate" className={navLinkStyle}>
@@ -226,6 +265,13 @@ const Navbar = () => {
               >
                 Pending Requests
               </Link>
+              <button
+                onClick={handleContactClick}
+                className={`${mobileLinkStyle} flex items-center gap-3 w-full text-left`}
+              >
+                <FaEnvelope className="text-sm" />
+                Contact
+              </button>
 
               {user && (
                 <>
