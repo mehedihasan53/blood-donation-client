@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   FaUser,
   FaMapMarkerAlt,
@@ -8,6 +8,10 @@ import {
   FaTint,
   FaStethoscope,
   FaArrowRight,
+  FaChevronLeft,
+  FaChevronRight,
+  FaHeart,
+  FaExclamationTriangle,
 } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
@@ -18,6 +22,8 @@ import DynamicTitle from "./shared/DynamicTitle";
 const PendingRequests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
   const axiosInstance = useAxiosSecure();
 
   useEffect(() => {
@@ -35,55 +41,72 @@ const PendingRequests = () => {
       }
     };
     fetchPendingRequests();
-  }, []);
+  }, [axiosInstance]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(requests.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentRequests = requests.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        duration: 0.6
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" }
+    }
+  };
 
   if (loading) {
     return <Loading />;
   }
 
-  if (!requests.length) {
-    return (
-      <div className="text-center py-16">
-        <div className="text-gray-400 text-6xl mb-4">🩸</div>
-        <h2 className="text-2xl font-bold text-gray-700 mb-2">
-          No Pending Requests
-        </h2>
-        <p className="text-gray-500">
-          There are no pending donation requests at the moment.
-        </p>
-      </div>
-    );
-  }
-
   const getBloodGroupColor = (bloodGroup) => {
     if (bloodGroup.includes("A"))
       return {
-        bg: "bg-red-100",
-        text: "text-red-700",
-        border: "border-red-200",
+        bg: "bg-red-100/80 dark:bg-red-900/40",
+        text: "text-red-700 dark:text-red-300",
+        border: "border-red-200/50 dark:border-red-700/30",
       };
     if (bloodGroup.includes("B"))
       return {
-        bg: "bg-blue-100",
-        text: "text-blue-700",
-        border: "border-blue-200",
+        bg: "bg-blue-100/80 dark:bg-blue-900/40",
+        text: "text-blue-700 dark:text-blue-300",
+        border: "border-blue-200/50 dark:border-blue-700/30",
       };
     if (bloodGroup.includes("O"))
       return {
-        bg: "bg-emerald-100",
-        text: "text-emerald-700",
-        border: "border-emerald-200",
+        bg: "bg-emerald-100/80 dark:bg-emerald-900/40",
+        text: "text-emerald-700 dark:text-emerald-300",
+        border: "border-emerald-200/50 dark:border-emerald-700/30",
       };
     if (bloodGroup.includes("AB"))
       return {
-        bg: "bg-purple-100",
-        text: "text-purple-700",
-        border: "border-purple-200",
+        bg: "bg-purple-100/80 dark:bg-purple-900/40",
+        text: "text-purple-700 dark:text-purple-300",
+        border: "border-purple-200/50 dark:border-purple-700/30",
       };
     return {
-      bg: "bg-gray-100",
-      text: "text-gray-700",
-      border: "border-gray-200",
+      bg: "bg-gray-100/80 dark:bg-gray-900/40",
+      text: "text-gray-700 dark:text-gray-300",
+      border: "border-gray-200/50 dark:border-gray-700/30",
     };
   };
 
@@ -96,118 +119,245 @@ const PendingRequests = () => {
     });
   };
 
-  return (
-    <div className="min-h-screen bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t border-white/20 dark:border-gray-700/20 p-4 md:p-8">
-      <DynamicTitle title="Pending Requests" />
+  if (!requests.length) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white/20 to-pink-50/30 dark:from-gray-900/50 dark:via-gray-800/30 dark:to-gray-900/50 backdrop-blur-sm">
+        <DynamicTitle title="Pending Requests" />
 
-      <Toaster position="top-right" />
+        {/* Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-20 w-40 h-40 bg-red-100/20 dark:bg-red-900/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-20 right-20 w-48 h-48 bg-pink-100/20 dark:bg-pink-900/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
+        </div>
 
-      <div className="max-w-7xl mx-auto mb-12">
-        <div className="text-center space-y-4">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 via-red-800 to-gray-900 dark:from-white dark:via-red-300 dark:to-white bg-clip-text text-transparent leading-tight">
-            Pending Blood Donation
-            <br />
-            <span className="text-red-600 dark:text-red-400">Requests</span>
-          </h1>
-
-          <div className="flex items-center justify-center gap-3 mt-6">
-            <div className="h-px bg-gradient-to-r from-transparent via-red-300 dark:via-red-600 to-transparent w-16"></div>
-            <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30 dark:border-gray-700/30">
-              <p className="text-gray-600 dark:text-gray-300 font-medium">
-                <span className="text-2xl font-bold text-red-600 dark:text-red-400">{requests.length}</span>
-                <span className="ml-2 text-sm">request{requests.length !== 1 ? "s" : ""} waiting for donors</span>
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+          <div className="max-w-2xl mx-auto text-center">
+            <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg p-12">
+              <div className="w-20 h-20 bg-gray-100/80 dark:bg-gray-800/60 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6">
+                <FaHeart className="text-3xl text-gray-400 dark:text-gray-500" />
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                No Pending Requests
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                There are no pending donation requests at the moment.
+                Check back later or help spread awareness about blood donation.
               </p>
             </div>
-            <div className="h-px bg-gradient-to-r from-transparent via-red-300 dark:via-red-600 to-transparent w-16"></div>
           </div>
         </div>
       </div>
+    );
+  }
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {requests.map((req) => {
-          const bloodGroupColor = getBloodGroupColor(req.bloodGroup);
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white/20 to-pink-50/30 dark:from-gray-900/50 dark:via-gray-800/30 dark:to-gray-900/50 backdrop-blur-sm">
+      <DynamicTitle title="Pending Blood Requests" />
+      <Toaster position="top-right" />
 
-          return (
-            <div
-              key={req._id}
-              className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-gray-700/30 border-l-4 border-l-red-500 overflow-hidden hover:bg-white/80 dark:hover:bg-gray-900/80 hover:border-white/30 dark:hover:border-gray-700/40 transition-all duration-300 hover:scale-[1.02]"
-            >
-              <div className="flex items-center gap-3 p-4 bg-red-50/50 dark:bg-red-900/20 backdrop-blur-sm">
-                <div className="w-12 h-12 bg-red-100/70 dark:bg-red-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                  <FaUser className="text-red-600 dark:text-red-400 text-xl" />
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-20 w-40 h-40 bg-red-100/20 dark:bg-red-900/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-20 w-48 h-48 bg-pink-100/20 dark:bg-pink-900/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
+        <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-orange-100/20 dark:bg-orange-900/10 rounded-full blur-2xl animate-pulse animation-delay-4000" />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="max-w-7xl mx-auto"
+        >
+          {/* Header Section */}
+          <motion.div variants={itemVariants} className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-red-50/80 dark:bg-red-900/30 backdrop-blur-sm border border-red-200/50 dark:border-red-700/30 text-red-600 dark:text-red-400 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+              <FaExclamationTriangle className="text-sm animate-pulse" />
+              <span className="uppercase tracking-wide">Urgent Requests</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight mb-6">
+              Pending Blood{" "}
+              <span className="text-red-600 dark:text-red-400">Requests</span>
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed mb-8">
+              These are urgent blood donation requests waiting for generous donors like you.
+              Every donation can save up to 3 lives.
+            </p>
+
+            {/* Stats */}
+            <div className="inline-flex items-center gap-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl px-6 py-4 rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                  <FaHeart className="text-red-600 dark:text-red-400 text-sm" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-bold text-gray-900 dark:text-white truncate">
-                    {req.recipientName}
-                  </h3>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs truncate">{req.requesterEmail}</p>
-                </div>
-                <div
-                  className={`${bloodGroupColor.bg} dark:bg-opacity-20 ${bloodGroupColor.text} dark:text-opacity-90 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/20 dark:border-gray-700/30 flex items-center gap-1.5`}
-                >
-                  <FaTint className="text-xs" />
-                  <span className="font-semibold text-sm">{req.bloodGroup}</span>
-                </div>
+                <span className="text-2xl font-bold text-red-600 dark:text-red-400">{requests.length}</span>
+                <span className="text-gray-600 dark:text-gray-300 font-medium">
+                  request{requests.length !== 1 ? "s" : ""} waiting
+                </span>
               </div>
+            </div>
+          </motion.div>
 
-              <div className="p-4 space-y-3">
-                <div className="flex items-center gap-2.5 p-2.5 bg-red-50/40 dark:bg-red-900/10 backdrop-blur-sm rounded-xl border border-white/10 dark:border-gray-700/20">
-                  <div className="w-8 h-8 bg-red-100/70 dark:bg-red-900/30 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                    <FaMapMarkerAlt className="text-red-600 dark:text-red-400 text-sm" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Location</p>
-                    <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">
-                      {req.recipientUpazila}
-                    </p>
-                    <p className="text-gray-600 dark:text-gray-300 text-xs truncate">
-                      {req.recipientDistrict}
-                    </p>
-                  </div>
-                </div>
+          {/* Requests Grid */}
+          <motion.div
+            variants={containerVariants}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
+          >
+            {currentRequests.map((req) => {
+              const bloodGroupColor = getBloodGroupColor(req.bloodGroup);
 
-                <div className="flex items-center gap-2.5 p-2.5 bg-emerald-50/40 dark:bg-emerald-900/10 backdrop-blur-sm rounded-xl border border-white/10 dark:border-gray-700/20">
-                  <div className="w-8 h-8 bg-emerald-100/70 dark:bg-emerald-900/30 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                    <FaCalendarAlt className="text-emerald-600 dark:text-emerald-400 text-sm" />
+              return (
+                <motion.div
+                  key={req._id}
+                  variants={itemVariants}
+                  whileHover={{ y: -5 }}
+                  className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col"
+                >
+                  {/* Header */}
+                  <div className="p-6 border-b border-gray-200/50 dark:border-gray-700/30">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                        <FaUser className="text-red-600 dark:text-red-400 text-lg" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white truncate">
+                          {req.recipientName}
+                        </h3>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm truncate">
+                          {req.requesterEmail}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Blood Group Badge */}
+                    <div className="flex justify-center">
+                      <div className={`${bloodGroupColor.bg} backdrop-blur-sm ${bloodGroupColor.text} ${bloodGroupColor.border} border px-4 py-2 rounded-full flex items-center gap-2`}>
+                        <FaTint className="text-sm" />
+                        <span className="font-bold text-sm">{req.bloodGroup}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Donation Date</p>
-                    <p className="font-semibold text-gray-900 dark:text-white text-sm">
-                      {formatDate(req.donationDate)}
-                    </p>
-                    {req.donationTime && (
-                      <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-300 mt-0.5">
-                        <FaClock className="text-gray-400 dark:text-gray-500" />
-                        <span>{req.donationTime}</span>
+
+                  {/* Content */}
+                  <div className="p-6 space-y-4 flex-grow">
+                    {/* Location */}
+                    <div className="flex items-center gap-3 p-3 bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30">
+                      <div className="w-8 h-8 bg-blue-100/80 dark:bg-blue-900/40 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                        <FaMapMarkerAlt className="text-blue-600 dark:text-blue-400 text-sm" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-gray-900 dark:text-white text-sm">
+                          {req.recipientUpazila}
+                        </p>
+                        <p className="text-gray-600 dark:text-gray-300 text-xs">
+                          {req.recipientDistrict}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Date */}
+                    <div className="flex items-center gap-3 p-3 bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30">
+                      <div className="w-8 h-8 bg-green-100/80 dark:bg-green-900/40 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                        <FaCalendarAlt className="text-green-600 dark:text-green-400 text-sm" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-gray-900 dark:text-white text-sm">
+                          {formatDate(req.donationDate)}
+                        </p>
+                        {req.donationTime && (
+                          <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-300">
+                            <FaClock className="text-gray-400 dark:text-gray-500" />
+                            <span>{req.donationTime}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Hospital */}
+                    {req.hospitalName && (
+                      <div className="flex items-center gap-3 p-3 bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30">
+                        <div className="w-8 h-8 bg-purple-100/80 dark:bg-purple-900/40 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                          <FaStethoscope className="text-purple-600 dark:text-purple-400 text-sm" />
+                        </div>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 truncate font-medium">
+                          {req.hospitalName}
+                        </p>
                       </div>
                     )}
                   </div>
+
+                  {/* Footer */}
+                  <div className="p-6 pt-0">
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Link
+                        to={`/donation-request/${req._id}`}
+                        className="w-full flex items-center justify-center gap-2 py-3 bg-red-600/90 dark:bg-red-600/80 backdrop-blur-sm text-white rounded-xl font-semibold hover:bg-red-700/90 dark:hover:bg-red-700/80 transition-all duration-300 border border-red-500/30 shadow-lg hover:shadow-xl"
+                      >
+                        <span>View Details & Donate</span>
+                        <FaArrowRight className="text-sm" />
+                      </Link>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <motion.div variants={itemVariants} className="flex justify-center">
+              <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg p-4">
+                <div className="flex items-center gap-2">
+                  <motion.button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    whileHover={{ scale: currentPage === 1 ? 1 : 1.05 }}
+                    whileTap={{ scale: currentPage === 1 ? 1 : 0.95 }}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100/80 dark:bg-gray-800/60 backdrop-blur-sm text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200/80 dark:hover:bg-gray-700/60 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200/50 dark:border-gray-700/30"
+                  >
+                    <FaChevronLeft className="text-sm" />
+                    <span className="hidden sm:inline">Previous</span>
+                  </motion.button>
+
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <motion.button
+                        key={page}
+                        onClick={() => handlePageChange(page)}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`w-10 h-10 rounded-xl font-semibold transition-all duration-300 border ${currentPage === page
+                          ? 'bg-red-600/90 dark:bg-red-600/80 text-white border-red-500/30 shadow-lg'
+                          : 'bg-gray-100/80 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300 border-gray-200/50 dark:border-gray-700/30 hover:bg-gray-200/80 dark:hover:bg-gray-700/60'
+                          }`}
+                      >
+                        {page}
+                      </motion.button>
+                    ))}
+                  </div>
+
+                  <motion.button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    whileHover={{ scale: currentPage === totalPages ? 1 : 1.05 }}
+                    whileTap={{ scale: currentPage === totalPages ? 1 : 0.95 }}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100/80 dark:bg-gray-800/60 backdrop-blur-sm text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200/80 dark:hover:bg-gray-700/60 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200/50 dark:border-gray-700/30"
+                  >
+                    <span className="hidden sm:inline">Next</span>
+                    <FaChevronRight className="text-sm" />
+                  </motion.button>
                 </div>
 
-                {req.hospitalName && (
-                  <div className="flex items-center gap-2 p-2.5 bg-purple-50/40 dark:bg-purple-900/10 backdrop-blur-sm rounded-xl border border-white/10 dark:border-gray-700/20">
-                    <FaStethoscope className="text-purple-500 dark:text-purple-400 text-sm" />
-                    <p className="text-sm text-gray-700 dark:text-gray-300 truncate">{req.hospitalName}</p>
-                  </div>
-                )}
-
-                <Link
-                  to={`/donation-request/${req._id}`}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 bg-red-600/90 dark:bg-red-600/80 backdrop-blur-sm text-white rounded-xl font-medium hover:bg-red-700/90 dark:hover:bg-red-700/80 transition-all duration-300 border border-red-500/20"
-                >
-                  <span className="text-sm">View Details & Donate</span>
-                  <FaArrowRight className="text-sm" />
-                </Link>
-
-                <div className="flex justify-center mt-2">
-                  <span className="px-2.5 py-1 bg-amber-100/70 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-xs font-medium rounded-full backdrop-blur-sm border border-amber-200/30 dark:border-amber-700/30">
-                    Urgent • Need {req.bloodGroup}
-                  </span>
+                <div className="text-center mt-3 text-sm text-gray-600 dark:text-gray-400">
+                  Showing {startIndex + 1}-{Math.min(endIndex, requests.length)} of {requests.length} requests
                 </div>
               </div>
-            </div>
-          );
-        })}
+            </motion.div>
+          )}
+        </motion.div>
       </div>
     </div>
   );
