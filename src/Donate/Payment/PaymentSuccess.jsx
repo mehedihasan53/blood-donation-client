@@ -1,29 +1,53 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaCheckCircle, FaHeart, FaHome, FaTachometerAlt, FaReceipt, FaHandsHelping } from "react-icons/fa";
+import { FaCheckCircle, FaHeart, FaHome, FaTachometerAlt, FaReceipt, FaHandsHelping, FaDownload } from "react-icons/fa";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import useAxios from "../../hooks/useAxios";
+import { AuthContext } from "../../Provider/AuthProvider";
 import DynamicTitle from "../../components/shared/DynamicTitle";
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const axiosInstance = useAxios();
+  const { user } = useContext(AuthContext);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
+  const [paymentData, setPaymentData] = useState(null);
+  const [downloadingPDF, setDownloadingPDF] = useState(false);
 
   useEffect(() => {
     if (!sessionId || saved) return;
 
     const savePayment = async () => {
       try {
-        await axiosInstance.post(`/success-payment?session_id=${sessionId}`);
+        const response = await axiosInstance.post(`/success-payment?session_id=${sessionId}`);
         setSaved(true);
+        // Store payment data for PDF generation
+        setPaymentData({
+          transactionId: sessionId,
+          amount: response.data?.amount || searchParams.get('amount') || 'N/A',
+          currency: response.data?.currency || 'USD',
+          paymentMethod: 'Stripe',
+          date: new Date().toISOString(),
+          status: 'Successful'
+        });
       } catch (err) {
         console.error(err);
         setError("Payment verified, but failed to save data.");
+        // Set basic payment data even if save fails
+        setPaymentData({
+          transactionId: sessionId,
+          amount: searchParams.get('amount') || 'N/A',
+          currency: 'USD',
+          paymentMethod: 'Stripe',
+          date: new Date().toISOString(),
+          status: 'Successful'
+        });
       } finally {
         setLoading(false);
       }
@@ -31,6 +55,119 @@ const PaymentSuccess = () => {
 
     savePayment();
   }, [sessionId, saved, axiosInstance]);
+
+  const generatePDF = async () => {
+    if (!paymentData || !user) return;
+
+    setDownloadingPDF(true);
+
+    try {
+      const pdf = new jsPDF();
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      // Header
+      pdf.setFillColor(220, 38, 38); // Red color
+      pdf.rect(0, 0, pageWidth, 40, 'F');
+
+      // Logo and title
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(24);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('BloodConnect', 20, 25);
+
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('Payment Receipt', pageWidth - 60, 25);
+
+      // Reset text color
+      pdf.setTextColor(0, 0, 0);
+
+      // Receipt title
+      pdf.setFontSize(20);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('PAYMENT RECEIPT', 20, 65);
+
+      // Receipt details
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'normal');
+
+      const startY = 85;
+      const lineHeight = 8;
+      let currentY = startY;
+
+      // Receipt information
+      const receiptInfo = [
+        ['Receipt Date:', new Date(paymentData.date).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })],
+        ['Transaction ID:', paymentData.transactionId],
+        ['Status:', paymentData.status],
+        ['', ''], // Empty line
+        ['DONOR INFORMATION', ''],
+        ['Name:', user.displayName || 'N/A'],
+        ['Email:', user.email || 'N/A'],
+        ['', ''], // Empty line
+        ['PAYMENT DETAILS', ''],
+        ['Amount:', `${paymentData.currency} ${paymentData.amount}`],
+        ['Payment Method:', paymentData.paymentMethod],
+        ['Processing Fee:', 'Included'],
+        ['', ''], // Empty line
+        ['DONATION PURPOSE', ''],
+        ['Platform Maintenance:', '✓ Supporting 24/7 operations'],
+        ['Emergency Response:', '✓ Urgent blood request coordination'],
+        ['Community Outreach:', '✓ Expanding donor network'],
+      ];
+
+      receiptInfo.forEach(([label, value]) => {
+        if (label === 'DONOR INFORMATION' || label === 'PAYMENT DETAILS' || label === 'DONATION PURPOSE') {
+          pdf.setFont('helvetica', 'bold');
+          pdf.setFontSize(14);
+          pdf.text(label, 20, currentY);
+          currentY += lineHeight + 2;
+        } else if (label === '') {
+          currentY += lineHeight / 2;
+        } else {
+          pdf.setFont('helvetica', 'bold');
+          pdf.setFontSize(11);
+          pdf.text(label, 20, currentY);
+
+          pdf.setFont('helvetica', 'normal');
+          pdf.text(value, 80, currentY);
+          currentY += lineHeight;
+        }
+      });
+
+      // Footer
+      const footerY = pageHeight - 40;
+      pdf.setDrawColor(220, 38, 38);
+      pdf.line(20, footerY - 10, pageWidth - 20, footerY - 10);
+
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(100, 100, 100);
+      pdf.text('Thank you for your generous donation to BloodConnect!', 20, footerY);
+      pdf.text('Your contribution helps save lives across Bangladesh.', 20, footerY + 6);
+      pdf.text('For questions, contact us at support@bloodconnect.bd', 20, footerY + 12);
+
+      pdf.setTextColor(220, 38, 38);
+      pdf.text(`Generated on ${new Date().toLocaleDateString()}`, pageWidth - 60, footerY + 12);
+
+      // Save the PDF
+      const fileName = `payment-receipt-${paymentData.transactionId.substring(0, 8)}.pdf`;
+      pdf.save(fileName);
+
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setDownloadingPDF(false);
+    }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0, scale: 0.9 },
@@ -168,7 +305,7 @@ const PaymentSuccess = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -194,6 +331,31 @@ const PaymentSuccess = () => {
                 </Link>
               </motion.div>
             </div>
+
+            {/* PDF Download Button */}
+            <motion.div
+              whileHover={{ scale: downloadingPDF ? 1 : 1.02 }}
+              whileTap={{ scale: downloadingPDF ? 1 : 0.98 }}
+              className="flex justify-center"
+            >
+              <button
+                onClick={generatePDF}
+                disabled={downloadingPDF || !paymentData}
+                className="flex items-center justify-center gap-3 bg-blue-600/90 dark:bg-blue-600/80 backdrop-blur-sm text-white border border-blue-500/30 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-blue-700/90 dark:hover:bg-blue-700/80 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed min-w-[200px]"
+              >
+                {downloadingPDF ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Generating PDF...
+                  </>
+                ) : (
+                  <>
+                    <FaDownload />
+                    Download Receipt
+                  </>
+                )}
+              </button>
+            </motion.div>
           </div>
 
           {/* Impact Message */}
