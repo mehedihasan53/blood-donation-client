@@ -60,7 +60,7 @@ const Statistics = () => {
 
     // Animate numbers on component mount
     useEffect(() => {
-        const duration = 2000; // 2 seconds
+        const duration = 2000; 
         const steps = 60;
         const stepDuration = duration / steps;
 
