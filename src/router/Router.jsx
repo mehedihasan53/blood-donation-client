@@ -6,6 +6,8 @@ import DonationFAQ from "../pages/DonationFAQ";
 import PrivacyPolicy from "../pages/PrivacyPolicy";
 import TermsOfService from "../pages/TermsOfService";
 import AboutOurMission from "../pages/AboutOurMission";
+import Services from "../pages/Services";
+import Statistics from "../pages/Statistics";
 
 import Register from "../pages/auth/Register";
 import Login from "../pages/auth/Login";
@@ -24,7 +26,6 @@ import Profile from "../dashboard/dashboard/Profile";
 import PendingRequests from "../components/PendingRequests";
 import DonationRequestDetails from "../pages/DonationRequestDetails";
 import EditDonationRequest from "../dashboard/EditDonationRequest";
-import VolunteerDashboard from "../dashboard/VolunteerDashboard";
 import VolunteerDonationRequests from "../dashboard/VolunteerDonationRequests";
 import ErrorPage from "../components/shared/ErrorPage";
 
@@ -51,7 +52,7 @@ export const router = createBrowserRouter([
         element: <ForgotPassword />,
       },
       {
-        path: "/search",
+        path: "search",
         element: (
           <PrivateRoute>
             <Search />
@@ -67,7 +68,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/donate",
+        path: "donate",
         element: (
           <PrivateRoute>
             <Donate />
@@ -75,7 +76,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/payment-success",
+        path: "payment-success",
         element: (
           <PrivateRoute>
             <PaymentSuccess />
@@ -83,28 +84,36 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/payment-cancel",
+        path: "payment-cancel",
         element: <CancelPayment />,
       },
       {
-        path: "/Pending-requests",
+        path: "pending-requests",
         element: <PendingRequests />,
       },
       {
-        path: "/donation-faq",
+        path: "donation-faq",
         element: <DonationFAQ />,
       },
       {
-        path: "/privacy-policy",
+        path: "privacy-policy",
         element: <PrivacyPolicy />,
       },
       {
-        path: "/terms-of-service",
+        path: "terms-of-service",
         element: <TermsOfService />,
       },
       {
-        path: "/about-our-mission",
+        path: "about-our-mission",
         element: <AboutOurMission />,
+      },
+      {
+        path: "services",
+        element: <Services />,
+      },
+      {
+        path: "statistics",
+        element: <Statistics />,
       },
     ],
   },
@@ -119,7 +128,6 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        path: "/dashboard",
         element: <Dashboard />,
       },
       {

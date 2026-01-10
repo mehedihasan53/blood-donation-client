@@ -1,6 +1,6 @@
-import React from "react";
 import { motion } from "framer-motion";
-import { FaClock, FaUsers, FaShieldAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { FaClock, FaUsers, FaShieldAlt, FaArrowRight } from "react-icons/fa";
 
 const Featured = () => {
   const features = [
@@ -103,10 +103,25 @@ const Featured = () => {
             <div className="h-px bg-gradient-to-r from-transparent via-red-300 dark:via-red-600 to-transparent w-20"></div>
           </div>
 
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-lg transition-colors duration-300 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-lg transition-colors duration-300 leading-relaxed mb-8">
             We've simplified blood donation with modern technology to save lives
             faster than ever before. Join our trusted community today.
           </p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <Link
+              to="/services"
+              className="inline-flex items-center gap-3 bg-red-600/90 dark:bg-red-600/80 backdrop-blur-sm text-white border border-red-500/30 px-6 py-3 rounded-xl font-semibold hover:bg-red-700/90 dark:hover:bg-red-700/80 transition-all duration-300 shadow-lg hover:shadow-xl hover:gap-4"
+            >
+              Explore All Services
+              <FaArrowRight className="text-sm" />
+            </Link>
+          </motion.div>
         </motion.div>
 
         <motion.div
