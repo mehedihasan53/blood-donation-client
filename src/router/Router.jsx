@@ -8,6 +8,9 @@ import TermsOfService from "../pages/TermsOfService";
 import AboutOurMission from "../pages/AboutOurMission";
 import Services from "../pages/Services";
 import Statistics from "../pages/Statistics";
+import Blogs from "../pages/Blogs";
+import BlogDetail from "../pages/BlogDetail";
+import Testimonials from "../pages/Testimonials";
 
 import Register from "../pages/auth/Register";
 import Login from "../pages/auth/Login";
@@ -114,6 +117,18 @@ export const router = createBrowserRouter([
       {
         path: "statistics",
         element: <Statistics />,
+      },
+      {
+        path: "blogs",
+        element: <Blogs />,
+      },
+      {
+        path: "blogs/:id",
+        element: <BlogDetail />,
+      },
+      {
+        path: "testimonials",
+        element: <Testimonials />,
       },
     ],
   },
