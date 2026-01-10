@@ -6,6 +6,47 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Navbar height variable - matches h-20 (80px) */
+:root {
+  --navbar-height: 5rem; /* 80px */
+}
+
+/* Mobile navbar spacing utility */
+.mobile-navbar-spacing {
+  padding-top: 6rem; /* 96px - accounts for 80px navbar + extra spacing */
+}
+
+@media (min-width: 1024px) {
+  .mobile-navbar-spacing {
+    padding-top: 0;
+  }
+}
+
+/* Auth pages navbar offset - dynamic solution */
+.auth-page-offset {
+  padding-top: calc(var(--navbar-height) + 2rem); /* navbar height + 2rem extra spacing */
+  padding-bottom: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .auth-page-offset {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+/* Smooth theme transitions */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Prevent transition on page load */
+.preload * {
+  transition: none !important;
+}
+
 /* Sticky navbar improvements */
 nav[class*="sticky"] {
   will-change: transform;

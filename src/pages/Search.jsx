@@ -200,7 +200,7 @@ const Search = () => {
         <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-blue-100/20 dark:bg-blue-900/10 rounded-full blur-2xl animate-pulse animation-delay-4000" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 lg:py-24">
         <motion.div
           variants={containerVariants}
           initial="hidden"

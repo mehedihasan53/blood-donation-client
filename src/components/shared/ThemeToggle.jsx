@@ -8,21 +8,19 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className="relative inline-flex items-center justify-center w-14 h-8 rounded-full bg-gray-300 dark:bg-gray-700 transition-all duration-300 focus:outline-none"
+      type="button"
+      className="relative inline-flex items-center w-14 h-8 rounded-full bg-gray-300 dark:bg-slate-700 transition-colors duration-500 focus:outline-none shadow-inner active:scale-95"
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
     >
       <span
-        className={`absolute left-1 w-6 h-6 rounded-full bg-white shadow-lg transform transition-transform duration-300 ${
-          isDark ? 'translate-x-6' : 'translate-x-0'
-        }`}
+        className={`absolute left-1 w-6 h-6 rounded-full bg-white dark:bg-slate-900 shadow-lg transform transition-transform duration-300 flex items-center justify-center ${isDark ? 'translate-x-6' : 'translate-x-0'
+          }`}
       >
-        <div className="flex items-center justify-center w-full h-full">
-          {isDark ? (
-            <FaSun className="text-yellow-500 w-4 h-4" />
-          ) : (
-            <FaMoon className="text-gray-600 w-4 h-4" />
-          )}
-        </div>
+        {isDark ? (
+          <FaSun className="text-yellow-500 w-3.5 h-3.5 animate-pulse" />
+        ) : (
+          <FaMoon className="text-gray-600 w-3.5 h-3.5" />
+        )}
       </span>
     </button>
   );

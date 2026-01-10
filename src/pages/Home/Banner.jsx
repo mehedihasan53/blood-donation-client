@@ -33,7 +33,7 @@ const Banner = () => {
   ];
 
   return (
-    <div className="relative flex items-center overflow-hidden bg-transparent py-8 lg:py-16">
+    <div className="relative flex items-center overflow-hidden bg-transparent pb-7 pt-25 lg:py-32">
       {/* Background Blobs - Reduced size on mobile */}
       <div className="absolute top-[-5%] left-[-10%] w-[200px] h-[200px] lg:w-[500px] lg:h-[500px] bg-red-100 dark:bg-red-900/20 rounded-full mix-blend-multiply filter blur-[60px] lg:blur-[100px] opacity-20 lg:opacity-30 animate-blob" />
       <div className="absolute bottom-[-5%] right-[-10%] w-[200px] h-[200px] lg:w-[500px] lg:h-[500px] bg-pink-100 dark:bg-pink-900/20 rounded-full mix-blend-multiply filter blur-[60px] lg:blur-[100px] opacity-20 lg:opacity-30 animate-blob animation-delay-2000" />

@@ -130,7 +130,7 @@ const PendingRequests = () => {
           <div className="absolute bottom-20 right-20 w-48 h-48 bg-pink-100/20 dark:bg-pink-900/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 lg:py-24">
           <div className="max-w-2xl mx-auto text-center">
             <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg p-12">
               <div className="w-20 h-20 bg-gray-100/80 dark:bg-gray-800/60 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6">
@@ -162,7 +162,7 @@ const PendingRequests = () => {
         <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-orange-100/20 dark:bg-orange-900/10 rounded-full blur-2xl animate-pulse animation-delay-4000" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 lg:py-24">
         <motion.div
           variants={containerVariants}
           initial="hidden"
