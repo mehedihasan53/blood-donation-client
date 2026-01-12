@@ -183,8 +183,8 @@ const Testimonials = () => {
             <FaStar
                 key={index}
                 className={`text-sm ${index < rating
-                        ? "text-yellow-400"
-                        : "text-gray-300 dark:text-gray-600"
+                    ? "text-yellow-400"
+                    : "text-gray-300 dark:text-gray-600"
                     }`}
             />
         ));
@@ -222,7 +222,7 @@ const Testimonials = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white/20 to-blue-50/30 dark:from-gray-900/50 dark:via-gray-800/30 dark:to-gray-900/50 backdrop-blur-sm">
+        <div className="min-h-screen bg-bg-primary backdrop-blur-sm">
             <DynamicTitle title="Testimonials - BloodConnect" />
 
             {/* Background Elements */}
@@ -380,8 +380,8 @@ const Testimonials = () => {
                                     key={index}
                                     onClick={() => goToSlide(index)}
                                     className={`w-3 h-3 rounded-full transition-all duration-300 ${currentSlide === index
-                                            ? "bg-red-600 dark:bg-red-400 scale-125"
-                                            : "bg-gray-300 dark:bg-gray-600 hover:bg-red-300 dark:hover:bg-red-600"
+                                        ? "bg-red-600 dark:bg-red-400 scale-125"
+                                        : "bg-gray-300 dark:bg-gray-600 hover:bg-red-300 dark:hover:bg-red-600"
                                         }`}
                                 />
                             ))}

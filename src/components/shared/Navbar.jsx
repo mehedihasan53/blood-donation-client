@@ -88,15 +88,9 @@ const Navbar = () => {
             <NavLink to="/statistics" className={navLinkStyle}>Statistics</NavLink>
             <NavLink to="/about-our-mission" className={navLinkStyle}>Our Mission</NavLink>
             <NavLink to="/pending-requests" className={navLinkStyle}>Pending Requests</NavLink>
-            <button
-              onClick={handleContactClick}
-              className="px-3.5 py-2.5 text-sm text-gray-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-red-300 font-medium transition-all duration-300 rounded-md hover:bg-white/10 dark:hover:bg-white/5 backdrop-blur-sm"
-            >
-              Contact
-            </button>
             {user && (
               <>
-                <div className="w-px h-5 bg-gray-300/40 dark:bg-slate-500/40 mx-2"></div>
+
                 <NavLink to="/donate" className={navLinkStyle}>Donate</NavLink>
                 <NavLink to="/search" className={navLinkStyle}>Search</NavLink>
               </>
@@ -186,9 +180,6 @@ const Navbar = () => {
               <Link to="/statistics" className={mobileLinkStyle} onClick={toggleMenu}>Statistics</Link>
               <Link to="/about-our-mission" className={mobileLinkStyle} onClick={toggleMenu}>Our Mission</Link>
               <Link to="/pending-requests" className={mobileLinkStyle} onClick={toggleMenu}>Pending Requests</Link>
-              <button onClick={handleContactClick} className={`${mobileLinkStyle} w-full text-left`}>
-                Contact
-              </button>
 
               {user ? (
                 <>

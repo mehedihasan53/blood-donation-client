@@ -55,9 +55,9 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4 pt-24 pb-12">
+    <div className="min-h-screen flex items-center justify-center bg-bg-secondary px-4 pt-24 pb-12">
       <DynamicTitle title="Login" />
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6">
+      <div className="w-full max-w-md bg-bg-card rounded-2xl shadow-xl p-6">
         <div className="text-center mb-6">
           <div className="flex justify-center mb-3">
             <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center">

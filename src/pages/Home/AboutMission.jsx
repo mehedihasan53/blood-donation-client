@@ -34,18 +34,24 @@ const AboutMission = () => {
             value: "10K+",
             label: "Active Donors",
             color: "text-blue-600 dark:text-blue-400",
+            bgColor: "bg-blue-100/50 dark:bg-blue-900/20",
+            cardClass: "hover:shadow-blue-500/10",
         },
         {
             icon: FaTint,
             value: "5K+",
             label: "Lives Saved",
-            color: "text-red-600 dark:text-red-400",
+            color: "text-red-600 dark:text-red-500",
+            bgColor: "bg-red-100/50 dark:bg-red-900/20",
+            cardClass: "hover:shadow-red-500/10",
         },
         {
             icon: FaGlobe,
             value: "64+",
             label: "Districts Covered",
             color: "text-green-600 dark:text-green-400",
+            bgColor: "bg-green-100/50 dark:bg-green-900/20",
+            cardClass: "hover:shadow-green-500/10",
         },
     ];
 
@@ -53,33 +59,37 @@ const AboutMission = () => {
         {
             icon: FaHeartbeat,
             title: "Save Lives",
-            description:
-                "Every donation can save up to 3 lives. Your contribution makes a real difference in emergency situations.",
+            description: "Every donation can save up to 3 lives. Your contribution makes a real difference in emergency situations.",
+            color: "text-red-600 dark:text-red-500",
+            bgColor: "bg-red-100/50 dark:bg-red-900/20",
+            cardClass: "hover:shadow-red-500/10",
         },
         {
             icon: FaUsers,
             title: "Build Community",
-            description:
-                "Connect with like-minded individuals who share the passion for helping others in their time of need.",
+            description: "Connect with like-minded individuals who share the passion for helping others in their time of need.",
+            color: "text-blue-600 dark:text-blue-400",
+            bgColor: "bg-blue-100/50 dark:bg-blue-900/20",
+            cardClass: "hover:shadow-blue-500/10",
         },
         {
             icon: FaHandsHelping,
             title: "Easy Process",
-            description:
-                "Our streamlined platform makes it simple to find donors, request blood, and coordinate donations safely.",
+            description: "Our streamlined platform makes it simple to find donors, request blood, and coordinate donations safely.",
+            color: "text-green-600 dark:text-green-400",
+            bgColor: "bg-green-100/50 dark:bg-green-900/20",
+            cardClass: "hover:shadow-green-500/10",
         },
     ];
 
     return (
         <section
             id="about-mission"
-            className="relative py-5 lg:py-10 bg-gradient-to-br from-red-50/40 via-white/30 to-pink-50/40 dark:from-gray-900/60 dark:via-gray-800/40 dark:to-gray-900/60 backdrop-blur-sm overflow-hidden"
+            className="relative py-16 bg-bg-secondary/90 dark:bg-bg-secondary/95 backdrop-blur-sm overflow-hidden"
         >
-            {/* Background Elements */}
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute top-20 left-20 w-40 h-40 bg-red-100/30 dark:bg-red-900/20 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-20 right-20 w-48 h-48 bg-pink-100/30 dark:bg-pink-900/20 rounded-full blur-3xl animate-pulse animation-delay-2000" />
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-blue-100/20 dark:bg-blue-900/15 rounded-full blur-2xl animate-pulse animation-delay-4000" />
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-20 left-20 w-64 h-64 bg-red-500/5 dark:bg-red-600/10 rounded-full blur-[100px] animate-pulse" />
+                <div className="absolute bottom-20 right-20 w-80 h-80 bg-blue-500/5 dark:bg-blue-600/10 rounded-full blur-[100px] animate-pulse animation-delay-2000" />
             </div>
 
             <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -90,27 +100,24 @@ const AboutMission = () => {
                     viewport={{ once: true, amount: 0.3 }}
                     className="max-w-6xl mx-auto"
                 >
-                    {/* Section Header */}
                     <motion.div variants={itemVariants} className="text-center mb-16">
-                        <div className="inline-flex items-center gap-2 bg-red-50/80 dark:bg-red-900/30 backdrop-blur-sm border border-red-200/50 dark:border-red-700/30 text-red-600 dark:text-red-400 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+                        <div className="inline-flex items-center gap-2 bg-red-50 dark:bg-red-900/20 backdrop-blur-sm text-red-600 dark:text-red-500 px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-widest mb-6">
                             <FaHeartbeat className="text-sm animate-pulse" />
-                            <span className="uppercase tracking-wide">Our Mission</span>
+                            <span>Our Mission</span>
                         </div>
-                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight mb-6">
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-text-primary leading-tight mb-6">
                             Connecting Hearts,{" "}
-                            <span className="text-red-600 dark:text-red-400">
+                            <span className="text-red-600 dark:text-red-500">
                                 Saving Lives
                             </span>
                         </h2>
-                        <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                        <p className="text-lg text-text-secondary max-w-3xl mx-auto leading-relaxed font-normal">
                             We believe that every drop of blood donated is a gift of life. Our
                             mission is to create a seamless, trustworthy platform that
-                            connects blood donors with those in urgent need, ensuring no life
-                            is lost due to blood shortage.
+                            connects blood donors with those in urgent need.
                         </p>
                     </motion.div>
 
-                    {/* Stats Section */}
                     <motion.div
                         variants={itemVariants}
                         className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-16"
@@ -122,73 +129,57 @@ const AboutMission = () => {
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.1, duration: 0.5 }}
-                                className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-6 rounded-2xl border border-white/30 dark:border-gray-700/30 hover:bg-white/90 dark:hover:bg-gray-900/90 hover:border-white/40 dark:hover:border-gray-700/40 transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-lg text-center"
+                                className={`bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl p-8 rounded-3xl transition-all duration-300 hover:scale-[1.02] shadow-xl dark:shadow-2xl text-center ${stat.cardClass}`}
                             >
-                                <div
-                                    className={`w-12 h-12 ${stat.color.replace("text-", "bg-").replace("dark:text-", "dark:bg-").replace("-600", "-100").replace("-400", "-900/40")} backdrop-blur-sm rounded-xl flex items-center justify-center mx-auto mb-4`}
-                                >
-                                    <stat.icon className={`text-xl ${stat.color}`} />
+                                <div className={`w-14 h-14 ${stat.bgColor} backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-6`}>
+                                    <stat.icon className={`text-2xl ${stat.color}`} />
                                 </div>
-                                <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                                <div className="text-3xl font-bold text-text-primary mb-2">
                                     {stat.value}
                                 </div>
-                                <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                                <div className="text-xs font-semibold uppercase tracking-widest text-text-secondary">
                                     {stat.label}
                                 </div>
                             </motion.div>
                         ))}
                     </motion.div>
 
-                    {/* Main Content */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-16">
-                        {/* Mission Content */}
-                        <motion.div variants={itemVariants} className="space-y-8">
-                            <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-8 rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg">
-                                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                        <motion.div variants={itemVariants}>
+                            <div className="bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl p-8 lg:p-10 rounded-[2rem] shadow-xl dark:shadow-2xl transition-all duration-300">
+                                <h3 className="text-2xl font-bold text-text-primary mb-6 flex items-center gap-4">
+                                    <div className="w-10 h-10 bg-red-100 dark:bg-red-900/20 rounded-xl flex items-center justify-center">
+                                        <FaHeartbeat className="text-red-600 dark:text-red-500 text-lg" />
+                                    </div>
                                     Why Blood Donation Matters
                                 </h3>
-                                <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
-                                    <p>
-                                        In Bangladesh, thousands of people require blood
-                                        transfusions daily due to accidents, surgeries, and medical
-                                        conditions. Unfortunately, blood shortage remains a critical
-                                        challenge in our healthcare system.
-                                    </p>
-                                    <p>
-                                        Our platform bridges this gap by creating a reliable network
-                                        of voluntary blood donors who are ready to help in times of
-                                        emergency. We ensure that every donation request reaches the
-                                        right donors quickly and efficiently.
-                                    </p>
-                                    <p>
-                                        Together, we're building a community where no one has to
-                                        worry about finding blood when they need it most. Every
-                                        registered donor becomes a potential lifesaver.
-                                    </p>
+                                <div className="space-y-4 text-text-secondary leading-relaxed font-normal">
+                                    <p>In Bangladesh, thousands of people require blood transfusions daily. Unfortunately, blood shortage remains a critical challenge.</p>
+                                    <p>Our platform bridges this gap by creating a reliable network of voluntary blood donors ready to help in emergencies.</p>
+                                    <p>Together, we're building a community where no one has to worry about finding blood when they need it most.</p>
                                 </div>
                             </div>
                         </motion.div>
 
-                        {/* Features Grid */}
                         <motion.div variants={itemVariants} className="space-y-6">
                             {features.map((feature, index) => (
                                 <motion.div
                                     key={index}
-                                    initial={{ opacity: 0, x: 30 }}
+                                    initial={{ opacity: 0, x: 20 }}
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: index * 0.1, duration: 0.5 }}
-                                    className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl p-6 rounded-2xl border border-white/30 dark:border-gray-700/30 hover:bg-white/80 dark:hover:bg-gray-900/80 hover:border-white/40 dark:hover:border-gray-700/40 transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-lg"
+                                    className={`bg-bg-card/95 dark:bg-bg-card/90 backdrop-blur-xl p-6 rounded-3xl transition-all duration-300 hover:scale-[1.01] shadow-lg hover:shadow-xl dark:shadow-2xl ${feature.cardClass}`}
                                 >
-                                    <div className="flex items-start gap-4">
-                                        <div className="w-12 h-12 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center text-red-600 dark:text-red-400 text-lg flex-shrink-0">
-                                            <feature.icon />
+                                    <div className="flex items-start gap-5">
+                                        <div className={`w-12 h-12 ${feature.bgColor} backdrop-blur-sm rounded-xl flex items-center justify-center text-xl flex-shrink-0`}>
+                                            <feature.icon className={feature.color} />
                                         </div>
                                         <div>
-                                            <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                                            <h4 className="text-lg font-bold text-text-primary mb-2">
                                                 {feature.title}
                                             </h4>
-                                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                                            <p className="text-sm text-text-secondary leading-relaxed font-normal">
                                                 {feature.description}
                                             </p>
                                         </div>

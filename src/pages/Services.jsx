@@ -158,14 +158,14 @@ const Services = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white/20 to-pink-50/30 dark:from-gray-900/50 dark:via-gray-800/30 dark:to-gray-900/50 backdrop-blur-sm">
+        <div className="min-h-screen bg-bg-primary backdrop-blur-sm">
             <DynamicTitle title="Our Services - BloodConnect" />
 
             {/* Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute top-20 left-20 w-40 h-40 bg-red-100/20 dark:bg-red-900/10 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-20 right-20 w-48 h-48 bg-blue-100/20 dark:bg-blue-900/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
-                <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-green-100/20 dark:bg-green-900/10 rounded-full blur-2xl animate-pulse animation-delay-4000" />
+                <div className="absolute top-20 left-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute bottom-20 right-20 w-48 h-48 bg-accent/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
+                <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-primary/5 rounded-full blur-2xl animate-pulse animation-delay-4000" />
             </div>
 
             <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-25 pb-10 lg:py-24">
@@ -177,18 +177,18 @@ const Services = () => {
                 >
                     {/* Header Section */}
                     <motion.div variants={itemVariants} className="text-center mb-16">
-                        <div className="inline-flex items-center gap-2 bg-red-50/80 dark:bg-red-900/30 backdrop-blur-sm border border-red-200/50 dark:border-red-700/30 text-red-600 dark:text-red-400 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+                        <div className="inline-flex items-center gap-2 bg-primary-light/80 backdrop-blur-sm border border-primary/30 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6">
                             <FaHeartbeat className="text-sm animate-pulse" />
                             <span className="uppercase tracking-wide">Our Services</span>
                         </div>
-                        <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight mb-6">
+                        <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-text-primary leading-tight mb-6">
                             Comprehensive{" "}
-                            <span className="text-red-600 dark:text-red-400">
+                            <span className="text-primary">
                                 Blood Donation
                             </span>{" "}
                             Services
                         </h1>
-                        <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
+                        <p className="text-lg sm:text-xl text-text-secondary max-w-4xl mx-auto leading-relaxed mb-8">
                             From emergency blood requests to donor registration, we provide a complete ecosystem of services
                             designed to make blood donation safe, efficient, and accessible for everyone in Bangladesh.
                         </p>

@@ -8,22 +8,46 @@ export default {
     theme: {
         extend: {
             colors: {
+                // Brand colors using CSS variables
                 primary: {
-                    DEFAULT: '#EA7B7B',
-                    dark: '#D25353',
-                    darker: '#9E3B3B',
+                    DEFAULT: 'rgb(var(--color-primary))',
+                    hover: 'rgb(var(--color-primary-hover))',
+                    light: 'rgb(var(--color-primary-light))',
                 },
                 accent: {
-                    DEFAULT: '#FFEAD3',
+                    DEFAULT: 'rgb(var(--color-accent))',
                 },
+                // Background colors
+                bg: {
+                    primary: 'rgb(var(--color-bg-primary))',
+                    secondary: 'rgb(var(--color-bg-secondary))',
+                    tertiary: 'rgb(var(--color-bg-tertiary))',
+                    card: 'rgb(var(--color-bg-card))',
+                    overlay: 'rgb(var(--color-bg-overlay))',
+                },
+                // Text colors
+                text: {
+                    primary: 'rgb(var(--color-text-primary))',
+                    secondary: 'rgb(var(--color-text-secondary))',
+                    tertiary: 'rgb(var(--color-text-tertiary))',
+                    muted: 'rgb(var(--color-text-muted))',
+                    inverse: 'rgb(var(--color-text-inverse))',
+                },
+                // Border colors
+                border: {
+                    primary: 'rgb(var(--color-border-primary))',
+                    secondary: 'rgb(var(--color-border-secondary))',
+                    muted: 'rgb(var(--color-border-muted))',
+                },
+                // Glassmorphism colors
                 glass: {
-                    light: 'rgba(255, 255, 255, 0.25)',
-                    dark: 'rgba(15, 23, 42, 0.25)',
-                    border: {
-                        light: 'rgba(255, 255, 255, 0.18)',
-                        dark: 'rgba(255, 255, 255, 0.1)',
-                    }
-                }
+                    bg: 'rgb(var(--color-glass-bg) / 0.8)',
+                    'bg-light': 'rgb(var(--color-glass-bg) / 0.6)',
+                    'bg-heavy': 'rgb(var(--color-glass-bg) / 0.95)',
+                    border: 'rgb(var(--color-glass-border) / 0.2)',
+                    'border-light': 'rgb(var(--color-glass-border) / 0.1)',
+                    shadow: 'rgb(var(--color-glass-shadow) / 0.1)',
+                },
             },
             backdropBlur: {
                 xs: '2px',
@@ -61,7 +85,8 @@ export default {
         },
     },
     plugins: [
-        // require('daisyui'), // Commented out to avoid require error in ES modules
+        // DaisyUI is commented out to avoid require error in ES modules
+        // require('daisyui'),
     ],
     daisyui: {
         themes: false, // Disable DaisyUI themes to use our custom theme

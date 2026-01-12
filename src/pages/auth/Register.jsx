@@ -104,9 +104,9 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 auth-page-offset">
+    <div className="min-h-screen flex items-center justify-center bg-bg-secondary px-4 auth-page-offset">
       <DynamicTitle title="Register" />
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
+      <div className="w-full max-w-md bg-bg-card rounded-xl shadow-lg p-6">
         <div className="text-center mb-6">
           <h2 className="text-xl font-bold text-gray-800">Create Account</h2>
           <p className="text-gray-600 mt-1 text-sm">

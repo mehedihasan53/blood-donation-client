@@ -169,14 +169,14 @@ const Blogs = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white/20 to-blue-50/30 dark:from-gray-900/50 dark:via-gray-800/30 dark:to-gray-900/50 backdrop-blur-sm">
+        <div className="min-h-screen bg-bg-primary dark:bg-bg-primary">
             <DynamicTitle title="Blogs - BloodConnect" />
 
-            {/* Background Elements */}
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute top-20 left-20 w-40 h-40 bg-red-100/20 dark:bg-red-900/10 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-20 right-20 w-48 h-48 bg-blue-100/20 dark:bg-blue-900/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
-                <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-green-100/20 dark:bg-green-900/10 rounded-full blur-2xl animate-pulse animation-delay-4000" />
+            {/* Enhanced Background Elements for dark mode */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-20 left-20 w-40 h-40 bg-primary/8 dark:bg-primary/12 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute bottom-20 right-20 w-48 h-48 bg-accent/5 dark:bg-accent/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
+                <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-green-500/5 dark:bg-green-400/8 rounded-full blur-2xl animate-pulse animation-delay-4000" />
             </div>
 
             <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-25 pb-10 lg:py-24">
@@ -188,17 +188,17 @@ const Blogs = () => {
                 >
                     {/* Header Section */}
                     <motion.div variants={itemVariants} className="text-center mb-16">
-                        <div className="inline-flex items-center gap-2 bg-red-50/80 dark:bg-red-900/30 backdrop-blur-sm border border-red-200/50 dark:border-red-700/30 text-red-600 dark:text-red-400 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+                        <div className="inline-flex items-center gap-2 bg-primary-light/80 dark:bg-primary/20 backdrop-blur-sm border border-primary/30 dark:border-primary/40 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 shadow-lg dark:shadow-xl">
                             <FaTag className="text-sm" />
                             <span className="uppercase tracking-wide">Our Blog</span>
                         </div>
-                        <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight mb-6">
+                        <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-text-primary leading-tight mb-6">
                             Stories, Insights &{" "}
-                            <span className="text-red-600 dark:text-red-400">
+                            <span className="text-primary dark:text-red-400">
                                 Knowledge
                             </span>
                         </h1>
-                        <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
+                        <p className="text-lg sm:text-xl text-text-secondary max-w-4xl mx-auto leading-relaxed mb-8">
                             Stay informed with the latest insights on blood donation, health tips, community stories,
                             and medical breakthroughs that are shaping the future of healthcare in Bangladesh.
                         </p>
@@ -206,7 +206,7 @@ const Blogs = () => {
 
                     {/* Search and Filter Section */}
                     <motion.div variants={itemVariants} className="mb-12">
-                        <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-6 rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-sm">
+                        <div className="bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl p-6 rounded-2xl border border-border-primary/30 dark:border-border-primary/40 shadow-lg dark:shadow-2xl">
                             <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
                                 {/* Search Bar */}
                                 <div className="relative flex-1 max-w-md">
@@ -216,7 +216,7 @@ const Blogs = () => {
                                         placeholder="Search articles..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-3 bg-gray-50/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-sm transition-all duration-300"
+                                        className="w-full pl-10 pr-4 py-3 bg-bg-tertiary/80 dark:bg-bg-tertiary/60 backdrop-blur-sm border border-border-primary/50 dark:border-border-primary/60 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary/50 outline-none text-sm transition-all duration-300 text-text-primary placeholder-text-muted"
                                     />
                                 </div>
 
@@ -229,7 +229,7 @@ const Blogs = () => {
                                             setSelectedCategory(e.target.value);
                                             setCurrentPage(1);
                                         }}
-                                        className="px-4 py-3 bg-gray-50/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-sm transition-all duration-300"
+                                        className="px-4 py-3 bg-bg-tertiary/80 dark:bg-bg-tertiary/60 backdrop-blur-sm border border-border-primary/50 dark:border-border-primary/60 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary/50 outline-none text-sm transition-all duration-300 text-text-primary"
                                     >
                                         {categories.map(category => (
                                             <option key={category} value={category}>
@@ -257,7 +257,7 @@ const Blogs = () => {
                                         initial={{ opacity: 0, y: 30 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ duration: 0.6 }}
-                                        className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01] group"
+                                        className="bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl rounded-2xl border border-border-primary/30 dark:border-border-primary/40 overflow-hidden shadow-lg hover:shadow-xl dark:shadow-2xl transition-all duration-300 hover:scale-[1.01] group"
                                     >
                                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
                                             <div className="relative overflow-hidden">
@@ -267,14 +267,14 @@ const Blogs = () => {
                                                     className="w-full h-64 lg:h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                 />
                                                 <div className="absolute top-4 left-4">
-                                                    <span className="bg-red-600/90 text-white px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">
+                                                    <span className="bg-primary/90 dark:bg-primary/80 text-text-inverse px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm shadow-sm">
                                                         Featured
                                                     </span>
                                                 </div>
                                             </div>
                                             <div className="p-8 lg:p-12 flex flex-col justify-center">
-                                                <div className="flex items-center gap-4 mb-4 text-sm text-gray-500 dark:text-gray-400">
-                                                    <span className="bg-blue-100/80 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-xs font-medium">
+                                                <div className="flex items-center gap-4 mb-4 text-sm text-text-muted">
+                                                    <span className="bg-accent-blue text-accent-blue px-3 py-1 rounded-full text-xs font-medium">
                                                         {featuredBlog.category}
                                                     </span>
                                                     <div className="flex items-center gap-1">
@@ -333,7 +333,7 @@ const Blogs = () => {
                                     initial={{ opacity: 0, y: 30 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1, duration: 0.5 }}
-                                    className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:scale-[1.02] group"
+                                    className="bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl rounded-2xl border border-border-primary/30 dark:border-border-primary/40 overflow-hidden shadow-lg hover:shadow-xl dark:shadow-2xl transition-all duration-300 hover:scale-[1.02] group"
                                 >
                                     <div className="relative overflow-hidden">
                                         <img
@@ -342,7 +342,7 @@ const Blogs = () => {
                                             className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
                                         />
                                         <div className="absolute top-3 left-3">
-                                            <span className="bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm">
+                                            <span className="bg-bg-card/90 dark:bg-bg-card/80 text-text-primary px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm shadow-sm">
                                                 {blog.category}
                                             </span>
                                         </div>
@@ -386,12 +386,12 @@ const Blogs = () => {
                     {/* Pagination */}
                     {totalPages > 1 && (
                         <motion.div variants={itemVariants} className="flex justify-center">
-                            <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-4 rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-sm">
+                            <div className="bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl p-4 rounded-2xl border border-border-primary/30 dark:border-border-primary/40 shadow-lg dark:shadow-2xl">
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => handlePageChange(currentPage - 1)}
                                         disabled={currentPage === 1}
-                                        className="p-2 rounded-lg bg-gray-100/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-400 hover:bg-red-100/80 dark:hover:bg-red-900/40 hover:text-red-600 dark:hover:text-red-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                                        className="p-2 rounded-lg bg-bg-tertiary/80 dark:bg-bg-tertiary/60 text-text-secondary hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
                                     >
                                         <FaChevronLeft className="text-sm" />
                                     </button>
@@ -412,7 +412,7 @@ const Blogs = () => {
                                     <button
                                         onClick={() => handlePageChange(currentPage + 1)}
                                         disabled={currentPage === totalPages}
-                                        className="p-2 rounded-lg bg-gray-100/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-400 hover:bg-red-100/80 dark:hover:bg-red-900/40 hover:text-red-600 dark:hover:text-red-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                                        className="p-2 rounded-lg bg-bg-tertiary/80 dark:bg-bg-tertiary/60 text-text-secondary hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
                                     >
                                         <FaChevronRight className="text-sm" />
                                     </button>
