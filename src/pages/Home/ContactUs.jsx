@@ -118,7 +118,7 @@ const ContactUs = () => {
   return (
     <section
       id="contact-us"
-      className="relative py-16 bg-bg-secondary/90 dark:bg-bg-secondary/95 backdrop-blur-sm overflow-hidden"
+      className="relative py-8 sm:py-10 lg:py-12 xl:py-14 bg-bg-secondary/90 dark:bg-bg-secondary/95 backdrop-blur-sm overflow-hidden"
     >
       {/* Enhanced Background Elements for dark mode */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -361,16 +361,16 @@ const ContactUs = () => {
             </div>
 
             {/* Emergency Notice */}
-            <div className="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-900/10 backdrop-blur-sm p-6 rounded-2xl border border-red-200 dark:border-red-800/40 shadow-lg dark:shadow-xl">
+            <div className="bg-gradient-to-r from-primary/15 to-primary/8 dark:from-primary/20 dark:to-primary/10 backdrop-blur-sm p-6 rounded-2xl border border-red-400 dark:border-primary/40 shadow-lg dark:shadow-xl">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-red-200 dark:bg-red-900/40 rounded-full flex items-center justify-center text-red-600 dark:text-red-400 text-sm mt-1">
+                <div className="w-8 h-8 bg-primary/15 dark:bg-primary/25 rounded-full flex items-center justify-center text-primary text-sm mt-1 shadow-sm">
                   ⚡
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900 dark:text-white mb-2">
+                  <h4 className="font-bold text-text-primary mb-2">
                     Emergency Blood Request?
                   </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
+                  <p className="text-sm text-text-secondary leading-relaxed font-medium">
                     For urgent blood requirements, call our 24/7 emergency hotline.
                     We'll connect you with the nearest available donors immediately.
                   </p>

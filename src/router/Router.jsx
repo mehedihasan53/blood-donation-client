@@ -30,6 +30,7 @@ import PendingRequests from "../components/PendingRequests";
 import DonationRequestDetails from "../pages/DonationRequestDetails";
 import EditDonationRequest from "../dashboard/EditDonationRequest";
 import VolunteerDonationRequests from "../dashboard/VolunteerDonationRequests";
+import Analytics from "../dashboard/Analytics";
 import ErrorPage from "../components/shared/ErrorPage";
 
 export const router = createBrowserRouter([
@@ -173,6 +174,10 @@ export const router = createBrowserRouter([
       {
         path: "all-blood-donation-request-volunteer",
         element: <VolunteerDonationRequests />,
+      },
+      {
+        path: "analytics",
+        element: <Analytics />,
       },
     ],
   },

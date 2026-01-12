@@ -158,17 +158,16 @@ const Services = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-bg-primary backdrop-blur-sm">
+        <div className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
             <DynamicTitle title="Our Services - BloodConnect" />
 
             {/* Background Elements */}
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute top-20 left-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-20 right-20 w-48 h-48 bg-accent/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
-                <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-primary/5 rounded-full blur-2xl animate-pulse animation-delay-4000" />
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-20 left-20 w-40 h-40 bg-red-500/10 dark:bg-red-500/5 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute bottom-20 right-20 w-48 h-48 bg-red-600/10 dark:bg-red-600/5 rounded-full blur-3xl animate-pulse delay-2000" />
             </div>
 
-            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-25 pb-10 lg:py-24">
+            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-10 lg:py-24">
                 <motion.div
                     variants={containerVariants}
                     initial="hidden"
@@ -177,18 +176,18 @@ const Services = () => {
                 >
                     {/* Header Section */}
                     <motion.div variants={itemVariants} className="text-center mb-16">
-                        <div className="inline-flex items-center gap-2 bg-primary-light/80 backdrop-blur-sm border border-primary/30 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6">
+                        <div className="inline-flex items-center gap-2 bg-red-50 dark:bg-red-900/20 backdrop-blur-sm border border-red-100 dark:border-red-800/30 text-red-600 dark:text-red-400 px-4 py-2 rounded-full text-sm font-semibold mb-6">
                             <FaHeartbeat className="text-sm animate-pulse" />
                             <span className="uppercase tracking-wide">Our Services</span>
                         </div>
-                        <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-text-primary leading-tight mb-6">
+                        <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight mb-6">
                             Comprehensive{" "}
-                            <span className="text-primary">
+                            <span className="text-red-600 dark:text-red-500">
                                 Blood Donation
                             </span>{" "}
                             Services
                         </h1>
-                        <p className="text-lg sm:text-xl text-text-secondary max-w-4xl mx-auto leading-relaxed mb-8">
+                        <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-4xl mx-auto leading-relaxed mb-8">
                             From emergency blood requests to donor registration, we provide a complete ecosystem of services
                             designed to make blood donation safe, efficient, and accessible for everyone in Bangladesh.
                         </p>
@@ -201,11 +200,12 @@ const Services = () => {
                                 <motion.div
                                     key={index}
                                     initial={{ opacity: 0, y: 30 }}
-                                    animate={{ opacity: 1, y: 0 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
                                     transition={{ delay: index * 0.1, duration: 0.5 }}
-                                    className={`bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-8 rounded-2xl border ${service.borderColor} hover:bg-white/90 dark:hover:bg-gray-900/90 hover:border-white/40 dark:hover:border-gray-700/40 transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-lg group`}
+                                    className={`bg-white dark:bg-slate-900/50 backdrop-blur-xl p-8 rounded-2xl border ${service.borderColor} hover:border-red-500/30 dark:hover:border-red-500/40 transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-xl dark:shadow-slate-900/50 group`}
                                 >
-                                    <div className="flex items-start gap-6">
+                                    <div className="flex flex-col sm:flex-row items-start gap-6">
                                         <div className={`w-16 h-16 ${service.bgColor} backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}>
                                             <service.icon className={`text-2xl ${service.color}`} />
                                         </div>
@@ -216,7 +216,7 @@ const Services = () => {
                                             <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
                                                 {service.description}
                                             </p>
-                                            <div className="grid grid-cols-2 gap-2 mb-6">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6">
                                                 {service.features.map((feature, idx) => (
                                                     <div key={idx} className="flex items-center gap-2 text-sm">
                                                         <FaCheckCircle className={`text-xs ${service.color}`} />
@@ -226,7 +226,7 @@ const Services = () => {
                                             </div>
                                             <Link
                                                 to={service.link}
-                                                className={`inline-flex items-center gap-2 ${service.color} hover:gap-3 font-semibold transition-all duration-300`}
+                                                className={`inline-flex items-center gap-2 ${service.color} hover:gap-3 font-semibold transition-all duration-300 group-hover:underline underline-offset-4`}
                                             >
                                                 Learn More
                                                 <FaArrowRight className="text-sm" />
@@ -244,7 +244,7 @@ const Services = () => {
                             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
                                 Additional Features
                             </h2>
-                            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
                                 Comprehensive support services designed to enhance your blood donation experience
                                 and ensure maximum safety and efficiency.
                             </p>
@@ -255,9 +255,10 @@ const Services = () => {
                                 <motion.div
                                     key={index}
                                     initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true }}
                                     transition={{ delay: index * 0.1, duration: 0.5 }}
-                                    className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-6 rounded-2xl border border-white/30 dark:border-gray-700/30 hover:bg-white/90 dark:hover:bg-gray-900/90 hover:border-white/40 dark:hover:border-gray-700/40 transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-lg group"
+                                    className="bg-white dark:bg-slate-900/50 backdrop-blur-xl p-6 rounded-2xl border border-gray-100 dark:border-slate-800 hover:border-red-500/20 transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-lg group"
                                 >
                                     <div className={`w-12 h-12 ${service.bgColor} backdrop-blur-sm rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                                         <service.icon className={`text-xl ${service.color}`} />
@@ -279,7 +280,7 @@ const Services = () => {
                             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
                                 How It Works
                             </h2>
-                            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
                                 Simple steps to become a life-saver. Our streamlined process makes blood donation
                                 easy, safe, and rewarding.
                             </p>
@@ -290,14 +291,15 @@ const Services = () => {
                                 <motion.div
                                     key={index}
                                     initial={{ opacity: 0, y: 30 }}
-                                    animate={{ opacity: 1, y: 0 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
                                     transition={{ delay: index * 0.2, duration: 0.5 }}
-                                    className="relative bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-6 rounded-2xl border border-white/30 dark:border-gray-700/30 hover:bg-white/90 dark:hover:bg-gray-900/90 hover:border-white/40 dark:hover:border-gray-700/40 transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-lg text-center group"
+                                    className="relative bg-white dark:bg-slate-900/50 backdrop-blur-xl p-6 rounded-2xl border border-gray-100 dark:border-slate-800 hover:border-red-500/20 transition-all duration-300 hover:scale-[1.02] shadow-sm text-center group"
                                 >
-                                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-red-600 dark:bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-red-600 dark:bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg">
                                         {step.step}
                                     </div>
-                                    <div className="w-16 h-16 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 mt-4 group-hover:scale-110 transition-transform duration-300">
+                                    <div className="w-16 h-16 bg-red-50 dark:bg-red-900/30 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 mt-4 group-hover:scale-110 transition-transform duration-300">
                                         <step.icon className="text-2xl text-red-600 dark:text-red-400" />
                                     </div>
                                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
@@ -311,97 +313,42 @@ const Services = () => {
                         </div>
                     </motion.div>
 
-                    {/* Emergency Services Highlight */}
-                    <motion.div
-                        variants={itemVariants}
-                        className="bg-gradient-to-r from-red-50/80 to-pink-50/80 dark:from-red-900/20 dark:to-pink-900/20 backdrop-blur-sm p-8 lg:p-12 rounded-2xl border border-red-200/50 dark:border-red-700/30 mb-16"
-                    >
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                            <div>
-                                <div className="flex items-center gap-3 mb-4">
-                                    <div className="w-12 h-12 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                                        <FaAmbulance className="text-xl text-red-600 dark:text-red-400" />
-                                    </div>
-                                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                                        Emergency Blood Service
-                                    </h3>
-                                </div>
-                                <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                                    Critical situations require immediate action. Our emergency response system connects
-                                    you with the nearest available donors within minutes, not hours.
-                                </p>
-                                <div className="space-y-3">
-                                    <div className="flex items-center gap-3">
-                                        <FaCheckCircle className="text-red-600 dark:text-red-400" />
-                                        <span className="text-gray-700 dark:text-gray-300">Response time under 15 minutes</span>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <FaCheckCircle className="text-red-600 dark:text-red-400" />
-                                        <span className="text-gray-700 dark:text-gray-300">24/7 emergency hotline support</span>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <FaCheckCircle className="text-red-600 dark:text-red-400" />
-                                        <span className="text-gray-700 dark:text-gray-300">Direct hospital coordination</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm p-8 rounded-2xl border border-white/40 dark:border-gray-700/40 text-center">
-                                <div className="w-16 h-16 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <FaPhone className="text-2xl text-red-600 dark:text-red-400 animate-pulse" />
-                                </div>
-                                <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                                    Emergency Hotline
-                                </h4>
-                                <p className="text-3xl font-bold text-red-600 dark:text-red-400 mb-4">
-                                    +880-1234-567890
-                                </p>
-                                <p className="text-gray-600 dark:text-gray-300 text-sm">
-                                    Available 24/7 for critical blood requests
-                                </p>
-                            </div>
-                        </div>
-                    </motion.div>
-
                     {/* Call to Action */}
                     <motion.div
                         variants={itemVariants}
-                        className="bg-gradient-to-r from-red-50/80 to-pink-50/80 dark:from-red-900/20 dark:to-pink-900/20 backdrop-blur-sm p-8 lg:p-12 rounded-2xl border border-red-200/50 dark:border-red-700/30 text-center"
+                        className="bg-red-800 dark:bg-red-700/90 backdrop-blur-sm p-8 lg:p-16 rounded-3xl text-center shadow-2xl shadow-red-500/20 relative overflow-hidden group"
                     >
-                        <div className="max-w-3xl mx-auto">
-                            <div className="w-16 h-16 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6">
-                                <FaHeartbeat className="text-2xl text-red-600 dark:text-red-400 animate-pulse" />
+                        {/* CTA Decoration */}
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl group-hover:bg-white/10 transition-colors" />
+
+                        <div className="max-w-3xl mx-auto relative z-10">
+                            <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mx-auto mb-8 border border-white/30">
+                                <FaHeartbeat className="text-4xl text-white animate-pulse" />
                             </div>
-                            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+                            <h2 className="text-3xl lg:text-5xl font-black text-white mb-6">
                                 Ready to Save Lives?
                             </h2>
-                            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+                            <p className="text-lg text-red-50 mb-10 leading-relaxed font-medium">
                                 Join thousands of heroes who are making a difference every day. Your blood donation
                                 can save up to 3 lives and bring hope to families in need.
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                                <motion.div
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
+                            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                     <Link
                                         to="/register"
-                                        className="flex items-center justify-center gap-3 bg-red-600/90 dark:bg-red-600/80 backdrop-blur-sm text-white border border-red-500/30 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-red-700/90 dark:hover:bg-red-700/80 transition-all duration-300 shadow-lg hover:shadow-xl min-w-[200px]"
+                                        className="flex items-center justify-center gap-3 bg-white text-red-600 px-10 py-5 rounded-2xl font-bold text-xl hover:bg-gray-50 transition-all duration-300 shadow-xl shadow-black/10 min-w-[220px]"
                                     >
-                                        <FaUsers />
+                                        <FaUsers className="text-2xl" />
                                         Join as Donor
-                                        <FaArrowRight className="text-sm" />
                                     </Link>
                                 </motion.div>
-                                <motion.div
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                     <Link
                                         to="/statistics"
-                                        className="flex items-center justify-center gap-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-200 border border-white/50 dark:border-gray-700/50 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/90 dark:hover:bg-gray-800/90 transition-all duration-300 min-w-[200px]"
+                                        className="flex items-center justify-center gap-3 bg-red-500/30 backdrop-blur-md text-white border border-white/40 px-10 py-5 rounded-2xl font-bold text-xl hover:bg-red-500/50 transition-all duration-300 min-w-[220px]"
                                     >
-                                        <FaChartLine />
-                                        View Statistics
+                                        <FaChartLine className="text-2xl" />
+                                        View Stats
                                     </Link>
                                 </motion.div>
                             </div>

@@ -4,6 +4,12 @@ import { FaEye, FaEdit, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
 import Loading from "../components/shared/Loading";
 import DynamicTitle from "../components/shared/DynamicTitle";
+import { Select } from "../components/ui/Select";
+import { Modal } from "../components/ui/Modal";
+import { Button } from "../components/ui/Button";
+import { Card, CardContent } from "../components/ui/Card";
+import { motion } from "framer-motion";
+import { useSmoothScroll } from "../hooks/useSmoothScroll";
 
 const STATUS = [
   { value: "all", label: "All" },
@@ -27,6 +33,9 @@ const VolunteerDonationRequests = () => {
   const [selected, setSelected] = useState(null);
   const [newStatus, setNewStatus] = useState("");
   const [updating, setUpdating] = useState(false);
+
+  // Initialize smooth scrolling
+  useSmoothScroll();
 
   useEffect(() => {
     fetchRequests();
@@ -59,7 +68,6 @@ const VolunteerDonationRequests = () => {
     if (!selected || !newStatus) return;
     setUpdating(true);
     try {
-      // 2. Updating status
       await axiosSecure.patch(
         `/volunteer/donation-requests/status/${selected._id}`,
         {
@@ -79,181 +87,224 @@ const VolunteerDonationRequests = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="p-4 space-y-4">
-      <DynamicTitle title="Donation Requests" />
-      <Toaster position="top-right" />
+    <div className="container-safe">
+      <div className="content-container space-y-6">
+        <DynamicTitle title="Donation Requests" />
+        <Toaster position="top-right" />
 
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl font-bold">
-          Donation Requests ({requests.length})
-        </h1>
-        {/* 3. Dropdown  */}
-        <select
-          value={filter}
-          onChange={(e) => {
-            setFilter(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="border px-3 py-2 rounded focus:outline-red-500"
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
         >
-          {STATUS.map((s) => (
-            <option key={s.value} value={s.value}>
-              {s.label}
-            </option>
-          ))}
-        </select>
-      </div>
+          <h1 className="text-2xl font-bold text-text-primary">
+            Donation Requests ({requests.length})
+          </h1>
 
-      <div className="hidden md:block bg-red-50 shadow rounded overflow-hidden">
-        <table className="w-full border-collapse">
-          <thead className="bg-gray-100 text-gray-700">
-            <tr>
-              <th className="p-3 text-left">Recipient</th>
-              <th className="p-3 text-left">Location</th>
-              <th className="p-3 text-left">Blood Group</th>
-              <th className="p-3 text-left">Status</th>
-              <th className="p-3 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests.length === 0 ? (
-              <tr>
-                <td colSpan="5" className="p-10 text-center text-gray-500">
-                  No donation requests found for "{filter}"
-                </td>
-              </tr>
-            ) : (
-              requests.map((r) => (
-                <tr
-                  key={r._id}
-                  className="border-t hover:bg-gray-50 transition"
-                >
-                  <td className="p-3 font-medium">{r.recipientName}</td>
-                  <td className="p-3 text-sm">
-                    {r.recipientUpazila}, {r.recipientDistrict}
-                  </td>
-                  <td className="p-3">
-                    <span className="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-bold">
+          <Select
+            value={filter}
+            onChange={(e) => {
+              setFilter(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full sm:w-48"
+            placeholder="Filter by status"
+          >
+            {STATUS.map((s) => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </Select>
+        </motion.div>
+
+        {/* Desktop Table */}
+        <Card className="hidden md:block overflow-hidden">
+          <div className="table-container">
+            <table className="w-full border-collapse">
+              <thead className="bg-bg-tertiary/50 dark:bg-bg-tertiary/30">
+                <tr>
+                  <th className="p-4 text-left text-sm font-semibold text-text-primary">Recipient</th>
+                  <th className="p-4 text-left text-sm font-semibold text-text-primary">Location</th>
+                  <th className="p-4 text-left text-sm font-semibold text-text-primary">Blood Group</th>
+                  <th className="p-4 text-left text-sm font-semibold text-text-primary">Status</th>
+                  <th className="p-4 text-center text-sm font-semibold text-text-primary">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border-primary/10 dark:divide-border-primary/20">
+                {requests.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="p-12 text-center text-text-muted">
+                      No donation requests found for "{filter}"
+                    </td>
+                  </tr>
+                ) : (
+                  requests.map((r, index) => (
+                    <motion.tr
+                      key={r._id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                      className="table-row-hover"
+                    >
+                      <td className="p-4 font-medium text-text-primary">{r.recipientName}</td>
+                      <td className="p-4 text-sm text-text-secondary">
+                        {r.recipientUpazila}, {r.recipientDistrict}
+                      </td>
+                      <td className="p-4">
+                        <span className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-3 py-1 rounded-full text-xs font-bold">
+                          {r.bloodGroup}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <span
+                          className={`capitalize text-sm font-medium ${r.status === "done"
+                              ? "text-green-600 dark:text-green-400"
+                              : r.status === "inprogress"
+                                ? "text-blue-600 dark:text-blue-400"
+                                : r.status === "canceled"
+                                  ? "text-red-600 dark:text-red-400"
+                                  : "text-orange-600 dark:text-orange-400"
+                            }`}
+                        >
+                          {r.status}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex gap-2 justify-center">
+                          <Button
+                            size="sm"
+                            variant="success"
+                            onClick={() => openModal(r)}
+                            className="p-2"
+                          >
+                            <FaEdit />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            className="p-2"
+                          >
+                            <FaEye />
+                          </Button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+
+        {/* Mobile Cards */}
+        <div className="md:hidden space-y-4">
+          {requests.map((r, index) => (
+            <motion.div
+              key={r._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
+              <Card className="border-l-4 border-l-red-500">
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-start mb-3">
+                    <p className="font-bold text-text-primary">{r.recipientName}</p>
+                    <span className="text-xs font-bold uppercase bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2 py-1 rounded-full">
                       {r.bloodGroup}
                     </span>
-                  </td>
-                  <td className="p-3">
-                    <span
-                      className={`capitalize text-sm ${
-                        r.status === "done"
-                          ? "text-green-600"
-                          : "text-orange-500"
-                      }`}
-                    >
-                      {r.status}
+                  </div>
+                  <p className="text-sm text-text-secondary mb-3">
+                    {r.recipientUpazila}, {r.recipientDistrict}
+                  </p>
+                  <div className="flex justify-between items-center">
+                    <span className={`text-sm font-medium capitalize ${r.status === "done"
+                        ? "text-green-600 dark:text-green-400"
+                        : r.status === "inprogress"
+                          ? "text-blue-600 dark:text-blue-400"
+                          : r.status === "canceled"
+                            ? "text-red-600 dark:text-red-400"
+                            : "text-orange-600 dark:text-orange-400"
+                      }`}>
+                      Status: {r.status}
                     </span>
-                  </td>
-                  <td className="p-3">
-                    <div className="flex gap-2 justify-center">
-                      <button
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="success"
                         onClick={() => openModal(r)}
-                        className="p-2 bg-green-500 hover:bg-green-600 text-white rounded transition"
-                        title="Update Status"
+                        className="p-2"
                       >
                         <FaEdit />
-                      </button>
-                      <button className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded transition">
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="p-2"
+                      >
                         <FaEye />
-                      </button>
+                      </Button>
                     </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
 
-      <div className="md:hidden space-y-3">
-        {requests.map((r) => (
-          <div
-            key={r._id}
-            className="bg-white shadow rounded p-4 border-l-4 border-red-500"
-          >
-            <div className="flex justify-between items-start">
-              <p className="font-bold text-gray-800">{r.recipientName}</p>
-              <span className="text-xs font-bold uppercase text-red-500">
-                {r.bloodGroup}
-              </span>
-            </div>
-            <p className="text-sm text-gray-600">
-              {r.recipientUpazila}, {r.recipientDistrict}
-            </p>
-            <div className="mt-3 flex justify-between items-center">
-              <span className="text-sm italic text-gray-500">
-                Status: {r.status}
-              </span>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => openModal(r)}
-                  className="p-2 bg-green-500 text-white rounded"
+        {/* Status Update Modal */}
+        <Modal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          title="Change Request Status"
+          size="md"
+        >
+          {selected && (
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <div>
+                  <span className="text-sm font-medium text-text-muted">Recipient:</span>
+                  <p className="text-text-primary font-semibold">{selected.recipientName}</p>
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-text-muted">Current Status:</span>
+                  <p className="text-text-primary font-semibold capitalize">{selected.status}</p>
+                </div>
+              </div>
+
+              <Select
+                label="Select New Status"
+                value={newStatus}
+                onChange={(e) => setNewStatus(e.target.value)}
+                placeholder="Choose status"
+              >
+                {STATUS.filter((s) => s.value !== "all").map((s) => (
+                  <option key={s.value} value={s.value}>
+                    {s.label}
+                  </option>
+                ))}
+              </Select>
+
+              <div className="flex justify-end gap-3">
+                <Button
+                  variant="secondary"
+                  onClick={() => setModalOpen(false)}
                 >
-                  <FaEdit />
-                </button>
-                <button className="p-2 bg-blue-500 text-white rounded">
-                  <FaEye />
-                </button>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={updateStatus}
+                  disabled={updating || newStatus === selected.status}
+                  className="flex items-center gap-2"
+                >
+                  {updating ? "Updating..." : "Update Status"}
+                </Button>
               </div>
             </div>
-          </div>
-        ))}
+          )}
+        </Modal>
       </div>
-
-      {modalOpen && selected && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
-          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
-            {/* 4. Modal  */}
-            <h2 className="text-xl font-bold mb-4 border-b pb-2">
-              Change Request Status
-            </h2>
-            <div className="space-y-3 mb-6">
-              <p>
-                <strong>Recipient:</strong> {selected.recipientName}
-              </p>
-              <p>
-                <strong>Current Status:</strong>{" "}
-                <span className="capitalize">{selected.status}</span>
-              </p>
-            </div>
-
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Select New Status
-            </label>
-            <select
-              value={newStatus}
-              onChange={(e) => setNewStatus(e.target.value)}
-              className="border p-2 w-full mb-6 rounded focus:ring-2 focus:ring-red-500 outline-none"
-            >
-              {STATUS.filter((s) => s.value !== "all").map((s) => (
-                <option key={s.value} value={s.value}>
-                  {s.label}
-                </option>
-              ))}
-            </select>
-
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setModalOpen(false)}
-                className="px-4 py-2 border rounded hover:bg-gray-100 transition"
-              >
-                Close
-              </button>
-              <button
-                onClick={updateStatus}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition disabled:bg-gray-400"
-                disabled={updating || newStatus === selected.status}
-              >
-                {updating ? "Updating..." : "Update Now"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

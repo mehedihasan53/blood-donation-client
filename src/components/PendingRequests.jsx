@@ -81,32 +81,32 @@ const PendingRequests = () => {
   const getBloodGroupColor = (bloodGroup) => {
     if (bloodGroup.includes("A"))
       return {
-        bg: "bg-red-100/80 dark:bg-red-900/40",
+        bg: "bg-gradient-to-r from-red-100/90 to-red-200/90 dark:from-red-900/50 dark:to-red-800/50",
         text: "text-red-700 dark:text-red-300",
-        border: "border-red-200/50 dark:border-red-700/30",
+        icon: "text-red-600 dark:text-red-400",
       };
     if (bloodGroup.includes("B"))
       return {
-        bg: "bg-blue-100/80 dark:bg-blue-900/40",
+        bg: "bg-gradient-to-r from-blue-100/90 to-blue-200/90 dark:from-blue-900/50 dark:to-blue-800/50",
         text: "text-blue-700 dark:text-blue-300",
-        border: "border-blue-200/50 dark:border-blue-700/30",
+        icon: "text-blue-600 dark:text-blue-400",
       };
     if (bloodGroup.includes("O"))
       return {
-        bg: "bg-emerald-100/80 dark:bg-emerald-900/40",
-        text: "text-emerald-700 dark:text-emerald-300",
-        border: "border-emerald-200/50 dark:border-emerald-700/30",
+        bg: "bg-gradient-to-r from-green-100/90 to-green-200/90 dark:from-green-900/50 dark:to-green-800/50",
+        text: "text-green-700 dark:text-green-300",
+        icon: "text-green-600 dark:text-green-400",
       };
     if (bloodGroup.includes("AB"))
       return {
-        bg: "bg-purple-100/80 dark:bg-purple-900/40",
+        bg: "bg-gradient-to-r from-purple-100/90 to-purple-200/90 dark:from-purple-900/50 dark:to-purple-800/50",
         text: "text-purple-700 dark:text-purple-300",
-        border: "border-purple-200/50 dark:border-purple-700/30",
+        icon: "text-purple-600 dark:text-purple-400",
       };
     return {
-      bg: "bg-gray-100/80 dark:bg-gray-900/40",
+      bg: "bg-gradient-to-r from-gray-100/90 to-gray-200/90 dark:from-gray-900/50 dark:to-gray-800/50",
       text: "text-gray-700 dark:text-gray-300",
-      border: "border-gray-200/50 dark:border-gray-700/30",
+      icon: "text-gray-600 dark:text-gray-400",
     };
   };
 
@@ -121,25 +121,25 @@ const PendingRequests = () => {
 
   if (!requests.length) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white/20 to-pink-50/30 dark:from-gray-900/50 dark:via-gray-800/30 dark:to-gray-900/50 backdrop-blur-sm">
+      <div className="min-h-screen bg-bg-primary dark:bg-bg-primary transition-colors duration-300">
         <DynamicTitle title="Pending Requests" />
 
-        {/* Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-20 w-40 h-40 bg-red-100/20 dark:bg-red-900/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-20 right-20 w-48 h-48 bg-pink-100/20 dark:bg-pink-900/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
+        {/* Enhanced Background Elements for dark mode */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-20 w-40 h-40 bg-primary/8 dark:bg-primary/12 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-20 right-20 w-48 h-48 bg-accent/5 dark:bg-accent/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
         </div>
 
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 lg:py-24">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg p-12">
-              <div className="w-20 h-20 bg-gray-100/80 dark:bg-gray-800/60 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6">
-                <FaHeart className="text-3xl text-gray-400 dark:text-gray-500" />
+            <div className="bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl rounded-3xl border-0 shadow-modern-xl dark:shadow-modern-2xl p-16">
+              <div className="w-24 h-24 bg-gradient-to-r from-bg-tertiary/90 to-bg-tertiary/80 dark:from-bg-tertiary/80 dark:to-bg-tertiary/70 backdrop-blur-xl rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-modern-sm">
+                <FaHeart className="text-4xl text-text-muted" />
               </div>
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-3xl font-black text-text-primary mb-6">
                 No Pending Requests
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+              <p className="text-xl text-text-secondary leading-relaxed font-medium">
                 There are no pending donation requests at the moment.
                 Check back later or help spread awareness about blood donation.
               </p>
@@ -151,15 +151,15 @@ const PendingRequests = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white/20 to-pink-50/30 dark:from-gray-900/50 dark:via-gray-800/30 dark:to-gray-900/50 backdrop-blur-sm">
+    <div className="min-h-screen bg-bg-primary dark:bg-bg-primary transition-colors duration-300">
       <DynamicTitle title="Pending Blood Requests" />
       <Toaster position="top-right" />
 
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-20 w-40 h-40 bg-red-100/20 dark:bg-red-900/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-20 w-48 h-48 bg-pink-100/20 dark:bg-pink-900/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
-        <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-orange-100/20 dark:bg-orange-900/10 rounded-full blur-2xl animate-pulse animation-delay-4000" />
+      {/* Enhanced Background Elements for dark mode */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-20 w-40 h-40 bg-primary/8 dark:bg-primary/12 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-20 w-48 h-48 bg-accent/5 dark:bg-accent/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
+        <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-green-500/5 dark:bg-green-400/8 rounded-full blur-2xl animate-pulse animation-delay-4000" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 lg:py-24">
@@ -170,28 +170,30 @@ const PendingRequests = () => {
           className="max-w-7xl mx-auto"
         >
           {/* Header Section */}
-          <motion.div variants={itemVariants} className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-red-50/80 dark:bg-red-900/30 backdrop-blur-sm border border-red-200/50 dark:border-red-700/30 text-red-600 dark:text-red-400 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-              <FaExclamationTriangle className="text-sm animate-pulse" />
-              <span className="uppercase tracking-wide">Urgent Requests</span>
+          <motion.div variants={itemVariants} className="text-center mb-16">
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-primary/15 to-red-500/15 dark:from-primary/25 dark:to-red-400/25 backdrop-blur-xl border-0 text-primary dark:text-red-400 px-6 py-3 rounded-2xl text-sm font-bold mb-8 shadow-modern-lg dark:shadow-modern-xl">
+              <FaExclamationTriangle className="text-base animate-pulse" />
+              <span className="uppercase tracking-wider">Urgent Requests</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-text-primary leading-tight mb-8">
               Pending Blood{" "}
-              <span className="text-red-600 dark:text-red-400">Requests</span>
+              <span className="bg-gradient-to-r from-primary via-red-600 to-red-700 dark:from-red-400 dark:via-red-500 dark:to-primary bg-clip-text text-transparent">
+                Requests
+              </span>
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed mb-8">
+            <p className="text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed font-medium mb-8">
               These are urgent blood donation requests waiting for generous donors like you.
               Every donation can save up to 3 lives.
             </p>
 
             {/* Stats */}
-            <div className="inline-flex items-center gap-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl px-6 py-4 rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                  <FaHeart className="text-red-600 dark:text-red-400 text-sm" />
+            <div className="inline-flex items-center gap-4 bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl px-8 py-5 rounded-2xl border-0 shadow-modern-lg dark:shadow-modern-xl">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-primary/20 to-red-500/20 dark:from-primary/30 dark:to-red-400/30 backdrop-blur-xl rounded-2xl flex items-center justify-center">
+                  <FaHeart className="text-primary text-xl" />
                 </div>
-                <span className="text-2xl font-bold text-red-600 dark:text-red-400">{requests.length}</span>
-                <span className="text-gray-600 dark:text-gray-300 font-medium">
+                <span className="text-3xl font-black text-primary">{requests.length}</span>
+                <span className="text-text-secondary font-bold text-lg">
                   request{requests.length !== 1 ? "s" : ""} waiting
                 </span>
               </div>
@@ -201,7 +203,7 @@ const PendingRequests = () => {
           {/* Requests Grid */}
           <motion.div
             variants={containerVariants}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-12"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 mb-16"
           >
             {currentRequests.map((req) => {
               const bloodGroupColor = getBloodGroupColor(req.bloodGroup);
@@ -210,20 +212,20 @@ const PendingRequests = () => {
                 <motion.div
                   key={req._id}
                   variants={itemVariants}
-                  whileHover={{ y: -3 }}
-                  className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col"
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  className="bg-gradient-to-br from-bg-card/98 to-bg-card/95 dark:from-bg-card/95 dark:to-bg-card/90 backdrop-blur-xl rounded-3xl border-0 shadow-modern-lg hover:shadow-modern-2xl transition-all duration-300 overflow-hidden h-full flex flex-col"
                 >
                   {/* Header */}
-                  <div className="p-4 lg:p-5 border-b border-gray-200/50 dark:border-gray-700/30">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                        <FaUser className="text-red-600 dark:text-red-400 text-sm" />
+                  <div className="p-6 lg:p-7 border-b border-border-primary/20 dark:border-border-primary/30">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-primary/20 to-red-500/20 dark:from-primary/30 dark:to-red-400/30 backdrop-blur-xl rounded-2xl flex items-center justify-center">
+                        <FaUser className="text-primary text-lg" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-base font-bold text-gray-900 dark:text-white truncate">
+                        <h3 className="text-lg font-black text-text-primary truncate">
                           {req.recipientName}
                         </h3>
-                        <p className="text-gray-500 dark:text-gray-400 text-xs truncate">
+                        <p className="text-text-muted text-sm truncate">
                           {req.requesterEmail}
                         </p>
                       </div>
@@ -231,42 +233,42 @@ const PendingRequests = () => {
 
                     {/* Blood Group Badge */}
                     <div className="flex justify-center">
-                      <div className={`${bloodGroupColor.bg} backdrop-blur-sm ${bloodGroupColor.text} ${bloodGroupColor.border} border px-3 py-1.5 rounded-full flex items-center gap-1.5`}>
-                        <FaTint className="text-xs" />
-                        <span className="font-bold text-xs">{req.bloodGroup}</span>
+                      <div className={`${bloodGroupColor.bg} backdrop-blur-xl ${bloodGroupColor.text} px-4 py-2 rounded-2xl flex items-center gap-2 border-0 shadow-modern-sm`}>
+                        <FaTint className="text-sm" />
+                        <span className="font-black text-lg">{req.bloodGroup}</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div className="p-4 lg:p-5 space-y-3 flex-grow">
+                  <div className="p-6 lg:p-7 space-y-4 flex-grow">
                     {/* Location */}
-                    <div className="flex items-center gap-2.5 p-2.5 bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30">
-                      <div className="w-7 h-7 bg-blue-100/80 dark:bg-blue-900/40 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                        <FaMapMarkerAlt className="text-blue-600 dark:text-blue-400 text-xs" />
+                    <div className="flex items-center gap-3 p-3 bg-bg-tertiary/50 dark:bg-bg-tertiary/30 backdrop-blur-xl rounded-2xl border-0">
+                      <div className="w-10 h-10 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 dark:from-blue-400/30 dark:to-indigo-400/30 backdrop-blur-xl rounded-xl flex items-center justify-center">
+                        <FaMapMarkerAlt className="text-blue-600 dark:text-blue-400 text-sm" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-900 dark:text-white text-xs">
+                        <p className="font-black text-text-primary text-sm">
                           {req.recipientUpazila}
                         </p>
-                        <p className="text-gray-600 dark:text-gray-300 text-xs">
+                        <p className="text-text-secondary text-xs">
                           {req.recipientDistrict}
                         </p>
                       </div>
                     </div>
 
                     {/* Date */}
-                    <div className="flex items-center gap-2.5 p-2.5 bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30">
-                      <div className="w-7 h-7 bg-green-100/80 dark:bg-green-900/40 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                        <FaCalendarAlt className="text-green-600 dark:text-green-400 text-xs" />
+                    <div className="flex items-center gap-3 p-3 bg-bg-tertiary/50 dark:bg-bg-tertiary/30 backdrop-blur-xl rounded-2xl border-0">
+                      <div className="w-10 h-10 bg-gradient-to-r from-green-500/20 to-emerald-500/20 dark:from-green-400/30 dark:to-emerald-400/30 backdrop-blur-xl rounded-xl flex items-center justify-center">
+                        <FaCalendarAlt className="text-green-600 dark:text-green-400 text-sm" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-900 dark:text-white text-xs">
+                        <p className="font-black text-text-primary text-sm">
                           {formatDate(req.donationDate)}
                         </p>
                         {req.donationTime && (
-                          <div className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-300">
-                            <FaClock className="text-gray-400 dark:text-gray-500 text-xs" />
+                          <div className="flex items-center gap-1 text-xs text-text-secondary">
+                            <FaClock className="text-text-muted text-xs" />
                             <span className="text-xs">{req.donationTime}</span>
                           </div>
                         )}
@@ -275,11 +277,11 @@ const PendingRequests = () => {
 
                     {/* Hospital */}
                     {req.hospitalName && (
-                      <div className="flex items-center gap-2.5 p-2.5 bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30">
-                        <div className="w-7 h-7 bg-purple-100/80 dark:bg-purple-900/40 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                          <FaStethoscope className="text-purple-600 dark:text-purple-400 text-xs" />
+                      <div className="flex items-center gap-3 p-3 bg-bg-tertiary/50 dark:bg-bg-tertiary/30 backdrop-blur-xl rounded-2xl border-0">
+                        <div className="w-10 h-10 bg-gradient-to-r from-purple-500/20 to-pink-500/20 dark:from-purple-400/30 dark:to-pink-400/30 backdrop-blur-xl rounded-xl flex items-center justify-center">
+                          <FaStethoscope className="text-purple-600 dark:text-purple-400 text-sm" />
                         </div>
-                        <p className="text-xs text-gray-700 dark:text-gray-300 truncate font-medium">
+                        <p className="text-sm text-text-secondary truncate font-bold">
                           {req.hospitalName}
                         </p>
                       </div>
@@ -287,17 +289,17 @@ const PendingRequests = () => {
                   </div>
 
                   {/* Footer */}
-                  <div className="p-4 lg:p-5 pt-0">
+                  <div className="p-6 lg:p-7 pt-0">
                     <motion.div
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <Link
                         to={`/donation-request/${req._id}`}
-                        className="w-full flex items-center justify-center gap-2 py-2.5 bg-red-600/90 dark:bg-red-600/80 backdrop-blur-sm text-white rounded-xl font-semibold hover:bg-red-700/90 dark:hover:bg-red-700/80 transition-all duration-300 border border-red-500/30 shadow-lg hover:shadow-xl text-sm"
+                        className="w-full flex items-center justify-center gap-3 py-4 bg-gradient-to-r from-primary to-red-600 hover:from-red-600 hover:to-primary backdrop-blur-xl text-white rounded-2xl font-black hover:shadow-modern-xl transition-all duration-300 border-0 shadow-modern-lg text-sm"
                       >
                         <span>View & Donate</span>
-                        <FaArrowRight className="text-xs" />
+                        <FaArrowRight className="text-sm" />
                       </Link>
                     </motion.div>
                   </div>
@@ -309,29 +311,29 @@ const PendingRequests = () => {
           {/* Pagination */}
           {totalPages > 1 && (
             <motion.div variants={itemVariants} className="flex justify-center">
-              <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg p-4">
-                <div className="flex items-center gap-2">
+              <div className="bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl rounded-3xl border-0 shadow-modern-xl dark:shadow-modern-2xl p-6">
+                <div className="flex items-center gap-3">
                   <motion.button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                     whileHover={{ scale: currentPage === 1 ? 1 : 1.05 }}
                     whileTap={{ scale: currentPage === 1 ? 1 : 0.95 }}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-100/80 dark:bg-gray-800/60 backdrop-blur-sm text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200/80 dark:hover:bg-gray-700/60 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200/50 dark:border-gray-700/30"
+                    className="flex items-center gap-2 px-6 py-3 bg-bg-tertiary/90 dark:bg-bg-tertiary/70 backdrop-blur-xl text-text-secondary rounded-2xl font-bold hover:bg-gradient-to-r hover:from-primary/20 hover:to-red-500/20 dark:hover:from-primary/30 dark:hover:to-red-400/30 hover:text-primary transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed border-0 shadow-modern-sm hover:shadow-modern-lg"
                   >
                     <FaChevronLeft className="text-sm" />
                     <span className="hidden sm:inline">Previous</span>
                   </motion.button>
 
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2">
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                       <motion.button
                         key={page}
                         onClick={() => handlePageChange(page)}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className={`w-10 h-10 rounded-xl font-semibold transition-all duration-300 border ${currentPage === page
-                          ? 'bg-red-600/90 dark:bg-red-600/80 text-white border-red-500/30 shadow-lg'
-                          : 'bg-gray-100/80 dark:bg-gray-800/60 text-gray-700 dark:text-gray-300 border-gray-200/50 dark:border-gray-700/30 hover:bg-gray-200/80 dark:hover:bg-gray-700/60'
+                        className={`w-12 h-12 rounded-2xl font-black transition-all duration-300 border-0 ${currentPage === page
+                          ? 'bg-gradient-to-r from-primary to-red-600 text-white shadow-modern-lg'
+                          : 'bg-bg-tertiary/90 dark:bg-bg-tertiary/70 text-text-secondary hover:bg-gradient-to-r hover:from-primary/20 hover:to-red-500/20 dark:hover:from-primary/30 dark:hover:to-red-400/30 hover:text-primary shadow-modern-sm hover:shadow-modern-lg'
                           }`}
                       >
                         {page}
@@ -344,14 +346,14 @@ const PendingRequests = () => {
                     disabled={currentPage === totalPages}
                     whileHover={{ scale: currentPage === totalPages ? 1 : 1.05 }}
                     whileTap={{ scale: currentPage === totalPages ? 1 : 0.95 }}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-100/80 dark:bg-gray-800/60 backdrop-blur-sm text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200/80 dark:hover:bg-gray-700/60 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200/50 dark:border-gray-700/30"
+                    className="flex items-center gap-2 px-6 py-3 bg-bg-tertiary/90 dark:bg-bg-tertiary/70 backdrop-blur-xl text-text-secondary rounded-2xl font-bold hover:bg-gradient-to-r hover:from-primary/20 hover:to-red-500/20 dark:hover:from-primary/30 dark:hover:to-red-400/30 hover:text-primary transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed border-0 shadow-modern-sm hover:shadow-modern-lg"
                   >
                     <span className="hidden sm:inline">Next</span>
                     <FaChevronRight className="text-sm" />
                   </motion.button>
                 </div>
 
-                <div className="text-center mt-3 text-sm text-gray-600 dark:text-gray-400">
+                <div className="text-center mt-4 text-sm text-text-secondary font-medium">
                   Showing {startIndex + 1}-{Math.min(endIndex, requests.length)} of {requests.length} requests
                 </div>
               </div>

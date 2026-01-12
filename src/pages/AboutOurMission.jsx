@@ -161,15 +161,13 @@ const AboutOurMission = () => {
                 >
                     {/* Header Section */}
                     <motion.div variants={itemVariants} className="text-center mb-16">
-                        <div className="inline-flex items-center gap-2 bg-primary-light/80 dark:bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6">
+                        <div className="inline-flex items-center gap-2 bg-red-50 dark:bg-red-900/20 backdrop-blur-sm border border-red-200 dark:border-red-800 text-red-600 dark:text-red-500 px-4 py-2 rounded-full text-sm font-semibold mb-6 shadow-lg">
                             <FaHeartbeat className="text-sm animate-pulse" />
                             <span className="uppercase tracking-wide">Our Mission</span>
                         </div>
                         <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-text-primary leading-tight mb-6">
                             Connecting Hearts,{" "}
-                            <span className="text-primary">
-                                Saving Lives
-                            </span>
+                            <span className="text-red-600 dark:text-red-500">Saving Lives</span>
                         </h1>
                         <p className="text-lg sm:text-xl text-text-secondary max-w-4xl mx-auto leading-relaxed mb-8">
                             BloodConnect is more than just a platform – we're a movement dedicated to ensuring that no life is lost

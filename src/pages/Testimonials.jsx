@@ -9,6 +9,7 @@ import {
     FaUsers,
     FaMapMarkerAlt,
     FaCalendarAlt,
+    FaCheckCircle
 } from "react-icons/fa";
 import DynamicTitle from "../components/shared/DynamicTitle";
 
@@ -20,10 +21,7 @@ const Testimonials = () => {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-                duration: 0.6,
-            },
+            transition: { staggerChildren: 0.1, duration: 0.6 },
         },
     };
 
@@ -36,7 +34,6 @@ const Testimonials = () => {
         },
     };
 
-    // Sample testimonials data - in a real app, this would come from an API
     const testimonials = [
         {
             id: 1,
@@ -142,14 +139,11 @@ const Testimonials = () => {
     const testimonialsPerSlide = 3;
     const totalSlides = Math.ceil(testimonials.length / testimonialsPerSlide);
 
-    // Auto-play functionality
     useEffect(() => {
         if (!isAutoPlaying) return;
-
         const interval = setInterval(() => {
             setCurrentSlide((prev) => (prev + 1) % totalSlides);
         }, 5000);
-
         return () => clearInterval(interval);
     }, [isAutoPlaying, totalSlides]);
 
@@ -168,11 +162,6 @@ const Testimonials = () => {
         setIsAutoPlaying(false);
     };
 
-    const getCurrentTestimonials = () => {
-        const start = currentSlide * testimonialsPerSlide;
-        return testimonials.slice(start, start + testimonialsPerSlide);
-    };
-
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'short' };
         return new Date(dateString).toLocaleDateString('en-US', options);
@@ -182,291 +171,126 @@ const Testimonials = () => {
         return Array.from({ length: 5 }, (_, index) => (
             <FaStar
                 key={index}
-                className={`text-sm ${index < rating
-                    ? "text-yellow-400"
-                    : "text-gray-300 dark:text-gray-600"
-                    }`}
+                className={`text-sm ${index < rating ? "text-yellow-400" : "text-gray-300 dark:text-gray-700"}`}
             />
         ));
     };
 
     const stats = [
-        {
-            icon: FaUsers,
-            value: "15,000+",
-            label: "Happy Donors",
-            color: "text-blue-600 dark:text-blue-400",
-            bgColor: "bg-blue-100/80 dark:bg-blue-900/40",
-        },
-        {
-            icon: FaHeart,
-            value: "8,900+",
-            label: "Lives Saved",
-            color: "text-red-600 dark:text-red-400",
-            bgColor: "bg-red-100/80 dark:bg-red-900/40",
-        },
-        {
-            icon: FaMapMarkerAlt,
-            value: "64",
-            label: "Districts Served",
-            color: "text-green-600 dark:text-green-400",
-            bgColor: "bg-green-100/80 dark:bg-green-900/40",
-        },
-        {
-            icon: FaStar,
-            value: "4.9/5",
-            label: "Average Rating",
-            color: "text-yellow-600 dark:text-yellow-400",
-            bgColor: "bg-yellow-100/80 dark:bg-yellow-900/40",
-        },
+        { icon: FaUsers, value: "15,000+", label: "Happy Donors", color: "text-blue-600 dark:text-blue-400", bgColor: "bg-blue-100 dark:bg-blue-900/30" },
+        { icon: FaHeart, value: "8,900+", label: "Lives Saved", color: "text-red-600 dark:text-red-400", bgColor: "bg-red-100 dark:bg-red-900/30" },
+        { icon: FaMapMarkerAlt, value: "64", label: "Districts Served", color: "text-green-600 dark:text-green-400", bgColor: "bg-green-100 dark:bg-green-900/30" },
+        { icon: FaStar, value: "4.9/5", label: "Average Rating", color: "text-yellow-600 dark:text-yellow-400", bgColor: "bg-yellow-100 dark:bg-yellow-900/30" },
     ];
 
     return (
-        <div className="min-h-screen bg-bg-primary backdrop-blur-sm">
+        <div className="min-h-screen bg-white dark:bg-[#0a0a0a] transition-colors duration-300">
             <DynamicTitle title="Testimonials - BloodConnect" />
 
-            {/* Background Elements */}
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute top-20 left-20 w-40 h-40 bg-red-100/20 dark:bg-red-900/10 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-20 right-20 w-48 h-48 bg-blue-100/20 dark:bg-blue-900/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
-                <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-green-100/20 dark:bg-green-900/10 rounded-full blur-2xl animate-pulse animation-delay-4000" />
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-20 left-20 w-40 h-40 bg-red-500/5 dark:bg-red-500/10 rounded-full blur-3xl" />
+                <div className="absolute bottom-20 right-20 w-48 h-48 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-3xl" />
             </div>
 
-            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-25 pb-10 lg:py-24">
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="max-w-7xl mx-auto"
-                >
-                    {/* Header Section */}
+            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
+                <motion.div variants={containerVariants} initial="hidden" animate="visible" className="max-w-7xl mx-auto">
+
                     <motion.div variants={itemVariants} className="text-center mb-16">
-                        <div className="inline-flex items-center gap-2 bg-red-50/80 dark:bg-red-900/30 backdrop-blur-sm border border-red-200/50 dark:border-red-700/30 text-red-600 dark:text-red-400 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-                            <FaQuoteLeft className="text-sm" />
-                            <span className="uppercase tracking-wide">Testimonials</span>
+                        <div className="inline-flex items-center gap-2 bg-red-50 dark:bg-red-950/40 border border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-400 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6">
+                            <FaQuoteLeft className="text-[10px]" />
+                            <span>Community Voice</span>
                         </div>
-                        <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight mb-6">
-                            Stories from Our{" "}
-                            <span className="text-red-600 dark:text-red-400">
-                                Community
-                            </span>
+                        <h1 className="text-4xl lg:text-6xl font-black text-gray-900 dark:text-white mb-6">
+                            Stories from Our <span className="text-red-600 dark:text-red-500">Community</span>
                         </h1>
-                        <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
+                        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
                             Hear from the donors, recipients, and healthcare professionals who make our blood donation
-                            network a life-saving success. Their stories inspire us to continue our mission.
+                            network a life-saving success.
                         </p>
                     </motion.div>
 
-                    {/* Stats Section */}
-                    <motion.div variants={itemVariants} className="mb-16">
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                            {stats.map((stat, index) => (
-                                <motion.div
-                                    key={index}
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ delay: index * 0.1, duration: 0.5 }}
-                                    className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-6 rounded-2xl border border-white/30 dark:border-gray-700/30 hover:bg-white/90 dark:hover:bg-gray-900/90 hover:border-white/40 dark:hover:border-gray-700/40 transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-lg text-center group"
-                                >
-                                    <div className={`w-12 h-12 ${stat.bgColor} backdrop-blur-sm rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                                        <stat.icon className={`text-xl ${stat.color}`} />
-                                    </div>
-                                    <div className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                                        {stat.value}
-                                    </div>
-                                    <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                                        {stat.label}
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
+                    <motion.div variants={itemVariants} className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+                        {stats.map((stat, index) => (
+                            <div key={index} className="bg-gray-50 dark:bg-white/[0.03] p-6 rounded-3xl border border-gray-100 dark:border-white/10 text-center transition-all hover:shadow-xl group">
+                                <div className={`w-12 h-12 ${stat.bgColor} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
+                                    <stat.icon className={`text-xl ${stat.color}`} />
+                                </div>
+                                <div className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</div>
+                                <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-tighter">{stat.label}</div>
+                            </div>
+                        ))}
                     </motion.div>
 
-                    {/* Testimonials Carousel */}
-                    <motion.div variants={itemVariants} className="mb-16">
-                        <div className="relative">
-                            {/* Carousel Container */}
-                            <div className="overflow-hidden rounded-2xl">
-                                <div
-                                    className="flex transition-transform duration-500 ease-in-out"
-                                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                                >
-                                    {Array.from({ length: totalSlides }, (_, slideIndex) => (
-                                        <div key={slideIndex} className="w-full flex-shrink-0">
-                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
-                                                {testimonials
-                                                    .slice(slideIndex * testimonialsPerSlide, (slideIndex + 1) * testimonialsPerSlide)
-                                                    .map((testimonial, index) => (
-                                                        <motion.div
-                                                            key={testimonial.id}
-                                                            initial={{ opacity: 0, y: 30 }}
-                                                            animate={{ opacity: 1, y: 0 }}
-                                                            transition={{ delay: index * 0.1, duration: 0.5 }}
-                                                            className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:scale-[1.02] group"
-                                                        >
-                                                            {/* Quote Icon */}
-                                                            <div className="flex justify-between items-start mb-4">
-                                                                <FaQuoteLeft className="text-red-600/30 dark:text-red-400/30 text-2xl" />
-                                                                {testimonial.verified && (
-                                                                    <div className="bg-green-100/80 dark:bg-green-900/40 text-green-600 dark:text-green-400 px-2 py-1 rounded-full text-xs font-medium">
-                                                                        Verified
-                                                                    </div>
-                                                                )}
-                                                            </div>
-
-                                                            {/* Testimonial Text */}
-                                                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 text-sm">
-                                                                "{testimonial.testimonial}"
-                                                            </p>
-
-                                                            {/* Rating */}
-                                                            <div className="flex items-center gap-1 mb-4">
-                                                                {renderStars(testimonial.rating)}
-                                                            </div>
-
-                                                            {/* User Info */}
-                                                            <div className="flex items-center gap-4">
-                                                                <img
-                                                                    src={testimonial.avatar}
-                                                                    alt={testimonial.name}
-                                                                    className="w-12 h-12 rounded-full object-cover border-2 border-red-500/20 group-hover:border-red-500/40 transition-colors duration-300"
-                                                                />
-                                                                <div className="flex-1">
-                                                                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm">
-                                                                        {testimonial.name}
-                                                                    </h4>
-                                                                    <p className="text-xs text-gray-500 dark:text-gray-500 mb-1">
-                                                                        {testimonial.role}
-                                                                    </p>
-                                                                    <div className="flex items-center gap-3 text-xs text-gray-400 dark:text-gray-600">
-                                                                        <div className="flex items-center gap-1">
-                                                                            <FaMapMarkerAlt />
-                                                                            <span>{testimonial.location}</span>
-                                                                        </div>
-                                                                        <div className="flex items-center gap-1">
-                                                                            <FaCalendarAlt />
-                                                                            <span>{formatDate(testimonial.date)}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </motion.div>
-                                                    ))}
+                    <motion.div variants={itemVariants} className="relative mb-20">
+                        <div className="overflow-hidden">
+                            <div className="flex transition-transform duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+                                {Array.from({ length: totalSlides }, (_, slideIndex) => (
+                                    <div key={slideIndex} className="w-full flex-shrink-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
+                                        {testimonials.slice(slideIndex * testimonialsPerSlide, (slideIndex + 1) * testimonialsPerSlide).map((item) => (
+                                            <div key={item.id} className="bg-white dark:bg-white/[0.02] rounded-[2.5rem] p-8 border border-gray-100 dark:border-white/10 shadow-sm hover:shadow-2xl transition-all relative flex flex-col group">
+                                                <div className="flex justify-between items-start mb-6">
+                                                    <FaQuoteLeft className="text-red-50 dark:text-red-900/30 text-5xl" />
+                                                    {item.verified && (
+                                                        <span className="flex items-center gap-1 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase border border-green-100 dark:border-green-900/30">
+                                                            <FaCheckCircle className="text-xs" /> Verified
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-8 flex-grow">"{item.testimonial}"</p>
+                                                <div className="flex items-center gap-4">
+                                                    <img src={item.avatar} alt={item.name} className="w-14 h-14 rounded-2xl object-cover ring-4 ring-gray-50 dark:ring-white/5" />
+                                                    <div>
+                                                        <h4 className="font-bold text-gray-900 dark:text-white text-base">{item.name}</h4>
+                                                        <p className="text-xs font-semibold text-red-600 dark:text-red-400 mb-1">{item.role}</p>
+                                                        <div className="flex items-center gap-2 text-[10px] text-gray-400 dark:text-gray-500">
+                                                            <span className="flex items-center gap-1"><FaMapMarkerAlt /> {item.location}</span>
+                                                            <span className="flex items-center gap-1"><FaCalendarAlt /> {formatDate(item.date)}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Navigation Arrows */}
-                            <button
-                                onClick={prevSlide}
-                                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 z-10"
-                            >
-                                <FaChevronLeft className="text-lg" />
-                            </button>
-                            <button
-                                onClick={nextSlide}
-                                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 z-10"
-                            >
-                                <FaChevronRight className="text-lg" />
-                            </button>
-                        </div>
-
-                        {/* Slide Indicators */}
-                        <div className="flex justify-center mt-8 gap-2">
-                            {Array.from({ length: totalSlides }, (_, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => goToSlide(index)}
-                                    className={`w-3 h-3 rounded-full transition-all duration-300 ${currentSlide === index
-                                        ? "bg-red-600 dark:bg-red-400 scale-125"
-                                        : "bg-gray-300 dark:bg-gray-600 hover:bg-red-300 dark:hover:bg-red-600"
-                                        }`}
-                                />
-                            ))}
-                        </div>
-                    </motion.div>
-
-                    {/* Featured Testimonial */}
-                    <motion.div variants={itemVariants} className="mb-16">
-                        <div className="text-center mb-8">
-                            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                                Featured Story
-                            </h2>
-                            <p className="text-gray-600 dark:text-gray-300">
-                                A life-changing experience that showcases the power of our community
-                            </p>
-                        </div>
-
-                        <div className="bg-gradient-to-r from-red-50/80 to-pink-50/80 dark:from-red-900/20 dark:to-pink-900/20 backdrop-blur-sm rounded-2xl border border-red-200/50 dark:border-red-700/30 p-8 lg:p-12">
-                            <div className="max-w-4xl mx-auto text-center">
-                                <FaQuoteLeft className="text-red-600/40 dark:text-red-400/40 text-4xl mx-auto mb-6" />
-                                <blockquote className="text-xl lg:text-2xl text-gray-700 dark:text-gray-300 leading-relaxed mb-8 italic">
-                                    "During the pandemic, when regular blood drives were suspended, BloodConnect became our lifeline.
-                                    The platform helped us maintain critical blood supplies for our hospital. The dedication of the
-                                    donors and the efficiency of the system saved countless lives during those challenging times."
-                                </blockquote>
-                                <div className="flex items-center justify-center gap-4">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=80&h=80&fit=crop&crop=face"
-                                        alt="Dr. Rashida Begum"
-                                        className="w-16 h-16 rounded-full object-cover border-3 border-red-500"
-                                    />
-                                    <div className="text-left">
-                                        <h4 className="font-bold text-gray-900 dark:text-white">
-                                            Dr. Rashida Begum
-                                        </h4>
-                                        <p className="text-gray-600 dark:text-gray-400 text-sm">
-                                            Chief Medical Officer, Dhaka Medical College Hospital
-                                        </p>
-                                        <div className="flex items-center gap-1 mt-1">
-                                            {renderStars(5)}
-                                        </div>
+                                        ))}
                                     </div>
-                                </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <button onClick={prevSlide} className="absolute -left-2 lg:-left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-gray-800 shadow-xl rounded-full flex items-center justify-center text-gray-800 dark:text-white hover:bg-red-600 hover:text-white transition-all z-20">
+                            <FaChevronLeft />
+                        </button>
+                        <button onClick={nextSlide} className="absolute -right-2 lg:-right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white dark:bg-gray-800 shadow-xl rounded-full flex items-center justify-center text-gray-800 dark:text-white hover:bg-red-600 hover:text-white transition-all z-20">
+                            <FaChevronRight />
+                        </button>
+                    </motion.div>
+
+                    <div className="flex justify-center gap-3 mb-20">
+                        {Array.from({ length: totalSlides }, (_, i) => (
+                            <button key={i} onClick={() => goToSlide(i)} className={`h-2 rounded-full transition-all duration-300 ${currentSlide === i ? "w-10 bg-red-600" : "w-2 bg-gray-300 dark:bg-gray-800 hover:bg-red-400"}`} />
+                        ))}
+                    </div>
+
+                    <motion.div variants={itemVariants} className="bg-gray-50 dark:bg-white/[0.02] rounded-[3rem] p-8 lg:p-16 border border-gray-100 dark:border-white/10 text-center relative overflow-hidden">
+                        <div className="relative z-10 max-w-3xl mx-auto">
+                            <div className="w-20 h-20 bg-red-100 dark:bg-red-900/30 rounded-3xl flex items-center justify-center mx-auto mb-8">
+                                <FaHeart className="text-3xl text-red-600 animate-pulse" />
+                            </div>
+                            <h2 className="text-3xl lg:text-5xl font-black text-gray-900 dark:text-white mb-6 leading-tight">
+                                Join Our Community of <span className="text-red-600">Heroes</span>
+                            </h2>
+                            <p className="text-lg text-gray-600 dark:text-gray-400 mb-10 leading-relaxed">
+                                Your contribution can save a life. Become a donor or share your story to inspire others in our mission to make blood available for everyone.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <button className="px-10 py-4 bg-red-600 text-white rounded-2xl font-bold text-lg hover:bg-red-700 transition-all shadow-lg shadow-red-600/20">
+                                    Become a Donor
+                                </button>
+                                <button className="px-10 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-2xl font-bold text-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">
+                                    Share Your Story
+                                </button>
                             </div>
                         </div>
                     </motion.div>
 
-                    {/* Call to Action */}
-                    <motion.div
-                        variants={itemVariants}
-                        className="bg-gradient-to-r from-red-50/80 to-blue-50/80 dark:from-red-900/20 dark:to-blue-900/20 backdrop-blur-sm p-8 lg:p-12 rounded-2xl border border-red-200/50 dark:border-red-700/30 text-center"
-                    >
-                        <div className="max-w-3xl mx-auto">
-                            <div className="w-16 h-16 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6">
-                                <FaHeart className="text-2xl text-red-600 dark:text-red-400 animate-pulse" />
-                            </div>
-                            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                                Join Our Community of Heroes
-                            </h2>
-                            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-                                Become part of a community that's making a real difference. Your story could be the next
-                                one that inspires others to save lives through blood donation.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                                <motion.div
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    <button className="flex items-center justify-center gap-3 bg-red-600/90 dark:bg-red-600/80 backdrop-blur-sm text-white border border-red-500/30 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-red-700/90 dark:hover:bg-red-700/80 transition-all duration-300 shadow-lg hover:shadow-xl min-w-[200px]">
-                                        <FaUsers />
-                                        Become a Donor
-                                    </button>
-                                </motion.div>
-                                <motion.div
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    <button className="flex items-center justify-center gap-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-200 border border-white/50 dark:border-gray-700/50 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/90 dark:hover:bg-gray-800/90 transition-all duration-300 min-w-[200px]">
-                                        <FaQuoteLeft />
-                                        Share Your Story
-                                    </button>
-                                </motion.div>
-                            </div>
-                        </div>
-                    </motion.div>
                 </motion.div>
             </div>
         </div>

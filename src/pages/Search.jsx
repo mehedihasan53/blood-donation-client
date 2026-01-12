@@ -21,16 +21,16 @@ const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
 const getBloodGroupColor = (bg) => {
   const colors = {
-    "A+": "bg-red-100/80 dark:bg-red-900/40 text-red-700 dark:text-red-300 border-red-200/50 dark:border-red-700/30",
-    "A-": "bg-red-50/80 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-200/30 dark:border-red-700/20",
-    "B+": "bg-blue-100/80 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border-blue-200/50 dark:border-blue-700/30",
-    "B-": "bg-blue-50/80 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-200/30 dark:border-blue-700/20",
-    "AB+": "bg-purple-100/80 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 border-purple-200/50 dark:border-purple-700/30",
-    "AB-": "bg-purple-50/80 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border-purple-200/30 dark:border-purple-700/20",
-    "O+": "bg-green-100/80 dark:bg-green-900/40 text-green-700 dark:text-green-300 border-green-200/50 dark:border-green-700/30",
-    "O-": "bg-green-50/80 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-200/30 dark:border-green-700/20",
+    "A+": "bg-gradient-to-r from-red-100/90 to-red-200/90 dark:from-red-900/50 dark:to-red-800/50 text-red-700 dark:text-red-300",
+    "A-": "bg-gradient-to-r from-red-50/90 to-red-100/90 dark:from-red-900/30 dark:to-red-800/30 text-red-600 dark:text-red-400",
+    "B+": "bg-gradient-to-r from-blue-100/90 to-blue-200/90 dark:from-blue-900/50 dark:to-blue-800/50 text-blue-700 dark:text-blue-300",
+    "B-": "bg-gradient-to-r from-blue-50/90 to-blue-100/90 dark:from-blue-900/30 dark:to-blue-800/30 text-blue-600 dark:text-blue-400",
+    "AB+": "bg-gradient-to-r from-purple-100/90 to-purple-200/90 dark:from-purple-900/50 dark:to-purple-800/50 text-purple-700 dark:text-purple-300",
+    "AB-": "bg-gradient-to-r from-purple-50/90 to-purple-100/90 dark:from-purple-900/30 dark:to-purple-800/30 text-purple-600 dark:text-purple-400",
+    "O+": "bg-gradient-to-r from-green-100/90 to-green-200/90 dark:from-green-900/50 dark:to-green-800/50 text-green-700 dark:text-green-300",
+    "O-": "bg-gradient-to-r from-green-50/90 to-green-100/90 dark:from-green-900/30 dark:to-green-800/30 text-green-600 dark:text-green-400",
   };
-  return colors[bg] || "bg-gray-100/80 dark:bg-gray-900/40 text-gray-700 dark:text-gray-300 border-gray-200/50 dark:border-gray-700/30";
+  return colors[bg] || "bg-gradient-to-r from-gray-100/90 to-gray-200/90 dark:from-gray-900/50 dark:to-gray-800/50 text-gray-700 dark:text-gray-300";
 };
 
 const Search = () => {
@@ -96,7 +96,6 @@ const Search = () => {
     try {
       const doc = new jsPDF();
 
-      // Header
       doc.setFillColor(220, 38, 38);
       doc.rect(0, 0, doc.internal.pageSize.getWidth(), 40, 'F');
 
@@ -108,7 +107,6 @@ const Search = () => {
       doc.setFontSize(12);
       doc.text('Blood Donor Search Results', doc.internal.pageSize.getWidth() - 80, 25);
 
-      // Reset text color
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(18);
       doc.setFont('helvetica', 'bold');
@@ -190,14 +188,13 @@ const Search = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white/20 to-pink-50/30 dark:from-gray-900/50 dark:via-gray-800/30 dark:to-gray-900/50 backdrop-blur-sm">
+    <div className="min-h-screen bg-bg-primary dark:bg-bg-primary transition-colors duration-300">
       <DynamicTitle title="Search Blood Donors" />
 
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-20 w-40 h-40 bg-red-100/20 dark:bg-red-900/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-20 w-48 h-48 bg-pink-100/20 dark:bg-pink-900/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
-        <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-blue-100/20 dark:bg-blue-900/10 rounded-full blur-2xl animate-pulse animation-delay-4000" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-20 w-40 h-40 bg-primary/8 dark:bg-primary/15 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-20 w-48 h-48 bg-accent/5 dark:bg-accent/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
+        <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-green-500/5 dark:bg-green-400/8 rounded-full blur-2xl animate-pulse animation-delay-4000" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 lg:py-24">
@@ -207,46 +204,49 @@ const Search = () => {
           animate="visible"
           className="max-w-7xl mx-auto"
         >
-          {/* Header Section */}
           <motion.div variants={itemVariants} className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-red-50/80 dark:bg-red-900/30 backdrop-blur-sm border border-red-200/50 dark:border-red-700/30 text-red-600 dark:text-red-400 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-              <FaUsers className="text-sm" />
-              <span className="uppercase tracking-wide">Find Blood Donors</span>
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-primary/15 to-blue-500/15 dark:from-primary/25 dark:to-blue-400/25 backdrop-blur-xl border-0 text-primary dark:text-blue-400 px-6 py-3 rounded-2xl text-sm font-bold mb-8 shadow-modern-lg dark:shadow-modern-xl">
+              <FaUsers className="text-base animate-pulse" />
+              <span className="uppercase tracking-wider">Find Blood Donors</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-text-primary leading-tight mb-8">
               Search for{" "}
-              <span className="text-red-600 dark:text-red-400">Life Savers</span>
+              <span className="bg-gradient-to-r from-primary via-blue-600 to-indigo-700 dark:from-blue-400 dark:via-primary dark:to-blue-500 bg-clip-text text-transparent">
+                Life Savers
+              </span>
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed font-medium">
               Find blood donors in your area quickly and easily. Connect with verified donors
               who are ready to help in times of emergency.
             </p>
           </motion.div>
 
-          {/* Search Form Section */}
           <motion.div variants={itemVariants} className="mb-12">
             <form
               onSubmit={handleSearch}
-              className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg p-8"
+              className="bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl rounded-3xl border-0 shadow-modern-xl dark:shadow-modern-2xl p-10"
             >
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                  <FiFilter className="text-red-600 dark:text-red-400" />
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-12 h-12 bg-gradient-to-r from-primary/20 to-blue-500/20 dark:from-primary/30 dark:to-blue-400/30 backdrop-blur-xl rounded-2xl flex items-center justify-center">
+                  <FiFilter className="text-primary text-lg" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-2xl font-black text-text-primary">
                   Search Filters
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-lg font-bold text-text-primary mb-4 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-r from-red-500/20 to-pink-500/20 dark:from-red-400/30 dark:to-pink-400/30 rounded-xl flex items-center justify-center">
+                      <FiDroplet className="text-red-600 dark:text-red-400 text-sm" />
+                    </div>
                     Blood Group *
                   </label>
                   <select
                     name="bloodGroup"
                     required
-                    className="w-full bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border border-white/40 dark:border-gray-700/40 text-gray-900 dark:text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all duration-300"
+                    className="w-full bg-bg-tertiary/90 dark:bg-bg-tertiary/70 backdrop-blur-xl border-0 text-text-primary px-6 py-4 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/30 dark:focus:ring-primary/40 transition-all duration-300 text-lg font-medium shadow-modern-sm focus:shadow-modern-lg"
                   >
                     <option value="">Select Blood Group</option>
                     {bloodGroups.map((bg) => (
@@ -258,14 +258,17 @@ const Search = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-lg font-bold text-text-primary mb-4 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 dark:from-blue-400/30 dark:to-indigo-400/30 rounded-xl flex items-center justify-center">
+                      <FiMapPin className="text-blue-600 dark:text-blue-400 text-sm" />
+                    </div>
                     District
                   </label>
                   <select
                     name="district"
                     value={selectedDistrict}
                     onChange={(e) => setSelectedDistrict(e.target.value)}
-                    className="w-full bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border border-white/40 dark:border-gray-700/40 text-gray-900 dark:text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all duration-300"
+                    className="w-full bg-bg-tertiary/90 dark:bg-bg-tertiary/70 backdrop-blur-xl border-0 text-text-primary px-6 py-4 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/30 dark:focus:ring-primary/40 transition-all duration-300 text-lg font-medium shadow-modern-sm focus:shadow-modern-lg"
                   >
                     <option value="">All Districts</option>
                     {districts.map((d) => (
@@ -277,13 +280,16 @@ const Search = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-lg font-bold text-text-primary mb-4 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-r from-green-500/20 to-emerald-500/20 dark:from-green-400/30 dark:to-emerald-400/30 rounded-xl flex items-center justify-center">
+                      <FiMapPin className="text-green-600 dark:text-green-400 text-sm" />
+                    </div>
                     Upazila
                   </label>
                   <select
                     name="upazila"
                     disabled={!selectedDistrict}
-                    className="w-full bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border border-white/40 dark:border-gray-700/40 text-gray-900 dark:text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-bg-tertiary/90 dark:bg-bg-tertiary/70 backdrop-blur-xl border-0 text-text-primary px-6 py-4 rounded-2xl focus:outline-none focus:ring-4 focus:ring-primary/30 dark:focus:ring-primary/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg font-medium shadow-modern-sm focus:shadow-modern-lg"
                   >
                     <option value="">All Upazilas</option>
                     {filteredUpazilas.map((u) => (
@@ -300,17 +306,17 @@ const Search = () => {
                 disabled={loading}
                 whileHover={{ scale: loading ? 1 : 1.02 }}
                 whileTap={{ scale: loading ? 1 : 0.98 }}
-                className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 disabled:from-red-400 disabled:to-red-500 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                className="w-full bg-gradient-to-r from-primary via-blue-600 to-indigo-700 hover:from-indigo-700 hover:via-primary hover:to-blue-800 disabled:from-primary/60 disabled:to-blue-600/60 text-white px-10 py-6 rounded-2xl font-black text-xl shadow-modern-xl hover:shadow-modern-2xl transition-all duration-300 disabled:cursor-not-allowed flex items-center justify-center gap-4 border-0"
               >
                 {loading ? (
                   <>
-                    <FaSpinner className="animate-spin" />
-                    Searching Donors...
+                    <FaSpinner className="animate-spin text-xl" />
+                    <span className="font-bold">Searching Donors...</span>
                   </>
                 ) : (
                   <>
-                    <FiSearch />
-                    Search Blood Donors
+                    <FiSearch className="text-2xl" />
+                    <span>Search Blood Donors</span>
                   </>
                 )}
               </motion.button>
@@ -319,12 +325,12 @@ const Search = () => {
 
           {/* Results Header */}
           {(results.length > 0 || loading) && (
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-100/80 dark:bg-green-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                  <FaUsers className="text-green-600 dark:text-green-400" />
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-12">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-primary/20 to-blue-500/20 dark:from-primary/30 dark:to-blue-400/30 backdrop-blur-xl rounded-2xl flex items-center justify-center">
+                  <FaUsers className="text-primary text-lg" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-3xl font-black text-text-primary">
                   {loading ? "Searching..." : `Found ${results.length} Donor${results.length !== 1 ? 's' : ''}`}
                 </h2>
               </div>
@@ -333,19 +339,19 @@ const Search = () => {
                 <motion.button
                   onClick={downloadPDF}
                   disabled={downloadingPDF}
-                  whileHover={{ scale: downloadingPDF ? 1 : 1.02 }}
-                  whileTap={{ scale: downloadingPDF ? 1 : 0.98 }}
-                  className="flex items-center gap-2 bg-blue-600/90 dark:bg-blue-600/80 backdrop-blur-sm text-white border border-blue-500/30 px-6 py-3 rounded-xl font-semibold hover:bg-blue-700/90 dark:hover:bg-blue-700/80 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed"
+                  whileHover={{ scale: downloadingPDF ? 1 : 1.05 }}
+                  whileTap={{ scale: downloadingPDF ? 1 : 0.95 }}
+                  className="flex items-center gap-3 bg-gradient-to-r from-accent/90 to-blue-600/90 dark:from-accent/80 dark:to-blue-500/80 backdrop-blur-xl text-white border-0 px-8 py-4 rounded-2xl font-bold text-lg hover:from-blue-600/90 hover:to-accent/90 transition-all duration-300 shadow-modern-lg hover:shadow-modern-xl disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {downloadingPDF ? (
                     <>
-                      <FaSpinner className="animate-spin" />
-                      Generating PDF...
+                      <FaSpinner className="animate-spin text-lg" />
+                      <span>Generating PDF...</span>
                     </>
                   ) : (
                     <>
-                      <FiDownload />
-                      Download PDF
+                      <FiDownload className="text-lg" />
+                      <span>Download PDF</span>
                     </>
                   )}
                 </motion.button>
@@ -357,13 +363,13 @@ const Search = () => {
           {loading && (
             <motion.div
               variants={itemVariants}
-              className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg p-12 text-center"
+              className="bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl rounded-3xl border-0 shadow-modern-xl dark:shadow-modern-2xl p-16 text-center"
             >
-              <div className="w-16 h-16 border-4 border-red-500/30 border-t-red-500 rounded-full animate-spin mx-auto mb-6"></div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              <div className="w-20 h-20 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-8"></div>
+              <h3 className="text-2xl font-black text-text-primary mb-4">
                 Searching for Donors
               </h3>
-              <p className="text-gray-600 dark:text-gray-300">
+              <p className="text-xl text-text-secondary font-medium">
                 Please wait while we find available blood donors in your area...
               </p>
             </motion.div>
@@ -373,84 +379,84 @@ const Search = () => {
           {!loading && results.length > 0 && (
             <motion.div
               variants={containerVariants}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
             >
               {results.map((donor, idx) => (
                 <motion.div
                   key={idx}
                   variants={itemVariants}
-                  whileHover={{ y: -5 }}
-                  className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg hover:shadow-xl transition-all duration-300 p-6 h-full flex flex-col"
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  className="bg-gradient-to-br from-bg-card/98 to-bg-card/95 dark:from-bg-card/95 dark:to-bg-card/90 backdrop-blur-xl rounded-3xl border-0 shadow-modern-lg hover:shadow-modern-2xl transition-all duration-300 p-8 h-full flex flex-col"
                 >
                   {/* Donor Avatar */}
-                  <div className="flex flex-col items-center mb-6">
-                    <div className="w-20 h-20 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 border border-red-200/50 dark:border-red-700/30">
-                      <FiUser className="text-3xl text-red-600 dark:text-red-400" />
+                  <div className="flex flex-col items-center mb-8">
+                    <div className="w-24 h-24 bg-gradient-to-r from-primary/20 to-blue-500/20 dark:from-primary/30 dark:to-blue-400/30 backdrop-blur-xl rounded-2xl flex items-center justify-center mb-6 border-0 shadow-modern-sm">
+                      <FiUser className="text-4xl text-primary" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white text-center">
+                    <h3 className="text-2xl font-black text-text-primary text-center mb-2">
                       {donor.recipientName}
                     </h3>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                    <p className="text-text-muted text-base font-medium">
                       {donor.requesterEmail}
                     </p>
                   </div>
 
                   {/* Blood Group Badge */}
-                  <div className="flex justify-center mb-6">
-                    <span className={`px-4 py-2 rounded-full text-sm font-bold uppercase backdrop-blur-sm border ${getBloodGroupColor(donor.bloodGroup)}`}>
+                  <div className="flex justify-center mb-8">
+                    <span className={`px-6 py-3 rounded-2xl text-lg font-black uppercase backdrop-blur-xl border-0 shadow-modern-sm ${getBloodGroupColor(donor.bloodGroup)}`}>
                       {donor.bloodGroup}
                     </span>
                   </div>
 
                   {/* Donor Details */}
-                  <div className="space-y-4 mb-6 flex-grow">
-                    <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-                      <div className="w-8 h-8 bg-gray-100/80 dark:bg-gray-800/60 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                        <FiMapPin className="text-red-500 text-sm" />
+                  <div className="space-y-6 mb-8 flex-grow">
+                    <div className="flex items-center gap-4 text-text-secondary bg-bg-tertiary/50 dark:bg-bg-tertiary/30 rounded-2xl p-4">
+                      <div className="w-10 h-10 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 dark:from-blue-400/30 dark:to-indigo-400/30 backdrop-blur-xl rounded-xl flex items-center justify-center">
+                        <FiMapPin className="text-blue-600 dark:text-blue-400 text-lg" />
                       </div>
-                      <span className="text-sm font-medium">
+                      <span className="text-lg font-bold text-text-primary">
                         {donor.recipientUpazila}, {donor.recipientDistrict}
                       </span>
                     </div>
 
                     {donor.hospitalName && (
-                      <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-                        <div className="w-8 h-8 bg-gray-100/80 dark:bg-gray-800/60 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                          <FiDroplet className="text-red-500 text-sm" />
+                      <div className="flex items-center gap-4 text-text-secondary bg-bg-tertiary/50 dark:bg-bg-tertiary/30 rounded-2xl p-4">
+                        <div className="w-10 h-10 bg-gradient-to-r from-green-500/20 to-emerald-500/20 dark:from-green-400/30 dark:to-emerald-400/30 backdrop-blur-xl rounded-xl flex items-center justify-center">
+                          <FiDroplet className="text-green-600 dark:text-green-400 text-lg" />
                         </div>
-                        <span className="text-sm font-medium truncate">
+                        <span className="text-lg font-bold text-text-primary truncate">
                           {donor.hospitalName}
                         </span>
                       </div>
                     )}
 
-                    <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-                      <div className="w-8 h-8 bg-gray-100/80 dark:bg-gray-800/60 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                        <FiCalendar className="text-red-500 text-sm" />
+                    <div className="flex items-center gap-4 text-text-secondary bg-bg-tertiary/50 dark:bg-bg-tertiary/30 rounded-2xl p-4">
+                      <div className="w-10 h-10 bg-gradient-to-r from-purple-500/20 to-pink-500/20 dark:from-purple-400/30 dark:to-pink-400/30 backdrop-blur-xl rounded-xl flex items-center justify-center">
+                        <FiCalendar className="text-purple-600 dark:text-purple-400 text-lg" />
                       </div>
-                      <span className="text-sm font-medium">
+                      <span className="text-lg font-bold text-text-primary">
                         {new Date(donor.donationDate).toLocaleDateString()}
                       </span>
                     </div>
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex gap-3 mt-auto">
+                  <div className="flex gap-4 mt-auto">
                     <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex-1 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm text-red-600 dark:text-red-400 border border-red-200/50 dark:border-red-700/30 py-3 rounded-xl font-semibold hover:bg-red-50/80 dark:hover:bg-red-900/20 transition-all duration-300 flex items-center justify-center gap-2 text-sm"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex-1 bg-gradient-to-r from-bg-tertiary/90 to-bg-tertiary/80 dark:from-bg-tertiary/80 dark:to-bg-tertiary/70 backdrop-blur-xl text-primary border-0 py-4 rounded-2xl font-bold hover:from-primary/20 hover:to-blue-500/20 dark:hover:from-primary/30 dark:hover:to-blue-400/30 transition-all duration-300 flex items-center justify-center gap-3 text-lg shadow-modern-sm hover:shadow-modern-lg"
                     >
-                      <FiPhone />
-                      Contact
+                      <FiPhone className="text-lg" />
+                      <span>Contact</span>
                     </motion.button>
                     <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex-1 bg-red-600/90 dark:bg-red-600/80 backdrop-blur-sm text-white border border-red-500/30 py-3 rounded-xl font-semibold hover:bg-red-700/90 dark:hover:bg-red-700/80 transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-xl"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex-1 bg-gradient-to-r from-primary to-blue-600 hover:from-blue-600 hover:to-primary backdrop-blur-xl text-white border-0 py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-center gap-3 text-lg shadow-modern-lg hover:shadow-modern-xl"
                     >
-                      <FiMail />
-                      Message
+                      <FiMail className="text-lg" />
+                      <span>Message</span>
                     </motion.button>
                   </div>
                 </motion.div>
@@ -462,15 +468,15 @@ const Search = () => {
           {!loading && results.length === 0 && (
             <motion.div
               variants={itemVariants}
-              className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg p-12 text-center"
+              className="bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl rounded-3xl border-0 shadow-modern-xl dark:shadow-modern-2xl p-16 text-center"
             >
-              <div className="w-20 h-20 bg-gray-100/80 dark:bg-gray-800/60 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6">
-                <FaHeart className="text-3xl text-gray-400 dark:text-gray-500" />
+              <div className="w-24 h-24 bg-gradient-to-r from-bg-tertiary/90 to-bg-tertiary/80 dark:from-bg-tertiary/80 dark:to-bg-tertiary/70 backdrop-blur-xl rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-modern-sm">
+                <FaHeart className="text-4xl text-text-muted" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              <h3 className="text-3xl font-black text-text-primary mb-6">
                 Ready to Find Donors?
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed max-w-md mx-auto">
+              <p className="text-xl text-text-secondary leading-relaxed max-w-lg mx-auto font-medium">
                 Use the search filters above to find blood donors in your area.
                 Select a blood group to get started.
               </p>

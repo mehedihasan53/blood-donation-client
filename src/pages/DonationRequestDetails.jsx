@@ -113,33 +113,33 @@ const DonationRequestDetails = () => {
 
   if (!request) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white/20 to-pink-50/30 dark:from-gray-900/50 dark:via-gray-800/30 dark:to-gray-900/50 backdrop-blur-sm">
+      <div className="min-h-screen bg-theme-primary relative overflow-hidden">
         <DynamicTitle title="Request Not Found" />
 
-        {/* Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-20 w-40 h-40 bg-red-100/20 dark:bg-red-900/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-20 right-20 w-48 h-48 bg-pink-100/20 dark:bg-pink-900/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
+        {/* Enhanced Background Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-red-500/20 to-red-600/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-blue-500/20 to-blue-600/10 rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg p-12">
-              <div className="w-20 h-20 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="bg-theme-card/95 backdrop-blur-xl rounded-2xl border-0 shadow-modern-2xl p-12">
+              <div className="w-20 h-20 bg-gradient-to-br from-red-500/20 to-red-600/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <FaTint className="text-3xl text-red-500" />
               </div>
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-3xl font-bold text-theme-primary mb-4">
                 Request Not Found
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-8">
+              <p className="text-lg text-theme-secondary leading-relaxed mb-8">
                 The donation request you're looking for doesn't exist or may have been removed.
               </p>
               <Link
                 to="/pending-requests"
-                className="inline-flex items-center gap-2 bg-red-600/90 dark:bg-red-600/80 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-700/90 dark:hover:bg-red-700/80 transition-all duration-300"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-modern-lg hover:shadow-modern-xl"
               >
                 <FaArrowLeft />
-                Back to Requests
+                Back
               </Link>
             </div>
           </div>
@@ -162,38 +162,28 @@ const DonationRequestDetails = () => {
     switch (status) {
       case "pending":
         return {
-          bg: "bg-amber-100/80 dark:bg-amber-900/40",
-          text: "text-amber-700 dark:text-amber-300",
-          border: "border-amber-200/50 dark:border-amber-700/30",
-          icon: "bg-amber-500",
+          bg: "bg-gradient-to-r from-amber-500/10 to-amber-600/10",
+          text: "text-amber-600",
         };
       case "inprogress":
         return {
-          bg: "bg-blue-100/80 dark:bg-blue-900/40",
-          text: "text-blue-700 dark:text-blue-300",
-          border: "border-blue-200/50 dark:border-blue-700/30",
-          icon: "bg-blue-500",
+          bg: "bg-gradient-to-r from-blue-500/10 to-blue-600/10",
+          text: "text-blue-600",
         };
       case "done":
         return {
-          bg: "bg-emerald-100/80 dark:bg-emerald-900/40",
-          text: "text-emerald-700 dark:text-emerald-300",
-          border: "border-emerald-200/50 dark:border-emerald-700/30",
-          icon: "bg-emerald-500",
+          bg: "bg-gradient-to-r from-emerald-500/10 to-emerald-600/10",
+          text: "text-emerald-600",
         };
       case "canceled":
         return {
-          bg: "bg-rose-100/80 dark:bg-rose-900/40",
-          text: "text-rose-700 dark:text-rose-300",
-          border: "border-rose-200/50 dark:border-rose-700/30",
-          icon: "bg-rose-500",
+          bg: "bg-gradient-to-r from-rose-500/10 to-rose-600/10",
+          text: "text-rose-600",
         };
       default:
         return {
-          bg: "bg-gray-100/80 dark:bg-gray-900/40",
-          text: "text-gray-700 dark:text-gray-300",
-          border: "border-gray-200/50 dark:border-gray-700/30",
-          icon: "bg-gray-500",
+          bg: "bg-gradient-to-r from-gray-500/10 to-gray-600/10",
+          text: "text-gray-600",
         };
     }
   };
@@ -201,32 +191,27 @@ const DonationRequestDetails = () => {
   const getBloodGroupColor = (bloodGroup) => {
     if (bloodGroup.includes("A"))
       return {
-        bg: "bg-red-100/80 dark:bg-red-900/40",
-        text: "text-red-700 dark:text-red-300",
-        border: "border-red-200/50 dark:border-red-700/30",
+        bg: "bg-gradient-to-r from-red-500/10 to-red-600/10",
+        text: "text-red-600",
       };
     if (bloodGroup.includes("B"))
       return {
-        bg: "bg-blue-100/80 dark:bg-blue-900/40",
-        text: "text-blue-700 dark:text-blue-300",
-        border: "border-blue-200/50 dark:border-blue-700/30",
+        bg: "bg-gradient-to-r from-blue-500/10 to-blue-600/10",
+        text: "text-blue-600",
       };
     if (bloodGroup.includes("O"))
       return {
-        bg: "bg-emerald-100/80 dark:bg-emerald-900/40",
-        text: "text-emerald-700 dark:text-emerald-300",
-        border: "border-emerald-200/50 dark:border-emerald-700/30",
+        bg: "bg-gradient-to-r from-emerald-500/10 to-emerald-600/10",
+        text: "text-emerald-600",
       };
     if (bloodGroup.includes("AB"))
       return {
-        bg: "bg-purple-100/80 dark:bg-purple-900/40",
-        text: "text-purple-700 dark:text-purple-300",
-        border: "border-purple-200/50 dark:border-purple-700/30",
+        bg: "bg-gradient-to-r from-purple-500/10 to-purple-600/10",
+        text: "text-purple-600",
       };
     return {
-      bg: "bg-gray-100/80 dark:bg-gray-900/40",
-      text: "text-gray-700 dark:text-gray-300",
-      border: "border-gray-200/50 dark:border-gray-700/30",
+      bg: "bg-gradient-to-r from-gray-500/10 to-gray-600/10",
+      text: "text-gray-600",
     };
   };
 
@@ -234,208 +219,258 @@ const DonationRequestDetails = () => {
   const bloodGroupColor = getBloodGroupColor(request.bloodGroup);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-white/20 to-pink-50/30 dark:from-gray-900/50 dark:via-gray-800/30 dark:to-gray-900/50 backdrop-blur-sm">
+    <div className="min-h-screen bg-theme-primary relative overflow-hidden">
       <DynamicTitle title={`Donation Request - ${request.recipientName}`} />
       <Toaster position="top-right" />
 
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-20 w-40 h-40 bg-red-100/20 dark:bg-red-900/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-20 w-48 h-48 bg-pink-100/20 dark:bg-pink-900/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
-        <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-orange-100/20 dark:bg-orange-900/10 rounded-full blur-2xl animate-pulse animation-delay-4000" />
+      {/* Enhanced Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-red-500/20 to-red-600/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-blue-500/20 to-blue-600/10 rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse animation-delay-4000"></div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
           className="max-w-4xl mx-auto"
         >
-          {/* Header */}
-          <motion.div variants={itemVariants} className="mb-8">
+          {/* Header Section with Gradient Badge */}
+          <motion.div variants={itemVariants} className="text-center mb-12">
             <Link
               to="/pending-requests"
-              className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 font-medium transition-colors duration-300 mb-6"
+              className="inline-flex items-center gap-2 text-theme-secondary hover:text-red-500 font-medium transition-all duration-300 mb-8 group"
             >
-              <FaArrowLeft />
-              Back to Requests
+              <FaArrowLeft className="group-hover:-translate-x-1 transition-transform duration-300" />
+              Back
             </Link>
 
-            <div className="text-center">
-              <div className="inline-flex items-center gap-2 bg-red-50/80 dark:bg-red-900/30 backdrop-blur-sm border border-red-200/50 dark:border-red-700/30 text-red-600 dark:text-red-400 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-                <FaExclamationTriangle className="text-sm animate-pulse" />
-                <span className="uppercase tracking-wide">Urgent Request</span>
-              </div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
-                Donation Request Details
-              </h1>
+            {/* Gradient Badge */}
+            <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-500/20 to-red-600/20 border border-red-500/30 rounded-full mb-6">
+              <FaExclamationTriangle className="text-red-500 text-sm animate-pulse mr-2" />
+              <span className="text-sm font-semibold bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent uppercase tracking-wide">
+                Urgent Blood Request
+              </span>
             </div>
+
+            {/* Dramatic Title */}
+            <h1 className="text-4xl sm:text-5xl font-bold mb-4">
+              <span className="bg-gradient-to-r from-red-500 via-red-600 to-red-700 bg-clip-text text-transparent">
+                Donation Request
+              </span>
+            </h1>
+            <p className="text-theme-secondary text-lg max-w-2xl mx-auto">
+              Help save a life by donating blood for {request.recipientName}
+            </p>
           </motion.div>
 
-          {/* Main Content */}
-          <motion.div
-            variants={itemVariants}
-            className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-gray-700/30 shadow-lg overflow-hidden"
-          >
-            {/* Header Section */}
-            <div className="p-8 border-b border-gray-200/50 dark:border-gray-700/30">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                    <FaUser className="text-red-600 dark:text-red-400 text-2xl" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
-                      {request.recipientName}
-                    </h2>
-                    <div className="flex items-center gap-3 mt-2">
-                      <span className={`px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-sm border ${statusColor.bg} ${statusColor.text} ${statusColor.border}`}>
-                        {request.status.toUpperCase()}
-                      </span>
-                      <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                        <FaIdCard className="text-xs" />
-                        ID: {request._id?.slice(-8)}
-                      </span>
+          {/* Main Content Grid */}
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Left Column - Main Information */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Patient Overview Card */}
+              <motion.div
+                variants={itemVariants}
+                className="bg-theme-card/95 backdrop-blur-xl border-0 rounded-2xl shadow-modern-2xl overflow-hidden"
+              >
+                <div className="p-8">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 bg-gradient-to-br from-red-500/20 to-red-600/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                        <FaUser className="text-red-500 text-2xl" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-theme-primary mb-2">
+                          {request.recipientName}
+                        </h2>
+                        <div className="flex items-center gap-3">
+                          <span className={`px-4 py-2 rounded-full text-sm font-semibold ${statusColor.bg} ${statusColor.text}`}>
+                            {request.status.toUpperCase()}
+                          </span>
+                          <span className="text-sm text-theme-muted flex items-center gap-1">
+                            <FaIdCard className="text-xs" />
+                            ID: {request._id?.slice(-8)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Blood Group Highlight */}
+                    <div className="sm:ml-auto">
+                      <div className={`${bloodGroupColor.bg} backdrop-blur-sm ${bloodGroupColor.text} px-6 py-4 rounded-2xl text-center min-w-[140px] border-0`}>
+                        <div className="flex items-center justify-center gap-2 mb-1">
+                          <FaTint className="text-lg" />
+                          <span className="text-sm font-medium">BLOOD GROUP</span>
+                        </div>
+                        <div className="text-3xl font-bold">{request.bloodGroup}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
+              </motion.div>
 
-                {/* Blood Group Highlight */}
-                <div className={`${bloodGroupColor.bg} backdrop-blur-sm ${bloodGroupColor.text} ${bloodGroupColor.border} border px-6 py-4 rounded-2xl text-center min-w-[140px]`}>
-                  <div className="flex items-center justify-center gap-2 mb-1">
-                    <FaTint className="text-lg" />
-                    <span className="text-sm font-medium">BLOOD GROUP</span>
-                  </div>
-                  <div className="text-3xl font-bold">{request.bloodGroup}</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Details Section */}
-            <div className="p-8 space-y-6">
-              {/* Location */}
-              <div className="bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30 p-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-blue-100/80 dark:bg-blue-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                    <FaMapMarkerAlt className="text-blue-600 dark:text-blue-400 text-lg" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Location</p>
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                      {request.recipientUpazila}, {request.recipientDistrict}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Date & Time */}
-              <div className="bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30 p-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-green-100/80 dark:bg-green-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                    <FaCalendarAlt className="text-green-600 dark:text-green-400 text-lg" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Donation Date & Time</p>
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                      {formatDate(request.donationDate)}
-                    </p>
-                    {request.donationTime && (
-                      <div className="flex items-center gap-2 mt-1">
-                        <FaClock className="text-gray-400 dark:text-gray-500 text-sm" />
-                        <span className="text-sm text-gray-600 dark:text-gray-300">{request.donationTime}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Hospital */}
-              {request.hospitalName && (
-                <div className="bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30 p-6">
+              {/* Key Information Grid */}
+              <motion.div variants={itemVariants} className="grid sm:grid-cols-2 gap-6">
+                {/* Location Card */}
+                <div className="bg-theme-card/95 backdrop-blur-xl border-0 rounded-2xl shadow-modern-lg p-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-purple-100/80 dark:bg-purple-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                      <FaHospital className="text-purple-600 dark:text-purple-400 text-lg" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500/20 to-blue-600/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                      <FaMapMarkerAlt className="text-blue-500 text-lg" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Hospital</p>
-                      <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                        {request.hospitalName}
+                      <p className="text-sm font-medium text-theme-muted mb-1">Location</p>
+                      <p className="text-lg font-semibold text-theme-primary">
+                        {request.recipientUpazila}
                       </p>
+                      <p className="text-sm text-theme-secondary">{request.recipientDistrict}</p>
                     </div>
                   </div>
                 </div>
-              )}
 
-              {/* Requester Contact */}
-              <div className="bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30 p-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-indigo-100/80 dark:bg-indigo-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                    <FaEnvelope className="text-indigo-600 dark:text-indigo-400 text-lg" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Requester Contact</p>
-                    <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                      {request.requesterEmail}
-                    </p>
+                {/* Date & Time Card */}
+                <div className="bg-theme-card/95 backdrop-blur-xl border-0 rounded-2xl shadow-modern-lg p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-500/20 to-green-600/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                      <FaCalendarAlt className="text-green-500 text-lg" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-theme-muted mb-1">Donation Date</p>
+                      <p className="text-lg font-semibold text-theme-primary">
+                        {formatDate(request.donationDate)}
+                      </p>
+                      {request.donationTime && (
+                        <div className="flex items-center gap-2 mt-1">
+                          <FaClock className="text-theme-muted text-sm" />
+                          <span className="text-sm text-theme-secondary">{request.donationTime}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
+
+              {/* Hospital Information */}
+              {request.hospitalName && (
+                <motion.div variants={itemVariants}>
+                  <div className="bg-theme-card/95 backdrop-blur-xl border-0 rounded-2xl shadow-modern-lg p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-purple-500/20 to-purple-600/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                        <FaHospital className="text-purple-500 text-lg" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-theme-muted mb-1">Hospital</p>
+                        <p className="text-lg font-semibold text-theme-primary">
+                          {request.hospitalName}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
 
               {/* Assigned Donor (if in progress) */}
               {request.status === "inprogress" && (
-                <div className="bg-blue-50/80 dark:bg-blue-900/20 backdrop-blur-sm rounded-xl border border-blue-200/50 dark:border-blue-700/30 p-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-blue-100/80 dark:bg-blue-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                      <FaUserCheck className="text-blue-600 dark:text-blue-400 text-lg" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-1">Assigned Donor</p>
-                      <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                        {request.donorName}
-                      </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">{request.donorEmail}</p>
+                <motion.div variants={itemVariants}>
+                  <div className="bg-gradient-to-r from-blue-500/10 to-blue-600/10 backdrop-blur-xl border border-blue-500/20 rounded-2xl shadow-modern-lg p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500/30 to-blue-600/30 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                        <FaUserCheck className="text-blue-500 text-lg" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-blue-500 mb-1">Assigned Donor</p>
+                        <p className="text-lg font-semibold text-theme-primary">
+                          {request.donorName}
+                        </p>
+                        <p className="text-sm text-theme-secondary">{request.donorEmail}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               )}
             </div>
 
-            {/* Action Buttons */}
-            <div className="p-8 pt-0">
-              {request.status === "pending" ? (
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <motion.button
-                    onClick={() => setOpenModal(true)}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex-1 flex items-center justify-center gap-3 bg-red-600/90 dark:bg-red-600/80 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-red-700/90 dark:hover:bg-red-700/80 transition-all duration-300 shadow-lg hover:shadow-xl"
-                  >
-                    <FaHandHoldingHeart />
-                    Donate Now
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex items-center justify-center gap-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-700 dark:text-gray-200 border border-white/50 dark:border-gray-700/50 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/90 dark:hover:bg-gray-800/90 transition-all duration-300"
-                  >
-                    <FaPhone />
-                    Contact Requester
-                  </motion.button>
-                </div>
-              ) : (
-                <div className="text-center">
-                  <div className={`inline-flex items-center gap-3 ${statusColor.bg} backdrop-blur-sm ${statusColor.text} ${statusColor.border} border px-6 py-4 rounded-xl`}>
-                    <FaCheckCircle />
-                    <span className="font-semibold">
-                      {request.status === "inprogress" ? "Donation In Progress" :
-                        request.status === "done" ? "Donation Completed" : "Request Canceled"}
-                    </span>
+            {/* Right Column - Actions & Contact */}
+            <div className="space-y-6">
+              {/* Action Card */}
+              <motion.div
+                variants={itemVariants}
+                className="bg-theme-card/95 backdrop-blur-xl border-0 rounded-2xl shadow-modern-2xl p-6"
+              >
+                <h3 className="text-xl font-bold text-theme-primary mb-6">Take Action</h3>
+
+                {request.status === "pending" ? (
+                  <div className="space-y-4">
+                    <motion.button
+                      onClick={() => setOpenModal(true)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-modern-lg hover:shadow-modern-xl transform transition-all duration-300"
+                    >
+                      <FaHandHoldingHeart />
+                      Donate Now
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full flex items-center justify-center gap-3 bg-theme-tertiary/50 backdrop-blur-sm text-theme-primary border-0 px-6 py-4 rounded-xl font-semibold text-lg hover:bg-theme-tertiary/70 transition-all duration-300"
+                    >
+                      <FaPhone />
+                      Contact Requester
+                    </motion.button>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <div className={`inline-flex items-center gap-3 ${statusColor.bg} backdrop-blur-sm ${statusColor.text} px-6 py-4 rounded-xl border-0`}>
+                      <FaCheckCircle />
+                      <span className="font-semibold">
+                        {request.status === "inprogress" ? "Donation In Progress" :
+                          request.status === "done" ? "Donation Completed" : "Request Canceled"}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+
+              {/* Contact Information Card */}
+              <motion.div
+                variants={itemVariants}
+                className="bg-theme-card/95 backdrop-blur-xl border-0 rounded-2xl shadow-modern-lg p-6"
+              >
+                <h3 className="text-xl font-bold text-theme-primary mb-4">Contact Information</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-indigo-500/20 to-indigo-600/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                      <FaEnvelope className="text-indigo-500 text-sm" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-theme-muted">Requester Email</p>
+                      <p className="text-sm font-semibold text-theme-primary break-all">
+                        {request.requesterEmail}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              )}
+              </motion.div>
+
+              {/* Emergency Notice */}
+              <motion.div
+                variants={itemVariants}
+                className="bg-gradient-to-r from-red-500/10 to-red-600/10 backdrop-blur-xl border border-red-500/20 rounded-2xl shadow-modern-lg p-6"
+              >
+                <div className="flex items-start gap-3">
+                  <FaExclamationTriangle className="text-red-500 text-lg mt-1 animate-pulse" />
+                  <div>
+                    <h4 className="font-bold text-red-500 mb-2">Emergency Request</h4>
+                    <p className="text-sm text-theme-secondary leading-relaxed">
+                      This is an urgent blood donation request. Your quick response could help save a life.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
             </div>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
 
@@ -451,49 +486,57 @@ const DonationRequestDetails = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl w-full max-w-md border border-white/30 dark:border-gray-700/30 shadow-2xl"
+            className="relative bg-theme-card/95 backdrop-blur-xl rounded-2xl w-full max-w-md border-0 shadow-modern-2xl"
           >
-            <div className="p-6">
-              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200/50 dark:border-gray-700/30">
-                <div className="w-12 h-12 bg-red-100/80 dark:bg-red-900/40 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                  <FaHandHoldingHeart className="text-red-600 dark:text-red-400 text-xl" />
+            <div className="p-8">
+              {/* Modal Header */}
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 bg-gradient-to-br from-red-500/20 to-red-600/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <FaHandHoldingHeart className="text-red-500 text-2xl" />
                 </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Confirm Donation
-                  </h2>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    You're about to donate for {request.recipientName}
-                  </p>
-                </div>
+                <h2 className="text-2xl font-bold text-theme-primary mb-2">
+                  Confirm Donation
+                </h2>
+                <p className="text-theme-secondary">
+                  You're about to donate for {request.recipientName}
+                </p>
               </div>
 
-              <div className="space-y-4 mb-6">
-                <div className="bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30 p-4">
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Your Information</p>
-                  <div className="space-y-2">
-                    <p className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                      <FaUser className="text-blue-500 text-sm" />
-                      {user?.displayName || "Not available"}
-                    </p>
-                    <p className="text-gray-600 dark:text-gray-300 flex items-center gap-2">
-                      <FaEnvelope className="text-green-500 text-sm" />
-                      {user?.email || "Not available"}
-                    </p>
+              {/* Donor Information */}
+              <div className="space-y-4 mb-8">
+                <div className="bg-theme-tertiary/50 backdrop-blur-sm rounded-xl border-0 p-4">
+                  <p className="text-sm font-medium text-theme-muted mb-3">Your Information</p>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-lg flex items-center justify-center">
+                        <FaUser className="text-blue-500 text-sm" />
+                      </div>
+                      <span className="font-semibold text-theme-primary">
+                        {user?.displayName || "Not available"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-lg flex items-center justify-center">
+                        <FaEnvelope className="text-green-500 text-sm" />
+                      </div>
+                      <span className="text-theme-secondary text-sm">
+                        {user?.email || "Not available"}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="bg-gray-50/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/30 p-4">
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Donation Details</p>
-                  <div className="flex items-center gap-3">
-                    <div className={`px-3 py-2 rounded-lg backdrop-blur-sm border ${bloodGroupColor.bg} ${bloodGroupColor.text} ${bloodGroupColor.border} font-bold`}>
+                <div className="bg-theme-tertiary/50 backdrop-blur-sm rounded-xl border-0 p-4">
+                  <p className="text-sm font-medium text-theme-muted mb-3">Donation Details</p>
+                  <div className="flex items-center gap-4">
+                    <div className={`px-4 py-2 rounded-lg backdrop-blur-sm border-0 ${bloodGroupColor.bg} ${bloodGroupColor.text} font-bold`}>
                       {request.bloodGroup}
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-900 dark:text-white text-sm">
+                      <p className="font-semibold text-theme-primary">
                         {request.recipientUpazila}
                       </p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                      <p className="text-sm text-theme-secondary">
                         {request.recipientDistrict}
                       </p>
                     </div>
@@ -501,17 +544,18 @@ const DonationRequestDetails = () => {
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-4 border-t border-gray-200/50 dark:border-gray-700/30">
+              {/* Modal Actions */}
+              <div className="flex gap-4">
                 <button
                   onClick={() => setOpenModal(false)}
-                  className="flex-1 px-4 py-3 bg-gray-100/80 dark:bg-gray-800/60 backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-gray-200/50 dark:border-gray-700/30 rounded-xl hover:bg-gray-200/80 dark:hover:bg-gray-700/60 font-semibold transition-all duration-300"
+                  className="flex-1 px-6 py-3 bg-theme-tertiary/50 backdrop-blur-sm text-theme-secondary border-0 rounded-xl hover:bg-theme-tertiary/70 font-semibold transition-all duration-300"
                 >
                   Cancel
                 </button>
                 <button
                   disabled={submitting}
                   onClick={confirmDonation}
-                  className="flex-1 px-4 py-3 bg-red-600/90 dark:bg-red-600/80 backdrop-blur-sm text-white rounded-xl hover:bg-red-700/90 dark:hover:bg-red-700/80 font-semibold flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {submitting ? (
                     <>

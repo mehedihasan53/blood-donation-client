@@ -12,16 +12,25 @@ import {
 import toast from "react-hot-toast";
 import Loading from "../components/shared/Loading";
 import DynamicTitle from "../components/shared/DynamicTitle";
+import OverviewCard from "../components/dashboard/OverviewCard";
+import DataTable from "../components/dashboard/DataTable";
+import { motion } from "framer-motion";
 
 const getRoleBadgeClass = (role) => {
-  if (role === "admin") return "bg-purple-100 text-purple-800";
-  if (role === "volunteer") return "bg-blue-100 text-blue-800";
-  return "bg-green-100 text-green-800";
+  const classes = {
+    admin: "bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-700",
+    volunteer: "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-700",
+    donor: "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-700"
+  };
+  return classes[role] || classes.donor;
 };
 
 const getStatusBadgeClass = (status) => {
-  if (status === "active") return "bg-green-100 text-green-800";
-  return "bg-red-100 text-red-800";
+  const classes = {
+    active: "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-700",
+    blocked: "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-700"
+  };
+  return classes[status] || classes.active;
 };
 
 const AllUsers = () => {
@@ -29,7 +38,6 @@ const AllUsers = () => {
   const { user } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all");
   const [openDropdown, setOpenDropdown] = useState(null);
 
   useEffect(() => {
@@ -67,13 +75,11 @@ const AllUsers = () => {
     }
   };
 
-  const filteredUsers =
-    filter === "all" ? users : users.filter((u) => u.status === filter);
-
   const stats = {
     active: users.filter((u) => u.status === "active").length,
     blocked: users.filter((u) => u.status === "blocked").length,
     admin: users.filter((u) => u.role === "admin").length,
+    volunteer: users.filter((u) => u.role === "volunteer").length,
   };
 
   const renderActions = (u) => (
@@ -82,20 +88,20 @@ const AllUsers = () => {
         onClick={() =>
           setOpenDropdown(openDropdown === u.email ? null : u.email)
         }
-        className="p-2 rounded-lg hover:bg-gray-100"
+        className="p-2 rounded-lg hover:bg-bg-tertiary/50 dark:hover:bg-bg-tertiary/30 transition-colors duration-200"
       >
-        <FaEllipsisV />
+        <FaEllipsisV className="text-text-muted" />
       </button>
       {openDropdown === u.email && (
-        <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-10">
+        <div className="absolute right-0 mt-2 w-44 bg-bg-card/95 dark:bg-bg-card/90 backdrop-blur-xl border border-border-primary/50 dark:border-border-primary/60 rounded-xl shadow-lg dark:shadow-2xl z-10 overflow-hidden">
           <button
             onClick={() => {
               handleStatus(u.email, u.status);
               setOpenDropdown(null);
             }}
-            className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100 text-left"
+            className="flex items-center gap-2 w-full px-4 py-3 text-sm hover:bg-bg-tertiary/50 dark:hover:bg-bg-tertiary/30 text-left transition-colors duration-200 text-text-primary"
           >
-            {u.status === "active" ? <FaBan /> : <FaCheck />}
+            {u.status === "active" ? <FaBan className="text-red-500" /> : <FaCheck className="text-green-500" />}
             {u.status === "active" ? "Block User" : "Unblock User"}
           </button>
 
@@ -105,9 +111,9 @@ const AllUsers = () => {
                 handleRole(u.email, "volunteer");
                 setOpenDropdown(null);
               }}
-              className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100 text-left"
+              className="flex items-center gap-2 w-full px-4 py-3 text-sm hover:bg-bg-tertiary/50 dark:hover:bg-bg-tertiary/30 text-left transition-colors duration-200 text-text-primary"
             >
-              <FaUserFriends />
+              <FaUserFriends className="text-blue-500" />
               Make Volunteer
             </button>
           )}
@@ -118,9 +124,9 @@ const AllUsers = () => {
                 handleRole(u.email, "admin");
                 setOpenDropdown(null);
               }}
-              className="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-gray-100 text-left"
+              className="flex items-center gap-2 w-full px-4 py-3 text-sm hover:bg-bg-tertiary/50 dark:hover:bg-bg-tertiary/30 text-left transition-colors duration-200 text-text-primary"
             >
-              <FaUserShield />
+              <FaUserShield className="text-purple-500" />
               Make Admin
             </button>
           )}
@@ -129,182 +135,146 @@ const AllUsers = () => {
     </div>
   );
 
-  if (loading)
+  // Table columns configuration
+  const userColumns = [
+    {
+      key: 'name',
+      label: 'User',
+      render: (value, item) => (
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-bg-tertiary/60 dark:bg-bg-tertiary/40 rounded-full flex items-center justify-center overflow-hidden">
+            {item.avatar ? (
+              <img
+                src={item.avatar}
+                alt={item.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <FaUser className="text-text-muted" />
+            )}
+          </div>
+          <div>
+            <p className="font-medium text-text-primary">{value || 'Unknown'}</p>
+            <p className="text-sm text-text-muted">{item.email}</p>
+          </div>
+        </div>
+      )
+    },
+    {
+      key: 'role',
+      label: 'Role',
+      render: (value) => (
+        <span className={`px-3 py-1 rounded-full text-sm font-medium capitalize backdrop-blur-sm ${getRoleBadgeClass(value)}`}>
+          {value || 'donor'}
+        </span>
+      )
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      render: (value) => (
+        <span className={`px-3 py-1 rounded-full text-sm font-medium capitalize backdrop-blur-sm ${getStatusBadgeClass(value)}`}>
+          {value || 'active'}
+        </span>
+      )
+    },
+    {
+      key: 'actions',
+      label: 'Actions',
+      sortable: false,
+      render: (value, item) => renderActions(item)
+    }
+  ];
+
+  if (loading) {
     return (
       <div className="text-center py-12">
         <Loading />
       </div>
     );
+  }
 
   return (
-    <div className="p-4 sm:p-6">
+    <div className="min-h-screen bg-bg-secondary/50 dark:bg-bg-secondary/30 p-4 sm:p-6">
       <DynamicTitle title="All Users" />
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Manage Users</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        {[
-          { label: "Active Users", value: stats.active, color: "green" },
-          { label: "Blocked Users", value: stats.blocked, color: "red" },
-          { label: "Admin Users", value: stats.admin, color: "purple" },
-        ].map((stat) => (
-          <div
-            key={stat.label}
-            className={`bg-white p-4 rounded-lg shadow border-l-4 border-${stat.color}-500`}
-          >
-            <div className="text-2xl font-bold text-gray-800">{stat.value}</div>
-            <div className="text-sm text-gray-600">{stat.label}</div>
-          </div>
-        ))}
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="mb-8"
+      >
+        <h1 className="text-3xl font-bold text-text-primary mb-2">User Management</h1>
+        <p className="text-text-secondary">Manage user roles, status, and permissions</p>
+      </motion.div>
+
+      {/* Stats Cards */}
+      <div className="overview-cards-grid mb-6 sm:mb-8">
+        <OverviewCard
+          title="Active Users"
+          value={stats.active}
+          icon={FaUser}
+          color="green"
+          delay={0.1}
+          subtitle="Currently active"
+        />
+        <OverviewCard
+          title="Blocked Users"
+          value={stats.blocked}
+          icon={FaBan}
+          color="red"
+          delay={0.2}
+          subtitle="Temporarily blocked"
+        />
+        <OverviewCard
+          title="Admin Users"
+          value={stats.admin}
+          icon={FaUserShield}
+          color="purple"
+          delay={0.3}
+          subtitle="System administrators"
+        />
+        <OverviewCard
+          title="Volunteers"
+          value={stats.volunteer}
+          icon={FaUserFriends}
+          color="blue"
+          delay={0.4}
+          subtitle="Platform volunteers"
+        />
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-6">
-        {["all", "active", "blocked"].map((f) => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={`px-4 py-2 rounded-lg capitalize transition duration-150 ${
-              filter === f
-                ? "bg-red-600 text-white shadow-md"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
-          >
-            {f}
-          </button>
-        ))}
-      </div>
-
-      {/* Desktop Table  */}
-      <div className="hidden md:block bg-white rounded-lg shadow overflow-hidden">
-        {filteredUsers.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            No users found matching the filter.
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="p-3 text-left text-sm font-medium text-gray-600">
-                    User
-                  </th>
-                  <th className="p-3 text-left text-sm font-medium text-gray-600">
-                    Role
-                  </th>
-                  <th className="p-3 text-left text-sm font-medium text-gray-600">
-                    Status
-                  </th>
-                  <th className="p-3 text-left text-sm font-medium text-gray-600">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {filteredUsers.map((u) => (
-                  <tr key={u.email} className="hover:bg-gray-50">
-                    <td className="p-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                          {u.avatar ? (
-                            <img
-                              src={u.avatar}
-                              alt={u.name}
-                              className="w-10 h-10 rounded-full object-cover"
-                            />
-                          ) : (
-                            <FaUser className="text-gray-600" />
-                          )}
-                        </div>
-                        <div>
-                          <div className="font-medium text-gray-800">
-                            {u.name}
-                          </div>
-                          <div className="text-sm text-gray-500">{u.email}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-3">
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm capitalize ${getRoleBadgeClass(
-                          u.role
-                        )}`}
-                      >
-                        {u.role}
-                      </span>
-                    </td>
-                    <td className="p-3">
-                      <span
-                        className={`px-3 py-1 rounded-full text-sm capitalize ${getStatusBadgeClass(
-                          u.status
-                        )}`}
-                      >
-                        {u.status}
-                      </span>
-                    </td>
-                    <td className="p-3">{renderActions(u)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* Mobile Cards  */}
-      <div className="md:hidden space-y-4">
-        {filteredUsers.length === 0 ? (
-          <div className="p-4 text-center text-gray-500 bg-white rounded-lg shadow">
-            No users found matching the filter.
-          </div>
-        ) : (
-          filteredUsers.map((u) => (
-            <div
-              key={u.email}
-              className="bg-white rounded-lg shadow p-4 space-y-3 border-l-4 border-red-500"
-            >
-              <div className="flex justify-between items-start">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
-                    {u.avatar ? (
-                      <img
-                        src={u.avatar}
-                        alt={u.name}
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
-                    ) : (
-                      <FaUser className="text-gray-600" />
-                    )}
-                  </div>
-                  <div>
-                    <div className="font-medium text-gray-800">{u.name}</div>
-                    <div className="text-sm text-gray-500">{u.email}</div>
-                  </div>
-                </div>
-
-                {renderActions(u)}
-              </div>
-
-              <div className="flex justify-start gap-3 items-center pt-2 border-t border-gray-100">
-                <div className="text-sm font-medium text-gray-600">Role:</div>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm capitalize ${getRoleBadgeClass(
-                    u.role
-                  )}`}
-                >
-                  {u.role}
-                </span>
-                <div className="text-sm font-medium text-gray-600">Status:</div>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm capitalize ${getStatusBadgeClass(
-                    u.status
-                  )}`}
-                >
-                  {u.status}
-                </span>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+      {/* Users Table */}
+      <DataTable
+        data={users}
+        columns={userColumns}
+        title="All Users"
+        searchable={true}
+        sortable={true}
+        filterable={true}
+        filters={[
+          {
+            key: 'status',
+            label: 'Status',
+            options: [
+              { value: 'active', label: 'Active' },
+              { value: 'blocked', label: 'Blocked' }
+            ]
+          },
+          {
+            key: 'role',
+            label: 'Role',
+            options: [
+              { value: 'donor', label: 'Donor' },
+              { value: 'volunteer', label: 'Volunteer' },
+              { value: 'admin', label: 'Admin' }
+            ]
+          }
+        ]}
+        emptyMessage="No users found matching the criteria"
+        className="mb-8"
+      />
     </div>
   );
 };

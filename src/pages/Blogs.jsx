@@ -20,14 +20,21 @@ const Blogs = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const blogsPerPage = 6;
 
+    const categoryStyles = {
+        Health: "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800",
+        Education: "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800",
+        Technology: "bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 border-purple-200 dark:border-purple-800",
+        Emergency: "bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400 border-orange-200 dark:border-orange-800",
+        Community: "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800",
+        Science: "bg-cyan-100 text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-400 border-cyan-200 dark:border-cyan-800",
+        all: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+    };
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-                duration: 0.6,
-            },
+            transition: { staggerChildren: 0.1, duration: 0.6 },
         },
     };
 
@@ -40,7 +47,6 @@ const Blogs = () => {
         },
     };
 
-    // Sample blog data - in a real app, this would come from an API
     const allBlogs = [
         {
             id: 1,
@@ -145,7 +151,6 @@ const Blogs = () => {
 
     const categories = ["all", "Health", "Education", "Technology", "Emergency", "Community", "Science"];
 
-    // Filter blogs based on category and search term
     const filteredBlogs = allBlogs.filter(blog => {
         const matchesCategory = selectedCategory === "all" || blog.category === selectedCategory;
         const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -153,7 +158,6 @@ const Blogs = () => {
         return matchesCategory && matchesSearch;
     });
 
-    // Pagination
     const totalPages = Math.ceil(filteredBlogs.length / blogsPerPage);
     const startIndex = (currentPage - 1) * blogsPerPage;
     const currentBlogs = filteredBlogs.slice(startIndex, startIndex + blogsPerPage);
@@ -169,72 +173,51 @@ const Blogs = () => {
     };
 
     return (
-        <div className="min-h-screen bg-bg-primary dark:bg-bg-primary">
+        <div className="min-h-screen bg-white dark:bg-[#0B0F1A] transition-colors duration-500">
             <DynamicTitle title="Blogs - BloodConnect" />
 
-            {/* Enhanced Background Elements for dark mode */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-20 left-20 w-40 h-40 bg-primary/8 dark:bg-primary/12 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-20 right-20 w-48 h-48 bg-accent/5 dark:bg-accent/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />
-                <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-green-500/5 dark:bg-green-400/8 rounded-full blur-2xl animate-pulse animation-delay-4000" />
+            <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-500/[0.03] dark:bg-red-600/[0.05] rounded-full blur-[120px]" />
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/[0.03] dark:bg-blue-600/[0.05] rounded-full blur-[120px]" />
             </div>
 
-            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-25 pb-10 lg:py-24">
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="max-w-7xl mx-auto"
-                >
-                    {/* Header Section */}
+            <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+                <motion.div variants={containerVariants} initial="hidden" animate="visible" className="max-w-7xl mx-auto">
+
                     <motion.div variants={itemVariants} className="text-center mb-16">
-                        <div className="inline-flex items-center gap-2 bg-primary-light/80 dark:bg-primary/20 backdrop-blur-sm border border-primary/30 dark:border-primary/40 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 shadow-lg dark:shadow-xl">
-                            <FaTag className="text-sm" />
-                            <span className="uppercase tracking-wide">Our Blog</span>
+                        <div className="inline-flex items-center gap-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6 border border-red-100 dark:border-red-800/50">
+                            <FaTag /> <span>Knowledge Hub</span>
                         </div>
-                        <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-text-primary leading-tight mb-6">
-                            Stories, Insights &{" "}
-                            <span className="text-primary dark:text-red-400">
-                                Knowledge
-                            </span>
+                        <h1 className="text-4xl md:text-6xl font-black text-gray-900 dark:text-white leading-tight mb-6">
+                            Insights & <span className="text-red-600">Stories</span>
                         </h1>
-                        <p className="text-lg sm:text-xl text-text-secondary max-w-4xl mx-auto leading-relaxed mb-8">
-                            Stay informed with the latest insights on blood donation, health tips, community stories,
-                            and medical breakthroughs that are shaping the future of healthcare in Bangladesh.
+                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
+                            Stay informed with the latest updates on blood donation, healthcare tips, and community impact across Bangladesh.
                         </p>
                     </motion.div>
 
-                    {/* Search and Filter Section */}
                     <motion.div variants={itemVariants} className="mb-12">
-                        <div className="bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl p-6 rounded-2xl border border-border-primary/30 dark:border-border-primary/40 shadow-lg dark:shadow-2xl">
-                            <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-                                {/* Search Bar */}
-                                <div className="relative flex-1 max-w-md">
-                                    <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
+                        <div className="bg-white dark:bg-[#111827] p-4 md:p-6 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-xl dark:shadow-2xl/50">
+                            <div className="flex flex-col md:flex-row gap-4">
+                                <div className="relative flex-1">
+                                    <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                                     <input
                                         type="text"
-                                        placeholder="Search articles..."
+                                        placeholder="Search articles by title or content..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-3 bg-bg-tertiary/80 dark:bg-bg-tertiary/60 backdrop-blur-sm border border-border-primary/50 dark:border-border-primary/60 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary/50 outline-none text-sm transition-all duration-300 text-text-primary placeholder-text-muted"
+                                        className="w-full pl-12 pr-4 py-4 bg-gray-50 dark:bg-[#1F2937] border-none rounded-2xl focus:ring-2 focus:ring-red-500/50 outline-none text-gray-900 dark:text-white transition-all"
                                     />
                                 </div>
-
-                                {/* Category Filter */}
-                                <div className="flex items-center gap-2">
-                                    <FaFilter className="text-gray-500 text-sm" />
+                                <div className="flex items-center gap-3 bg-gray-50 dark:bg-[#1F2937] px-4 rounded-2xl">
+                                    <FaFilter className="text-red-600" />
                                     <select
                                         value={selectedCategory}
-                                        onChange={(e) => {
-                                            setSelectedCategory(e.target.value);
-                                            setCurrentPage(1);
-                                        }}
-                                        className="px-4 py-3 bg-bg-tertiary/80 dark:bg-bg-tertiary/60 backdrop-blur-sm border border-border-primary/50 dark:border-border-primary/60 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary/50 outline-none text-sm transition-all duration-300 text-text-primary"
+                                        onChange={(e) => { setSelectedCategory(e.target.value); setCurrentPage(1); }}
+                                        className="py-4 bg-transparent border-none outline-none text-gray-900 dark:text-white font-bold cursor-pointer min-w-[160px]"
                                     >
-                                        {categories.map(category => (
-                                            <option key={category} value={category}>
-                                                {category === "all" ? "All Categories" : category}
-                                            </option>
+                                        {categories.map(cat => (
+                                            <option key={cat} value={cat} className="bg-white dark:bg-[#1F2937]">{cat === "all" ? "All Categories" : cat}</option>
                                         ))}
                                     </select>
                                 </div>
@@ -242,183 +225,95 @@ const Blogs = () => {
                         </div>
                     </motion.div>
 
-                    {/* Featured Blog */}
-                    {filteredBlogs.find(blog => blog.featured) && (
-                        <motion.div variants={itemVariants} className="mb-16">
-                            <div className="text-center mb-8">
-                                <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                                    Featured Article
-                                </h2>
-                            </div>
-                            {(() => {
-                                const featuredBlog = filteredBlogs.find(blog => blog.featured);
-                                return (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 30 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.6 }}
-                                        className="bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl rounded-2xl border border-border-primary/30 dark:border-border-primary/40 overflow-hidden shadow-lg hover:shadow-xl dark:shadow-2xl transition-all duration-300 hover:scale-[1.01] group"
-                                    >
-                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-                                            <div className="relative overflow-hidden">
-                                                <img
-                                                    src={featuredBlog.image}
-                                                    alt={featuredBlog.title}
-                                                    className="w-full h-64 lg:h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                />
-                                                <div className="absolute top-4 left-4">
-                                                    <span className="bg-primary/90 dark:bg-primary/80 text-text-inverse px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm shadow-sm">
-                                                        Featured
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div className="p-8 lg:p-12 flex flex-col justify-center">
-                                                <div className="flex items-center gap-4 mb-4 text-sm text-text-muted">
-                                                    <span className="bg-accent-blue text-accent-blue px-3 py-1 rounded-full text-xs font-medium">
-                                                        {featuredBlog.category}
-                                                    </span>
-                                                    <div className="flex items-center gap-1">
-                                                        <FaClock className="text-xs" />
-                                                        <span>{featuredBlog.readTime}</span>
-                                                    </div>
-                                                </div>
-                                                <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors duration-300">
-                                                    {featuredBlog.title}
-                                                </h3>
-                                                <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                                                    {featuredBlog.excerpt}
-                                                </p>
-                                                <div className="flex items-center justify-between">
-                                                    <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                                                        <div className="flex items-center gap-2">
-                                                            <FaUser className="text-xs" />
-                                                            <span>{featuredBlog.author}</span>
-                                                        </div>
-                                                        <div className="flex items-center gap-2">
-                                                            <FaCalendarAlt className="text-xs" />
-                                                            <span>{formatDate(featuredBlog.date)}</span>
-                                                        </div>
-                                                    </div>
-                                                    <Link
-                                                        to={`/blogs/${featuredBlog.id}`}
-                                                        className="inline-flex items-center gap-2 text-red-600 dark:text-red-400 hover:gap-3 font-semibold transition-all duration-300"
-                                                    >
-                                                        Read More
-                                                        <FaArrowRight className="text-sm" />
-                                                    </Link>
-                                                </div>
-                                            </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {currentBlogs.map((blog) => (
+                            <motion.div
+                                key={blog.id}
+                                variants={itemVariants}
+                                className="group bg-white dark:bg-[#111827] rounded-[2rem] border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col"
+                            >
+                                <div className="relative h-60 overflow-hidden">
+                                    <img src={blog.image} alt={blog.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <div className="absolute top-4 left-4">
+                                        <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider border backdrop-blur-md shadow-lg ${categoryStyles[blog.category] || categoryStyles.all}`}>
+                                            {blog.category}
+                                        </span>
+                                    </div>
+                                    {blog.featured && (
+                                        <div className="absolute top-4 right-4 bg-amber-500 text-white p-2 rounded-lg shadow-lg">
+                                            <FaTag className="text-xs" />
                                         </div>
-                                    </motion.div>
-                                );
-                            })()}
-                        </motion.div>
+                                    )}
+                                </div>
+
+                                <div className="p-8 flex flex-col flex-1">
+                                    <div className="flex items-center gap-4 text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+                                        <div className="flex items-center gap-1.5 text-red-600/80"><FaClock /> <span>{blog.readTime}</span></div>
+                                        <span>•</span>
+                                        <span>{formatDate(blog.date)}</span>
+                                    </div>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-white mb-4 leading-tight group-hover:text-red-600 transition-colors line-clamp-2">
+                                        {blog.title}
+                                    </h3>
+                                    <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3">
+                                        {blog.excerpt}
+                                    </p>
+
+                                    <div className="mt-auto pt-6 border-t border-gray-50 dark:border-gray-800 flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600">
+                                                <FaUser className="text-xs" />
+                                            </div>
+                                            <span className="text-sm font-bold text-gray-700 dark:text-gray-300">{blog.author}</span>
+                                        </div>
+                                        <Link to={`/blogs/${blog.id}`} className="text-red-600 hover:text-red-700 transition-colors">
+                                            <FaArrowRight />
+                                        </Link>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+
+                    {filteredBlogs.length === 0 && (
+                        <div className="text-center py-20">
+                            <div className="bg-gray-50 dark:bg-[#111827] inline-block p-10 rounded-full mb-6">
+                                <FaSearch className="text-6xl text-gray-200 dark:text-gray-800" />
+                            </div>
+                            <h3 className="text-2xl font-bold dark:text-white">No articles found</h3>
+                            <p className="text-gray-500">Try adjusting your search or category filter</p>
+                        </div>
                     )}
 
-                    {/* Blog Grid */}
-                    <motion.div variants={itemVariants} className="mb-16">
-                        <div className="text-center mb-8">
-                            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                                Latest Articles
-                            </h2>
-                            <p className="text-gray-600 dark:text-gray-300">
-                                Showing {currentBlogs.length} of {filteredBlogs.length} articles
-                            </p>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {currentBlogs.filter(blog => !blog.featured).map((blog, index) => (
-                                <motion.div
-                                    key={blog.id}
-                                    initial={{ opacity: 0, y: 30 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: index * 0.1, duration: 0.5 }}
-                                    className="bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl rounded-2xl border border-border-primary/30 dark:border-border-primary/40 overflow-hidden shadow-lg hover:shadow-xl dark:shadow-2xl transition-all duration-300 hover:scale-[1.02] group"
-                                >
-                                    <div className="relative overflow-hidden">
-                                        <img
-                                            src={blog.image}
-                                            alt={blog.title}
-                                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
-                                        />
-                                        <div className="absolute top-3 left-3">
-                                            <span className="bg-bg-card/90 dark:bg-bg-card/80 text-text-primary px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm shadow-sm">
-                                                {blog.category}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="p-6">
-                                        <div className="flex items-center gap-3 mb-3 text-xs text-gray-500 dark:text-gray-400">
-                                            <div className="flex items-center gap-1">
-                                                <FaClock />
-                                                <span>{blog.readTime}</span>
-                                            </div>
-                                            <div className="flex items-center gap-1">
-                                                <FaCalendarAlt />
-                                                <span>{formatDate(blog.date)}</span>
-                                            </div>
-                                        </div>
-                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors duration-300 line-clamp-2">
-                                            {blog.title}
-                                        </h3>
-                                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 line-clamp-3">
-                                            {blog.excerpt}
-                                        </p>
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                                                <FaUser />
-                                                <span>{blog.author}</span>
-                                            </div>
-                                            <Link
-                                                to={`/blogs/${blog.id}`}
-                                                className="inline-flex items-center gap-2 text-red-600 dark:text-red-400 hover:gap-3 font-semibold text-sm transition-all duration-300"
-                                            >
-                                                Read More
-                                                <FaArrowRight className="text-xs" />
-                                            </Link>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </motion.div>
-
-                    {/* Pagination */}
                     {totalPages > 1 && (
-                        <motion.div variants={itemVariants} className="flex justify-center">
-                            <div className="bg-bg-card/98 dark:bg-bg-card/95 backdrop-blur-xl p-4 rounded-2xl border border-border-primary/30 dark:border-border-primary/40 shadow-lg dark:shadow-2xl">
-                                <div className="flex items-center gap-2">
+                        <div className="mt-16 flex justify-center items-center gap-4">
+                            <button
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 1}
+                                className="w-12 h-12 rounded-2xl flex items-center justify-center bg-white dark:bg-[#111827] border border-gray-100 dark:border-gray-800 text-gray-500 disabled:opacity-30 hover:bg-red-600 hover:text-white transition-all shadow-lg"
+                            >
+                                <FaChevronLeft />
+                            </button>
+                            <div className="flex gap-2">
+                                {[...Array(totalPages)].map((_, i) => (
                                     <button
-                                        onClick={() => handlePageChange(currentPage - 1)}
-                                        disabled={currentPage === 1}
-                                        className="p-2 rounded-lg bg-bg-tertiary/80 dark:bg-bg-tertiary/60 text-text-secondary hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                                        key={i + 1}
+                                        onClick={() => handlePageChange(i + 1)}
+                                        className={`w-12 h-12 rounded-2xl font-black transition-all shadow-lg ${currentPage === i + 1 ? 'bg-red-600 text-white scale-110' : 'bg-white dark:bg-[#111827] text-gray-500 border border-gray-100 dark:border-gray-800 hover:border-red-600'}`}
                                     >
-                                        <FaChevronLeft className="text-sm" />
+                                        {i + 1}
                                     </button>
-
-                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                                        <button
-                                            key={page}
-                                            onClick={() => handlePageChange(page)}
-                                            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${currentPage === page
-                                                ? "bg-red-600/90 text-white shadow-md"
-                                                : "bg-gray-100/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-400 hover:bg-red-100/80 dark:hover:bg-red-900/40 hover:text-red-600 dark:hover:text-red-400"
-                                                }`}
-                                        >
-                                            {page}
-                                        </button>
-                                    ))}
-
-                                    <button
-                                        onClick={() => handlePageChange(currentPage + 1)}
-                                        disabled={currentPage === totalPages}
-                                        className="p-2 rounded-lg bg-bg-tertiary/80 dark:bg-bg-tertiary/60 text-text-secondary hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-                                    >
-                                        <FaChevronRight className="text-sm" />
-                                    </button>
-                                </div>
+                                ))}
                             </div>
-                        </motion.div>
+                            <button
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                                className="w-12 h-12 rounded-2xl flex items-center justify-center bg-white dark:bg-[#111827] border border-gray-100 dark:border-gray-800 text-gray-500 disabled:opacity-30 hover:bg-red-600 hover:text-white transition-all shadow-lg"
+                            >
+                                <FaChevronRight />
+                            </button>
+                        </div>
                     )}
                 </motion.div>
             </div>

@@ -85,7 +85,7 @@ const AboutMission = () => {
     return (
         <section
             id="about-mission"
-            className="relative py-16 bg-bg-secondary/90 dark:bg-bg-secondary/95 backdrop-blur-sm overflow-hidden"
+            className="relative py-8 sm:py-10 lg:py-12 xl:py-14 bg-bg-secondary/90 dark:bg-bg-secondary/95 backdrop-blur-sm overflow-hidden"
         >
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-20 left-20 w-64 h-64 bg-red-500/5 dark:bg-red-600/10 rounded-full blur-[100px] animate-pulse" />

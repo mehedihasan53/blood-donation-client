@@ -9,10 +9,23 @@ import { useTheme } from "../../contexts/ThemeContext";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { user, logout, role } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrolled]);
 
   const handleContactClick = () => {
     const isOnHomePage = location.pathname === '/';
@@ -54,26 +67,48 @@ const Navbar = () => {
   }, [isDropdownOpen]);
 
   const navLinkStyle = ({ isActive }) =>
-    `px-3.5 py-2.5 text-sm text-gray-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-red-300 font-medium transition-all duration-300 rounded-md hover:bg-white/10 dark:hover:bg-white/5 backdrop-blur-sm ${isActive ? "text-red-600 dark:text-red-300 bg-white/20 dark:bg-white/10 shadow-sm" : ""
+    `px-3.5 py-2.5 text-sm font-medium transition-all duration-300 rounded-md
+     ${isDark
+      ? `text-slate-200 hover:text-red-400 hover:bg-white/10 ${isActive ? "text-red-400 bg-white/10" : ""}`
+      : `text-gray-700 hover:text-red-600 hover:bg-gray-100/80 ${isActive ? "text-red-600 bg-gray-100/80" : ""}`
     }`;
 
-  const mobileLinkStyle =
-    "block text-gray-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-red-300 hover:bg-white/10 dark:hover:bg-white/5 px-4 py-3 rounded-md font-medium transition-all duration-300 backdrop-blur-sm text-sm";
+  const mobileLinkStyle = ({ isActive }) =>
+    `block px-4 py-3 rounded-md font-medium transition-all duration-300 text-sm
+     ${isDark
+      ? `text-slate-200 hover:text-red-400 hover:bg-white/10 ${isActive ? "text-red-400 bg-white/10" : ""}`
+      : `text-gray-700 hover:text-red-600 hover:bg-gray-100/80 ${isActive ? "text-red-600 bg-gray-100/80" : ""}`
+    }`;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-50/80 dark:bg-slate-800/90 backdrop-blur-xl border-b border-gray-200/40 dark:border-slate-600/40 shadow-sm">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500
+      ${isDark
+        ? scrolled
+          ? "bg-slate-900/80 backdrop-blur-xl border-b border-white/10 shadow-2xl"
+          : "bg-slate-900/60 backdrop-blur-xl border-b border-white/5"
+        : scrolled
+          ? "bg-white/90 backdrop-blur-xl border-b border-gray-200/50 shadow-lg"
+          : "bg-white/80 backdrop-blur-xl border-b border-gray-200/30"
+      }`}>
       <div className="container mx-auto px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo Section */}
           <Link to="/" className="flex items-center space-x-3 lg:space-x-4 group">
-            <div className="flex items-center justify-center w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+            <div className={`flex items-center justify-center w-10 h-10 lg:w-12 lg:h-12 rounded-xl shadow-lg 
+              group-hover:shadow-xl transition-all duration-300 group-hover:scale-105
+              ${isDark
+                ? "bg-gradient-to-br from-red-500/90 to-red-600 shadow-red-500/20"
+                : "bg-gradient-to-br from-red-500 to-red-600"
+              }`}>
               <MdBloodtype className="text-white text-lg lg:text-2xl" />
             </div>
             <div>
-              <h1 className="text-gray-900 dark:text-white text-lg lg:text-xl font-bold leading-tight">
+              <h1 className={`text-lg lg:text-xl font-bold leading-tight
+                ${isDark ? "text-white" : "text-gray-900"}`}>
                 BloodConnect
               </h1>
-              <p className="text-gray-600 dark:text-slate-400 text-xs font-medium hidden sm:block">
+              <p className={`text-xs font-medium hidden sm:block
+                ${isDark ? "text-slate-300" : "text-gray-600"}`}>
                 Save Lives, Donate Blood
               </p>
             </div>
@@ -90,7 +125,6 @@ const Navbar = () => {
             <NavLink to="/pending-requests" className={navLinkStyle}>Pending Requests</NavLink>
             {user && (
               <>
-
                 <NavLink to="/donate" className={navLinkStyle}>Donate</NavLink>
                 <NavLink to="/search" className={navLinkStyle}>Search</NavLink>
               </>
@@ -101,7 +135,11 @@ const Navbar = () => {
           <div className="flex items-center space-x-2">
             <button
               onClick={toggleTheme}
-              className="p-2.5 text-gray-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-300 hover:bg-white/10 dark:hover:bg-white/5 rounded-md transition-all duration-300 hover:scale-105 backdrop-blur-sm"
+              className={`p-2.5 rounded-md transition-all duration-300 hover:scale-105
+                ${isDark
+                  ? "text-slate-300 hover:text-red-400 hover:bg-white/10"
+                  : "text-gray-600 hover:text-red-600 hover:bg-gray-100/80"
+                }`}
               aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
             >
               {isDark ? <FaSun className="w-4 h-4" /> : <FaMoon className="w-4 h-4" />}
@@ -111,7 +149,11 @@ const Navbar = () => {
               <div className="relative user-dropdown">
                 <button
                   onClick={toggleDropdown}
-                  className="flex items-center space-x-2.5 text-gray-700 dark:text-slate-200 hover:bg-white/10 dark:hover:bg-white/5 px-3 py-2.5 rounded-md transition-all duration-300 focus:outline-none backdrop-blur-sm"
+                  className={`flex items-center space-x-2.5 px-3 py-2.5 rounded-md transition-all duration-300 focus:outline-none
+                    ${isDark
+                      ? "text-slate-200 hover:bg-white/10"
+                      : "text-gray-700 hover:bg-gray-100/80"
+                    }`}
                 >
                   <img
                     src={user.photoURL || "https://i.ibb.co/5GzXkwq/user.png"}
@@ -127,20 +169,47 @@ const Navbar = () => {
                 </button>
 
                 {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-52 bg-white/95 dark:bg-slate-700/95 backdrop-blur-xl rounded-lg border border-gray-200/50 dark:border-slate-600/50 py-2 z-50 animate-fade-in shadow-lg">
-                    <Link to="/dashboard" className="flex items-center px-4 py-2.5 text-gray-700 dark:text-slate-200 hover:bg-white/10 dark:hover:bg-white/5 hover:text-red-600 transition-all duration-300 mx-1.5 rounded-md backdrop-blur-sm text-sm" onClick={() => setIsDropdownOpen(false)}>
-                      <FaHome className="mr-3 text-red-500 w-3.5 h-3.5" />
+                  <div className={`absolute right-0 mt-2 w-52 rounded-lg py-2 z-50 animate-fade-in shadow-xl backdrop-blur-xl
+                    ${isDark
+                      ? "bg-slate-900/95 border border-white/10"
+                      : "bg-white/95 border border-gray-200/50"
+                    }`}>
+                    <Link
+                      to="/dashboard"
+                      className={`flex items-center px-4 py-2.5 transition-all duration-300 mx-1.5 rounded-md text-sm
+                        ${isDark
+                          ? "text-slate-200 hover:text-red-400 hover:bg-white/10"
+                          : "text-gray-700 hover:text-red-600 hover:bg-gray-100/80"
+                        }`}
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <FaHome className={`mr-3 w-3.5 h-3.5 ${isDark ? "text-red-400" : "text-red-500"}`} />
                       <span className="font-medium">Dashboard</span>
                     </Link>
                     {role === "admin" && (
-                      <Link to="/dashboard/all-users" className="flex items-center px-4 py-2.5 text-gray-700 dark:text-slate-200 hover:bg-white/10 dark:hover:bg-white/5 hover:text-red-600 transition-all duration-300 mx-1.5 rounded-md backdrop-blur-sm text-sm" onClick={() => setIsDropdownOpen(false)}>
-                        <FaUser className="mr-3 text-red-500 w-3.5 h-3.5" />
+                      <Link
+                        to="/dashboard/all-users"
+                        className={`flex items-center px-4 py-2.5 transition-all duration-300 mx-1.5 rounded-md text-sm
+                          ${isDark
+                            ? "text-slate-200 hover:text-red-400 hover:bg-white/10"
+                            : "text-gray-700 hover:text-red-600 hover:bg-gray-100/80"
+                          }`}
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        <FaUser className={`mr-3 w-3.5 h-3.5 ${isDark ? "text-red-400" : "text-red-500"}`} />
                         <span className="font-medium">Manage Users</span>
                       </Link>
                     )}
-                    <hr className="my-1.5 border-gray-200/50 dark:border-slate-600/50 mx-1.5" />
-                    <button onClick={handleLogout} className="flex items-center w-full px-4 py-2.5 text-gray-700 dark:text-slate-200 hover:bg-white/10 dark:hover:bg-white/5 hover:text-red-600 text-left transition-all duration-300 mx-1.5 rounded-md backdrop-blur-sm text-sm">
-                      <FaSignOutAlt className="mr-3 text-red-500 w-3.5 h-3.5" />
+                    <hr className={`my-1.5 mx-1.5 ${isDark ? "border-white/10" : "border-gray-200"}`} />
+                    <button
+                      onClick={handleLogout}
+                      className={`flex items-center w-full px-4 py-2.5 text-left transition-all duration-300 mx-1.5 rounded-md text-sm
+                        ${isDark
+                          ? "text-slate-200 hover:text-red-400 hover:bg-white/10"
+                          : "text-gray-700 hover:text-red-600 hover:bg-gray-100/80"
+                        }`}
+                    >
+                      <FaSignOutAlt className={`mr-3 w-3.5 h-3.5 ${isDark ? "text-red-400" : "text-red-500"}`} />
                       <span className="font-medium">Logout</span>
                     </button>
                   </div>
@@ -148,12 +217,37 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="hidden lg:flex items-center space-x-2.5">
-                <Link to="/login" className="text-gray-700 dark:text-slate-200 hover:text-red-600 font-medium px-3.5 py-2.5 rounded-md transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 backdrop-blur-sm text-sm">Login</Link>
-                <Link to="/register" className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2.5 rounded-md font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] text-sm">Join Now</Link>
+                <Link
+                  to="/login"
+                  className={`font-medium px-3.5 py-2.5 rounded-md transition-all duration-300 text-sm
+                    ${isDark
+                      ? "text-slate-200 hover:text-red-400 hover:bg-white/10"
+                      : "text-gray-700 hover:text-red-600 hover:bg-gray-100/80"
+                    }`}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className={`px-4 py-2.5 rounded-md font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] text-sm
+                    ${isDark
+                      ? "bg-gradient-to-r from-red-500/90 to-red-600 text-white hover:from-red-600 hover:to-red-700"
+                      : "bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
+                    }`}
+                >
+                  Join Now
+                </Link>
               </div>
             )}
 
-            <button onClick={toggleMenu} className="lg:hidden text-gray-700 dark:text-slate-200 hover:bg-white/10 dark:hover:bg-white/5 p-2.5 rounded-md transition-all duration-300 focus:outline-none backdrop-blur-sm">
+            <button
+              onClick={toggleMenu}
+              className={`lg:hidden p-2.5 rounded-md transition-all duration-300 focus:outline-none
+                ${isDark
+                  ? "text-slate-300 hover:text-red-400 hover:bg-white/10"
+                  : "text-gray-700 hover:text-red-600 hover:bg-gray-100/80"
+                }`}
+            >
               <GiHamburgerMenu size={20} />
             </button>
           </div>
@@ -161,47 +255,97 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden bg-white/95 dark:bg-slate-700/95 backdrop-blur-xl rounded-lg mt-2 mb-3 py-3 border border-gray-200/50 dark:border-slate-600/50 overflow-hidden animate-slide-up shadow-lg">
+          <div className={`lg:hidden rounded-lg mt-2 mb-3 py-3 overflow-hidden animate-slide-up shadow-xl backdrop-blur-xl
+            ${isDark
+              ? "bg-slate-900/95 border border-white/10"
+              : "bg-white/95 border border-gray-200/50"
+            }`}>
             <div className="flex flex-col space-y-1 px-2">
               {user && (
-                <div className="flex items-center p-4 mb-3 bg-gray-50/60 dark:bg-slate-600/40 backdrop-blur-sm rounded-lg border border-gray-200/40 dark:border-slate-500/40">
+                <div className={`flex items-center p-4 mb-3 rounded-lg border
+                  ${isDark
+                    ? "bg-white/5 border-white/10"
+                    : "bg-gray-50/80 border-gray-200"
+                  }`}>
                   <img src={user.photoURL} className="w-12 h-12 rounded-full border-2 border-red-500 mr-3 shadow-md" alt="user" />
                   <div>
-                    <p className="font-semibold text-gray-900 dark:text-white text-base">{user.displayName}</p>
-                    <p className="text-xs text-red-600 dark:text-red-300 font-medium capitalize bg-red-100/50 dark:bg-red-900/30 px-2.5 py-1 rounded-md inline-block mt-1">{role}</p>
+                    <p className={`font-semibold text-base ${isDark ? "text-white" : "text-gray-900"}`}>
+                      {user.displayName}
+                    </p>
+                    <p className={`text-xs font-medium capitalize px-2.5 py-1 rounded-md inline-block mt-1
+                      ${isDark
+                        ? "text-red-400 bg-red-900/30"
+                        : "text-red-600 bg-red-100"
+                      }`}>
+                      {role}
+                    </p>
                   </div>
                 </div>
               )}
 
-              <Link to="/" className={mobileLinkStyle} onClick={toggleMenu}>Home</Link>
-              <Link to="/services" className={mobileLinkStyle} onClick={toggleMenu}>Services</Link>
-              <Link to="/blogs" className={mobileLinkStyle} onClick={toggleMenu}>Blogs</Link>
-              <Link to="/testimonials" className={mobileLinkStyle} onClick={toggleMenu}>Testimonials</Link>
-              <Link to="/statistics" className={mobileLinkStyle} onClick={toggleMenu}>Statistics</Link>
-              <Link to="/about-our-mission" className={mobileLinkStyle} onClick={toggleMenu}>Our Mission</Link>
-              <Link to="/pending-requests" className={mobileLinkStyle} onClick={toggleMenu}>Pending Requests</Link>
+              <NavLink to="/" className={mobileLinkStyle} onClick={toggleMenu}>Home</NavLink>
+              <NavLink to="/services" className={mobileLinkStyle} onClick={toggleMenu}>Services</NavLink>
+              <NavLink to="/blogs" className={mobileLinkStyle} onClick={toggleMenu}>Blogs</NavLink>
+              <NavLink to="/testimonials" className={mobileLinkStyle} onClick={toggleMenu}>Testimonials</NavLink>
+              <NavLink to="/statistics" className={mobileLinkStyle} onClick={toggleMenu}>Statistics</NavLink>
+              <NavLink to="/about-our-mission" className={mobileLinkStyle} onClick={toggleMenu}>Our Mission</NavLink>
+              <NavLink to="/pending-requests" className={mobileLinkStyle} onClick={toggleMenu}>Pending Requests</NavLink>
 
               {user ? (
                 <>
-                  <Link to="/donate" className={mobileLinkStyle} onClick={toggleMenu}>Donate</Link>
-                  <Link to="/search" className={mobileLinkStyle} onClick={toggleMenu}>Search</Link>
-                  <hr className="my-3 border-gray-200/50 dark:border-slate-600/50 mx-2" />
-                  <Link to="/dashboard" className={`${mobileLinkStyle} bg-white/20 dark:bg-white/5 text-red-700 dark:text-red-300 font-semibold`} onClick={toggleMenu}>
-                    <span className="flex items-center"><FaHome className="mr-2.5 w-3.5 h-3.5" /> Dashboard</span>
-                  </Link>
+                  <NavLink to="/donate" className={mobileLinkStyle} onClick={toggleMenu}>Donate</NavLink>
+                  <NavLink to="/search" className={mobileLinkStyle} onClick={toggleMenu}>Search</NavLink>
+                  <hr className={`my-3 mx-2 ${isDark ? "border-white/10" : "border-gray-200"}`} />
+                  <NavLink to="/dashboard" className={mobileLinkStyle} onClick={toggleMenu}>
+                    <span className="flex items-center">
+                      <FaHome className={`mr-2.5 w-3.5 h-3.5 ${isDark ? "text-red-400" : "text-red-500"}`} />
+                      Dashboard
+                    </span>
+                  </NavLink>
                   {role === "admin" && (
-                    <Link to="/dashboard/all-users" className={mobileLinkStyle} onClick={toggleMenu}>
-                      <span className="flex items-center"><FaUser className="mr-2.5 w-3.5 h-3.5" /> Manage Users</span>
-                    </Link>
+                    <NavLink to="/dashboard/all-users" className={mobileLinkStyle} onClick={toggleMenu}>
+                      <span className="flex items-center">
+                        <FaUser className={`mr-2.5 w-3.5 h-3.5 ${isDark ? "text-red-400" : "text-red-500"}`} />
+                        Manage Users
+                      </span>
+                    </NavLink>
                   )}
-                  <button onClick={handleLogout} className={`${mobileLinkStyle} text-red-600 dark:text-red-300 w-full text-left font-semibold`}>
-                    <span className="flex items-center"><FaSignOutAlt className="mr-2.5 w-3.5 h-3.5" /> Logout</span>
+                  <button onClick={handleLogout} className={`block w-full text-left px-4 py-3 rounded-md font-medium transition-all duration-300 text-sm
+                    ${isDark
+                      ? "text-red-400 hover:text-red-300 hover:bg-white/10"
+                      : "text-red-600 hover:text-red-700 hover:bg-gray-100/80"
+                    }`}>
+                    <span className="flex items-center">
+                      <FaSignOutAlt className={`mr-2.5 w-3.5 h-3.5 ${isDark ? "text-red-400" : "text-red-500"}`} />
+                      Logout
+                    </span>
                   </button>
                 </>
               ) : (
-                <div className="pt-3 border-t border-gray-200/50 dark:border-slate-600/50 flex flex-col space-y-3 mt-3">
-                  <Link to="/login" className="block text-center text-gray-700 dark:text-slate-200 py-3 font-medium hover:bg-white/10 dark:hover:bg-white/5 rounded-md transition-all duration-300" onClick={toggleMenu}>Login</Link>
-                  <Link to="/register" className="block text-center bg-gradient-to-r from-red-500 to-red-600 text-white py-3 rounded-md font-semibold shadow-md" onClick={toggleMenu}>Join as Donor</Link>
+                <div className={`pt-3 border-t flex flex-col space-y-3 mt-3
+                  ${isDark ? "border-white/10" : "border-gray-200"}`}>
+                  <Link
+                    to="/login"
+                    className={`block text-center py-3 font-medium rounded-md transition-all duration-300
+                      ${isDark
+                        ? "text-slate-200 hover:text-red-400 hover:bg-white/10"
+                        : "text-gray-700 hover:text-red-600 hover:bg-gray-100/80"
+                      }`}
+                    onClick={toggleMenu}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    className={`block text-center py-3 rounded-md font-semibold shadow-md hover:shadow-lg transition-all duration-300
+                      ${isDark
+                        ? "bg-gradient-to-r from-red-500/90 to-red-600 text-white"
+                        : "bg-gradient-to-r from-red-500 to-red-600 text-white"
+                      }`}
+                    onClick={toggleMenu}
+                  >
+                    Join as Donor
+                  </Link>
                 </div>
               )}
             </div>

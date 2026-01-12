@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FaHeartbeat, FaSearch, FaArrowRight, FaUserCheck } from "react-icons/fa";
@@ -28,7 +27,7 @@ const Banner = () => {
   ];
 
   return (
-    <section className="relative flex items-center overflow-hidden bg-bg-secondary/90 dark:bg-bg-secondary/95 backdrop-blur-sm pb-12 pt-28 lg:pt-32 transition-colors duration-500">
+    <section className="relative flex items-center overflow-hidden bg-bg-secondary/90 dark:bg-bg-secondary/95 backdrop-blur-sm py-8 pt-24 sm:py-10 sm:pt-28 lg:py-12 lg:pt-32 xl:py-14 xl:pt-36 transition-colors duration-500">
 
       {/* Background Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

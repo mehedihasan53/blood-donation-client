@@ -70,7 +70,7 @@ const Featured = () => {
   };
 
   return (
-    <section className="py-10  bg-bg-secondary/90 dark:bg-bg-secondary/95 backdrop-blur-sm relative overflow-hidden">
+    <section className="py-8 sm:py-10 lg:py-12 xl:py-14 bg-bg-secondary/90 dark:bg-bg-secondary/95 backdrop-blur-sm relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-40 h-40 bg-red-500/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-20 right-20 w-48 h-48 bg-accent/5 dark:bg-blue-500/10 rounded-full blur-3xl animate-pulse animation-delay-2000" />

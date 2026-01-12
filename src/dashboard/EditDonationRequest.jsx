@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import axios from "axios";
@@ -10,14 +10,23 @@ import {
   FaCalendarAlt,
   FaClock,
   FaArrowLeft,
+  FaUser,
+  FaHospital,
 } from "react-icons/fa";
 import Loading from "../components/shared/Loading";
 import DynamicTitle from "../components/shared/DynamicTitle";
+import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/Card";
+import { Button } from "../components/ui/Button";
+import { Input } from "../components/ui/Input";
+import { Select } from "../components/ui/Select";
+import { motion } from "framer-motion";
+import { useSmoothScroll } from "../hooks/useSmoothScroll";
 
 const EditDonationRequest = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
+  const formRef = useRef(null);
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -36,6 +45,22 @@ const EditDonationRequest = () => {
     donationTime: "",
     requestMessage: "",
   });
+
+  const [errors, setErrors] = useState({});
+
+  // Initialize smooth scrolling
+  useSmoothScroll();
+
+  // Scroll to form when component mounts
+  useEffect(() => {
+    if (formRef.current) {
+      formRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
+  }, [loading]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -107,6 +132,14 @@ const EditDonationRequest = () => {
       [name]: value,
     }));
 
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ""
+      }));
+    }
+
     if (name === "recipientDistrict") {
       const matchedDistrict = districts.find((d) => d.name === value);
       setSelectedDistrict(matchedDistrict ? matchedDistrict.id : "");
@@ -117,8 +150,41 @@ const EditDonationRequest = () => {
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!requestData.recipientName.trim()) {
+      newErrors.recipientName = "Recipient name is required";
+    }
+
+    if (!requestData.recipientDistrict) {
+      newErrors.recipientDistrict = "District is required";
+    }
+
+    if (!requestData.hospitalName.trim()) {
+      newErrors.hospitalName = "Hospital name is required";
+    }
+
+    if (!requestData.donationDate) {
+      newErrors.donationDate = "Donation date is required";
+    }
+
+    if (!requestData.donationTime) {
+      newErrors.donationTime = "Donation time is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
     setSubmitting(true);
     const toastId = toast.loading("Updating donation request...");
 
@@ -154,208 +220,218 @@ const EditDonationRequest = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-      <Toaster />
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
-        <div className="bg-red-600 text-white p-6 md:p-8 flex items-center justify-start gap-4">
-          <button
-            onClick={handleBack}
-            className="p-2 rounded-full hover:bg-red-700 transition duration-200"
-            aria-label="Go back to previous page"
-          >
-            <FaArrowLeft className="text-xl" />
-          </button>
+    <div className="container-safe">
+      <div className="content-container">
+        <DynamicTitle title="Edit Donation Request" />
+        <Toaster position="top-right" />
 
-          <h1 className="text-3xl font-bold flex items-center gap-3">
-            <FaEdit /> Edit Donation Request
-          </h1>
-        </div>
-
-        <div className="p-6 border-b border-gray-100 bg-red-50">
-          <p className="text-lg font-medium text-gray-700">
-            Editing Request for:{" "}
-            <span className="font-semibold text-red-700">
-              {requestData.recipientName}
-            </span>
-          </p>
-          <p className="text-sm text-gray-500">ID: {id}</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="p-6 md:p-10 space-y-6">
-          <fieldset className="border border-gray-200 p-4 rounded-lg space-y-4">
-            <legend className="text-lg font-semibold text-red-600 px-2">
-              Recipient Details
-            </legend>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <label className="block col-span-2">
-                <span className="text-gray-700 font-medium">
-                  Recipient Name:
-                </span>
-                <input
-                  type="text"
-                  name="recipientName"
-                  value={requestData.recipientName}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-3"
-                />
-              </label>
-            </div>
-          </fieldset>
-
-          <fieldset className="border border-gray-200 p-4 rounded-lg space-y-4">
-            <legend className="text-lg font-semibold text-red-600 px-2 flex items-center gap-1">
-              <FaMapMarkerAlt className="text-sm" /> Donation Location
-            </legend>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <label className="block">
-                <span className="text-gray-700 font-medium">
-                  Recipient District:
-                </span>
-                <select
-                  name="recipientDistrict"
-                  value={requestData.recipientDistrict}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-3"
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-4xl mx-auto"
+          ref={formRef}
+        >
+          <Card className="overflow-hidden scroll-to-form">
+            {/* Header */}
+            <CardHeader className="bg-gradient-to-r from-red-600 to-red-500 text-white">
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleBack}
+                  className="text-white hover:bg-white/20 p-2"
                 >
-                  <option value="" disabled>
-                    Select District
-                  </option>
-                  {districts.map((d) => (
-                    <option key={d.id} value={d.name}>
-                      {d.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                  <FaArrowLeft className="text-lg" />
+                </Button>
+                <CardTitle className="text-2xl text-white flex items-center gap-3">
+                  <FaEdit /> Edit Donation Request
+                </CardTitle>
+              </div>
+            </CardHeader>
 
-              <label className="block">
-                <span className="text-gray-700 font-medium">
-                  Recipient Upazila:
+            {/* Request Info */}
+            <div className="p-6 glass-border border-t-0 border-l-0 border-r-0 bg-red-50/50 dark:bg-red-900/10">
+              <p className="text-lg font-medium text-text-primary">
+                Editing Request for:{" "}
+                <span className="font-semibold text-red-600 dark:text-red-400">
+                  {requestData.recipientName}
                 </span>
-                <select
-                  name="recipientUpazila"
-                  value={requestData.recipientUpazila}
-                  onChange={handleChange}
-                  required
-                  disabled={!requestData.recipientDistrict}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-3 disabled:bg-gray-100"
-                >
-                  <option value="" disabled>
-                    Select Upazila
-                  </option>
-                  {filteredUpazilas.length > 0 ? (
-                    filteredUpazilas.map((u) => (
-                      <option key={u.id} value={u.name}>
-                        {u.name}
-                      </option>
-                    ))
-                  ) : (
-                    <option value="" disabled>
-                      Select a District first
-                    </option>
-                  )}
-                </select>
-              </label>
+              </p>
+              <p className="text-sm text-text-muted">ID: {id}</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <label className="block">
-                <span className="text-gray-700 font-medium">
-                  Hospital Name:
-                </span>
-                <input
-                  type="text"
-                  name="hospitalName"
-                  value={requestData.hospitalName}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-3"
-                />
-              </label>
-              <label className="block">
-                <span className="text-gray-700 font-medium">
-                  Full Hospital Address:
-                </span>
-                <input
-                  type="text"
-                  name="hospitalAddress"
-                  value={requestData.hospitalAddress}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-3"
-                />
-              </label>
-            </div>
-          </fieldset>
 
-          <fieldset className="border border-gray-200 p-4 rounded-lg space-y-4">
-            <legend className="text-lg font-semibold text-red-600 px-2 flex items-center gap-1">
-              <FaCalendarAlt className="text-sm" /> Donation Timing
-            </legend>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <label className="block">
-                <span className="text-gray-700 font-medium flex items-center gap-1">
-                  <FaCalendarAlt /> Donation Date:
-                </span>
-                <input
-                  type="date"
-                  name="donationDate"
-                  value={requestData.donationDate}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-3"
-                />
-              </label>
+            {/* Form */}
+            <CardContent className="p-8">
+              <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Recipient Details */}
+                <Card className="border-2 border-red-100 dark:border-red-900/30">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg text-red-600 dark:text-red-400 flex items-center gap-2">
+                      <FaUser /> Recipient Details
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Input
+                      label="Recipient Name"
+                      name="recipientName"
+                      icon={FaUser}
+                      placeholder="Enter recipient's full name"
+                      value={requestData.recipientName}
+                      onChange={handleChange}
+                      error={errors.recipientName}
+                      required
+                    />
+                  </CardContent>
+                </Card>
 
-              <label className="block">
-                <span className="text-gray-700 font-medium flex items-center gap-1">
-                  <FaClock /> Donation Time:
-                </span>
-                <input
-                  type="time"
-                  name="donationTime"
-                  value={requestData.donationTime}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-3"
-                />
-              </label>
-            </div>
-          </fieldset>
+                {/* Location Details */}
+                <Card className="border-2 border-blue-100 dark:border-blue-900/30">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg text-blue-600 dark:text-blue-400 flex items-center gap-2">
+                      <FaMapMarkerAlt /> Donation Location
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <Select
+                        label="Recipient District"
+                        name="recipientDistrict"
+                        icon={FaMapMarkerAlt}
+                        value={requestData.recipientDistrict}
+                        onChange={handleChange}
+                        error={errors.recipientDistrict}
+                        placeholder="Select District"
+                      >
+                        {districts.map((d) => (
+                          <option key={d.id} value={d.name}>
+                            {d.name}
+                          </option>
+                        ))}
+                      </Select>
 
-          <label className="block">
-            <span className="text-gray-700 font-medium">
-              Request Message / Note:
-            </span>
-            <textarea
-              name="requestMessage"
-              value={requestData.requestMessage}
-              onChange={handleChange}
-              rows="3"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-3"
-            ></textarea>
-          </label>
+                      <Select
+                        label="Recipient Upazila"
+                        name="recipientUpazila"
+                        icon={FaMapMarkerAlt}
+                        value={requestData.recipientUpazila}
+                        onChange={handleChange}
+                        error={errors.recipientUpazila}
+                        placeholder="Select Upazila"
+                        disabled={!requestData.recipientDistrict}
+                      >
+                        {filteredUpazilas.length > 0 ? (
+                          filteredUpazilas.map((u) => (
+                            <option key={u.id} value={u.name}>
+                              {u.name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            Select a District first
+                          </option>
+                        )}
+                      </Select>
+                    </div>
 
-          <div className="pt-4 border-t border-gray-100">
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full flex justify-center items-center px-4 py-3 border border-transparent text-lg font-medium rounded-xl shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all disabled:bg-red-400 disabled:cursor-not-allowed"
-            >
-              {submitting ? (
-                <>
-                  <FaSpinner className="animate-spin mr-3" /> Updating
-                  Request...
-                </>
-              ) : (
-                <>
-                  <FaEdit className="mr-2" /> Update Donation Request
-                </>
-              )}
-            </button>
-          </div>
-        </form>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <Input
+                        label="Hospital Name"
+                        name="hospitalName"
+                        icon={FaHospital}
+                        placeholder="Enter hospital name"
+                        value={requestData.hospitalName}
+                        onChange={handleChange}
+                        error={errors.hospitalName}
+                        required
+                      />
+
+                      <Input
+                        label="Hospital Address"
+                        name="hospitalAddress"
+                        icon={FaMapMarkerAlt}
+                        placeholder="Enter full hospital address"
+                        value={requestData.hospitalAddress}
+                        onChange={handleChange}
+                        error={errors.hospitalAddress}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Timing Details */}
+                <Card className="border-2 border-green-100 dark:border-green-900/30">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg text-green-600 dark:text-green-400 flex items-center gap-2">
+                      <FaCalendarAlt /> Donation Timing
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <Input
+                        label="Donation Date"
+                        name="donationDate"
+                        type="date"
+                        icon={FaCalendarAlt}
+                        value={requestData.donationDate}
+                        onChange={handleChange}
+                        error={errors.donationDate}
+                        required
+                      />
+
+                      <Input
+                        label="Donation Time"
+                        name="donationTime"
+                        type="time"
+                        icon={FaClock}
+                        value={requestData.donationTime}
+                        onChange={handleChange}
+                        error={errors.donationTime}
+                        required
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Request Message */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-text-primary">
+                    Request Message / Note
+                  </label>
+                  <textarea
+                    name="requestMessage"
+                    value={requestData.requestMessage}
+                    onChange={handleChange}
+                    rows={4}
+                    placeholder="Enter any additional information or special requirements..."
+                    className="flex w-full rounded-xl bg-bg-tertiary/80 dark:bg-bg-tertiary/60 backdrop-blur-sm px-3 py-2 text-sm text-text-primary placeholder:text-text-muted interactive-border focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all duration-300 resize-none"
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <div className="pt-6 glass-border border-b-0 border-l-0 border-r-0">
+                  <Button
+                    type="submit"
+                    disabled={submitting}
+                    size="lg"
+                    className="w-full flex items-center justify-center gap-3"
+                  >
+                    {submitting ? (
+                      <>
+                        <FaSpinner className="animate-spin" />
+                        Updating Request...
+                      </>
+                    ) : (
+                      <>
+                        <FaEdit />
+                        Update Donation Request
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
     </div>
   );
