@@ -8,16 +8,16 @@ BloodConnect is not just a donation portal; it's a mission-critical platform des
 
 ---
 
-## 🏗️ System Architecture & Engineering
+## 🏗️ System Architecture & Engineering 
 
 As a production-level application, BloodConnect implements several high-end engineering patterns:
 
-### 1. Role-Based Access Control (RBAC)
+### 1. Role-Based Access Control (RBAC) 
 
 The system uses a 3-tier authorization layer:
 
 - **Admin Layer:** Full CRUD over users, requests, and system configurations.
-- **Volunteer Layer:** Content moderation and request status management without administrative destructive power.
+- **Volunteer Layer:** Content moderation and request status management without administrative destructive power. 
 - **Donor Layer:** Personal dashboard for tracking requests and profile management.
 
 ### 2. State Management & Data Fetching
