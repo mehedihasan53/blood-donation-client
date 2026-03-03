@@ -8,7 +8,7 @@ BloodConnect is not just a donation portal; it's a mission-critical platform des
 
 ---
 
-## 🏗️ System Architecture & Engineering 
+## 🏗️ System Architecture & Engineering
 
 As a production-level application, BloodConnect implements several high-end engineering patterns:
 
