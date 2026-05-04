@@ -20,7 +20,7 @@ The system uses a 3-tier authorization layer:
 - **Volunteer Layer:** Content moderation and request status management without administrative destructive power. 
 - **Donor Layer:** Personal dashboard for tracking requests and profile management.
 
-### 2. State Management & Data Fetching
+### 2. State Management & Data Fetching 
 
 - **Optimistic UI Updates:** Used via TanStack Query for a seamless UX during status transitions.
 - **Persistence:** JWT-based authentication combined with Firebase for robust session handling.
