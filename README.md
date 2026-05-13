@@ -12,7 +12,7 @@ BloodConnect is not just a donation portal; it's a mission-critical platform des
 
 As a production-level application, BloodConnect implements several high-end engineering patterns:
 
-### 1. Role-Based Access Control (RBAC) 
+### 1. Role-Based Access Control (RBAC)
 
 The system uses a 3-tier authorization layer:
 
